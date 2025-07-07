@@ -9,6 +9,7 @@ use App\Models\Lokasi;
 use App\Models\Karyawan;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Str;
 
 class BarangImport implements ToModel, WithHeadingRow
 {
@@ -19,33 +20,24 @@ class BarangImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
-        // Cek atau Tambahkan Kategori
-        $kategori = Kategori::firstOrCreate(
-            ['kategori' => $row['kategori_id']]
-        );
+        $row = collect($row)->mapWithKeys(function ($value, $key) {
+            return [$key => is_string($value) ? trim(preg_replace('/\s+/u', ' ', $value)) : $value];
+        })->all();
 
-        // Cek atau Tambahkan Jenis
-        $jenis = Jenis::firstOrCreate(
-            ['jenis' => $row['jenis_id']]
-        );
+        $kategori = Kategori::firstOrCreate(['kategori' => $row['kategori_id']]);
+        $jenis    = Jenis   ::firstOrCreate(['jenis'    => $row['jenis_id']]);
+        $lokasi   = Lokasi  ::firstOrCreate(['posisi'   => $row['lokasi_id']]);
 
-        // Cek atau Tambahkan Lokasi
-        $lokasi = Lokasi::firstOrCreate(
-            ['posisi' => $row['lokasi_id']]
-        );
-
-        // Konversi string ke int (1 = Lengkap, 0 = Tidak Lengkap)
-        $kelengkapanString = strtolower(trim($row['kelengkapan']));
-        $kelengkapan = ($kelengkapanString === 'lengkap') ? 1 : 0;
+        $kelengkapan = Str::lower($row['kelengkapan']) === 'lengkap' ? 1 : 0;
 
         return new Barang([
-            'id' => $row['id'],
-            'nama_barang' => $row['nama_barang'],
-            'kategori_id' => $kategori->id,
-            'jenis_id' => $jenis->id,
-            'lokasi_id' => $lokasi->id,
-            'kelengkapan' => $kelengkapan,
-            'keterangan' => $row['keterangan'],
+            'id'           => $row['id'],
+            'nama_barang'  => $row['nama_barang'],
+            'kategori_id'  => $kategori->id,
+            'jenis_id'     => $jenis->id,
+            'lokasi_id'    => $lokasi->id,
+            'kelengkapan'  => $kelengkapan,
+            'keterangan'   => $row['keterangan'] ?? null,
         ]);
     }
 }

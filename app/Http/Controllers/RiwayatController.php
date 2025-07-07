@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Exports\RiwayatExport;
+use App\Models\Riwayat;
+use App\Models\Barang;
+use App\Models\Karyawan;
+use App\Models\Jenis;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+class RiwayatController extends Controller
+{
+    public function index()
+    {
+        $riwayats = Riwayat::all();
+
+        return view('layouts.dataRiwayat', compact('riwayats'));
+    }
+    public function create()
+    {
+        $jenisBarang = Jenis::all();
+        $barangs = Barang::all();
+        $karyawans = Karyawan::all();
+        return view('layouts.createRiwayat', compact('jenisBarang', 'barangs', 'karyawans'));
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'jenis_id' => 'required|exists:jenis,id',
+            'barang_id' => 'required|exists:barangs,id',
+            'karyawan_id' => 'required|exists:karyawans,id',
+            'tanggal' => 'required|date',
+            'keterangan' => 'nullable|string',
+        ], [
+            'jenis_id.required' => 'Jenis barang harus dipilih.',
+            'barang_id.required' => 'Barang harus dipilih.',
+            'karyawan_id.required' => 'Karyawan harus dipilih.',
+            'tanggal.required' => 'Tanggal harus diisi.',
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            $barang = Barang::lockForUpdate()->findOrFail($request->barang_id);
+
+            Riwayat::create([
+                'jenis_id' => $request->jenis_id,
+                'barang_id' => $barang->id,
+                'nama_barang' => $barang->nama_barang,
+                'karyawan_id' => $request->karyawan_id,
+                'tanggal' => $request->tanggal,
+                'keterangan'  => $request->keterangan,
+            ]);
+
+            $barang->update(['status' => 1]);
+        });
+
+        return redirect()->route('riwayat.index')->with('success', 'Riwayat berhasil ditambahkan.');
+    }
+    public function show($id)
+    {
+        $riwayat = Riwayat::with(['barang', 'karyawan', 'jenis'])->findOrFail($id);
+        return view('layouts.showRiwayat', compact('riwayat'));
+    }
+    public function edit($id)
+    {
+        $riwayat = Riwayat::findOrFail($id);
+        $jenisBarang = Jenis::all();
+        $barangs = Barang::all();
+        $karyawans = Karyawan::all();
+        return view('layouts.editRiwayat', compact('riwayat', 'jenisBarang', 'barangs', 'karyawans'));
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'jenis_id' => 'required|exists:jenis,id',
+            'barang_id' => 'required|exists:barangs,id',
+            'karyawan_id' => 'required|exists:karyawans,id',
+            'tanggal' => 'required|date',
+            'keterangan' => 'nullable|string',
+        ], [
+            'jenis_id.required' => 'Jenis barang harus dipilih.',
+            'barang_id.required' => 'Barang harus dipilih.',
+            'karyawan_id.required' => 'Karyawan harus dipilih.',
+            'tanggal.required' => 'Tanggal harus diisi.',
+        ]);
+        $riwayat = Riwayat::findOrFail($id);
+        $barang = Barang::findOrFail($request->barang_id);
+        $riwayat->update([
+            'jenis_id' => $request->jenis_id,
+            'barang_id' => $barang->id,
+            'nama_barang' => $barang->nama_barang,
+            'karyawan_id' => $request->karyawan_id,
+            'tanggal' => $request->tanggal,
+            'keterangan'  => $request->keterangan,
+        ]);
+        return redirect()->route('riwayat.index')->with('success', 'Riwayat berhasil diperbarui.');
+    }
+    public function destroy($id)
+    {
+        DB::transaction(function () use ($id) {
+            $riwayat = Riwayat::findOrFail($id);
+            $riwayat->barang()->update(['status' => 0]);
+            $riwayat->delete();
+        });
+
+        return redirect()->route('riwayat.index')->with('success_delete', 'Riwayat berhasil dihapus.');
+    }
+    public function export($format)
+    {
+        $riwayats = Riwayat::with(['barang', 'jenis', 'karyawan'])->get();
+
+        if ($format === 'excel') {
+            return Excel::download(new RiwayatExport($riwayats), 'datariwayat.xlsx');
+        }
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('exports.riwayat-pdf', compact('riwayats'));
+            return $pdf->download('datariwayat.pdf');
+        }
+
+        if ($format === 'print') {
+            return view('exports.riwayat-print', compact('riwayats'));
+        }
+
+        abort(404);
+    }
+}

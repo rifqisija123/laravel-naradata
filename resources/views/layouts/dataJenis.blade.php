@@ -89,7 +89,7 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Tutup</button>
-                                        <button type="submit" class="btn btn-primary">Edit</button>
+                                        <button type="submit" class="btn btn-primary" id="btnUpdateJenis">Edit</button>
                                     </div>
                                 </div>
                             </form>
@@ -140,32 +140,65 @@
                 $('#wrapperKeteranganJenis').hide();
             }
         });
-        $('#formEditJenisModal').on('submit', function(e) {
+        $('#btnUpdateJenis').on('click', function(e) {
             e.preventDefault();
 
-            let id = $('#edit_id').val();
-            let jenis = $('#editJenis').val();
-            let keterangan = $('#keteranganEditJenis').val();
+            const id = $('#edit_id').val();
+            const jenis = $('#editJenis').val();
+            const keterangan = $('#keteranganEditJenis').val();
 
-            $.ajax({
-                url: `/jenis/update/${id}`,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    _method: 'PUT',
-                    jenis: jenis,
-                    keterangan: keterangan
+            Swal.fire({
+                title: 'Yakin ingin menyimpan perubahan?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Simpan',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary ms-2'
                 },
-                success: function(response) {
-                    if (response.status === 'success') {
-                        $('#editModalJenis').modal('hide');
-                        location.reload();
-                    } else {
-                        alert('Gagal update data');
-                    }
-                },
-                error: function() {
-                    alert('Terjadi kesalahan saat update data.');
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/jenis/update/${id}`,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            _method: 'PUT',
+                            jenis: jenis,
+                            keterangan: keterangan
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $('#editModalJenis').modal('hide');
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil!',
+                                    text: 'Data jenis berhasil diupdate.',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+
+                                // reload setelah swal ditutup
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
+                            } else {
+                                Swal.fire('Gagal!', response.message || 'Gagal update data.',
+                                    'error');
+                            }
+                        },
+                        error: function(xhr) {
+                            if (xhr.status === 409) {
+                                Swal.fire('Gagal!', 'Jenis sudah ada.', 'warning');
+                            } else {
+                                Swal.fire('Gagal!', 'Terjadi kesalahan saat update data.',
+                                    'error');
+                            }
+                        }
+                    });
                 }
             });
         });
@@ -195,5 +228,14 @@
                 });
             });
         });
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
     </script>
 @endpush

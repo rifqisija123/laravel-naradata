@@ -4,6 +4,17 @@
 
 @section('content')
     <div class="container mt-4">
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Terjadi kesalahan!</strong>
+                <ul class="mb-0 mt-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
         <div class="card shadow-sm rounded-4">
             <div class="card-body px-4 py-4">
                 <h3 class="fw-bold mb-3" style="color: #0d47a1;">Edit Barang</h3>
@@ -244,7 +255,7 @@
                         Swal.fire({
                             title: "Disimpan!",
                             icon: "success",
-                            timer: 1200,
+                            timer: 1500,
                             showConfirmButton: false
                         });
 

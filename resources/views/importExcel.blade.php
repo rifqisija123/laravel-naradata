@@ -33,14 +33,18 @@
                 <!-- Upload File -->
                 <div class="col-md-6">
                     <div class="p-3 border rounded bg-light">
-                        <form method="POST" action="{{ route('import.barang') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('import.barang') }}" enctype="multipart/form-data"
+                            id="formImport">
                             @csrf
                             <div class="mb-3">
-                                <label for="file_excel" class="form-label fw-semibold">File Excel <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" name="file_excel" id="file_excel" accept=".xlsx,.xls" required>
+                                <label for="file_excel" class="form-label fw-semibold">File Excel <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="file_excel" id="file_excel"
+                                    accept=".xlsx,.xls" required>
                                 <small class="text-muted">Format file: .xlsx atau .xls</small>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100" style="background: linear-gradient(to right, #1e3c72, #2a5298);">
+                            <button type="button" class="btn btn-primary w-100" id="btnImport"
+                                style="background: linear-gradient(to right, #1e3c72, #2a5298);">
                                 <i class="fa-solid fa-cloud-arrow-up me-1"></i>Import Barang
                             </button>
                         </form>
@@ -56,3 +60,38 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        document.getElementById('btnImport').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('file_excel');
+            if (!fileInput.value) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'File belum dipilih!',
+                    text: 'Silakan pilih file Excel terlebih dahulu.',
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Yakin ingin mengimport data?',
+                text: 'Pastikan file Excel sudah sesuai format!',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, import!',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary ms-2'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formImport').submit();
+                }
+            });
+        });
+    </script>
+@endpush

@@ -81,7 +81,7 @@ class BarangController extends Controller
 
         Excel::import(new BarangImport, $request->file('file_excel'));
 
-        return redirect()->route('barang.index')->with('success', 'Data barang berhasil diimport.');
+        return redirect()->route('barang.index')->with('success_excel', 'Data barang berhasil diimport.');
     }
 
     public function edit($id)
@@ -125,7 +125,7 @@ class BarangController extends Controller
         $barang = Barang::findOrFail($id);
         $barang->delete();
 
-        return redirect()->route('barang.index')->with('success', 'Data barang berhasil dihapus.');
+        return redirect()->route('barang.index')->with('success_delete', 'Data barang berhasil dihapus.');
     }
 
     public function dashboard()
@@ -135,5 +135,15 @@ class BarangController extends Controller
         $barangTidakLengkap = Barang::where('kelengkapan', 0)->count();
 
         return view('index', compact('totalBarang', 'barangLengkap', 'barangTidakLengkap'));
+    }
+    
+    public function getBarangByJenis($jenisId)
+    {
+        $barangs = Barang::where('jenis_id', $jenisId)
+        ->select('id', 'nama_barang')
+        ->orderBy('nama_barang')
+        ->get();
+
+        return response()->json($barangs);
     }
 }

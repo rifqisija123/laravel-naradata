@@ -11,7 +11,7 @@ class Karyawan extends Model
     use HasFactory, SoftDeletes;
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $fillable = ['id', 'nama', 'no_telp', 'jabatan', 'keterangan'];
+    protected $fillable = ['id', 'nama', 'jabatan', 'keterangan'];
     protected static function boot()
     {
         parent::boot();

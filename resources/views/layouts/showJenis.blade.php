@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container mt-4">
-        <h3 class="mb-4"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Detail Jenis</h3>
+        <h3 class="mb-4"><i class="fas fa-cubes me-2 text-primary"></i>Detail Jenis</h3>
 
         <div class="card shadow-sm rounded-4">
             <div class="card-body px-4 py-4">
@@ -30,11 +30,10 @@
                             data-id="{{ $jenis->id }}" data-jenis="{{ $jenis->jenis }}"
                             data-keterangan="{{ $jenis->keterangan }}" data-bs-toggle="modal"
                             data-bs-target="#editModalJenis"><i class="fas fa-pen"></i></button>
-                        <form action="{{ route('jenis.destroy', $jenis->id) }}" method="POST"
-                            onsubmit="return confirm('Yakin hapus data jenis ini?')">
+                        <form action="{{ route('jenis.destroy', $jenis->id) }}" method="POST" class="form-delete d-inline">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-danger" title="Hapus" type="submit">
+                            <button type="submit" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $jenis->jenis }}" title="Hapus">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -74,7 +73,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <button type="submit" class="btn btn-primary" id="btnUpdateJenis">Edit</button>
                         </div>
                     </div>
                 </form>
@@ -105,34 +104,102 @@
                 $('#wrapperKeteranganJenis').hide();
             }
         });
-        $('#formEditJenisModal').on('submit', function(e) {
+        $('#btnUpdateJenis').on('click', function(e) {
             e.preventDefault();
 
-            let id = $('#edit_id').val();
-            let jenis = $('#editJenis').val();
-            let keterangan = $('#keteranganEditJenis').val();
+            const id = $('#edit_id').val();
+            const jenis = $('#editJenis').val();
+            const keterangan = $('#keteranganEditJenis').val();
 
-            $.ajax({
-                url: `/jenis/update/${id}`,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    _method: 'PUT',
-                    jenis: jenis,
-                    keterangan: keterangan
+            Swal.fire({
+                title: 'Yakin ingin menyimpan perubahan?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Simpan',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary ms-2'
                 },
-                success: function(response) {
-                    if (response.status === 'success') {
-                        $('#editModalJenis').modal('hide');
-                        location.reload();
-                    } else {
-                        alert('Gagal update data');
-                    }
-                },
-                error: function() {
-                    alert('Terjadi kesalahan saat update data.');
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/jenis/update/${id}`,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            _method: 'PUT',
+                            jenis: jenis,
+                            keterangan: keterangan
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $('#editModalJenis').modal('hide');
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil!',
+                                    text: 'Data jenis berhasil diupdate.',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+
+                                // reload setelah swal ditutup
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
+                            } else {
+                                Swal.fire('Gagal!', response.message || 'Gagal update data.',
+                                    'error');
+                            }
+                        },
+                        error: function(xhr) {
+                            if (xhr.status === 409) {
+                                Swal.fire('Gagal!', 'Jenis sudah ada.', 'warning');
+                            } else {
+                                Swal.fire('Gagal!', 'Terjadi kesalahan saat update data.',
+                                    'error');
+                            }
+                        }
+                    });
                 }
             });
         });
+        $(document).ready(function() {
+            $('.form-delete').on('submit', function(e) {
+                e.preventDefault();
+
+                const form = this;
+                const nama = $(this).find('.btn-delete').data('nama');
+
+                Swal.fire({
+                    title: 'Apakah kamu yakin?',
+                    text: `Data Jenis "${nama}" akan dihapus!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                        cancelButton: 'btn btn-secondary ms-2'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // submit form jika user yakin
+                    }
+                });
+            });
+        });
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
     </script>
 @endpush

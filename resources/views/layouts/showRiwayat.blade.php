@@ -1,15 +1,15 @@
 @extends('layouts.apps')
 
-@section('title', 'Detail Barang')
+@section('title', 'Detail Riwayat')
 
 @section('content')
     <div class="container mt-4">
         <div class="mb-3">
-            <a href="{{ route('barang.index') }}" class="btn btn-secondary">
+            <a href="{{ route('riwayat.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-2"></i> Kembali
             </a>
         </div>
-        <h3 class="mb-4"><i class="fas fa-box-open me-2 text-primary"></i>Detail Barang</h3>
+        <h3 class="mb-4"><i class="bi bi-clock-history me-2 text-primary"></i>Detail Riwayat</h3>
 
         <div class="card shadow-sm rounded-4">
             <div class="card-body px-4 py-4">
@@ -17,71 +17,48 @@
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i class="fas fa-id-badge me-2 text-secondary"></i><strong>ID:</strong>
                         </p>
-                        <h5>{{ $barang->id }}</h5>
-                    </div>
-
-                    <div class="col-md-6">
-                        <p class="mb-1 text-muted"><i class="fas fa-tag me-2 text-secondary"></i><strong>Nama
-                                Barang:</strong></p>
-                        <h5>{{ $barang->nama_barang }}</h5>
+                        <h5>{{ $riwayat->id }}</h5>
                     </div>
 
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i
-                                class="fas fa-layer-group me-2 text-secondary"></i><strong>Kategori:</strong></p>
-                        <h5>{{ $barang->kategori->kategori ?? '-' }}</h5>
+                                class="fas fa-cubes me-2 text-secondary"></i><strong>Jenis Barang:</strong></p>
+                        <h5>{{ $riwayat->jenis->jenis ?? '-' }}</h5>
                     </div>
 
                     <div class="col-md-6">
-                        <p class="mb-1 text-muted"><i class="fas fa-cubes me-2 text-secondary"></i><strong>Jenis:</strong>
+                        <p class="mb-1 text-muted"><i class="fas fa-tag me-2 text-secondary"></i><strong>Nama Barang:</strong>
                         </p>
-                        <h5>{{ $barang->jenis->jenis ?? '-' }}</h5>
+                        <h5>{{ $riwayat->barang->nama_barang ?? '-' }}</h5>
                     </div>
 
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i
-                                class="fas fa-map-marker-alt me-2 text-secondary"></i><strong>Lokasi:</strong></p>
-                        <h5>{{ $barang->lokasi->posisi ?? '-' }}</h5>
-                    </div>
-
-                    <div class="col-md-6">
-                        <p class="mb-1 text-muted"><i
-                                class="fas fa-tools me-2 text-secondary"></i><strong>Kelengkapan:</strong></p>
-                        <h5>
-                            @if ($barang->kelengkapan == 1)
-                                <span class="badge bg-success">Lengkap</span>
-                            @else
-                                <span class="badge bg-danger">Tidak Lengkap</span>
-                            @endif
-                        </h5>
+                                class="fas fa-user me-2 text-secondary"></i><strong>Karyawan:</strong></p>
+                        <h5>{{ $riwayat->karyawan->nama ?? '-' }}</h5>
                     </div>
 
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i
                                 class="fas fa-align-left me-2 text-secondary"></i><strong>Keterangan:</strong></p>
-                        <h5>{{ $barang->keterangan ?? 'Tidak ada keterangan' }}</h5>
+                        <h5>{{ $riwayat->keterangan ?? 'Tidak ada keterangan' }}</h5>
                     </div>
 
                     <div class="col-md-6">
-                        <p class="mb-1 text-muted"><i
-                                class="fas fa-toggle-on me-2 text-secondary"></i><strong>Status:</strong></p>
-                        <h5>
-                            @if ($barang->status == 1)
-                                <span class="badge bg-primary">Dipakai</span>
-                            @else
-                                <span class="badge bg-secondary">Tidak Dipakai</span>
-                            @endif
-                        </h5>
+                        <p class="mb-1 text-muted"><i class="fas fa-calendar-alt me-2 text-secondary"></i><strong>Tanggal:</strong>
+                        </p>
+                        <h5>{{ $riwayat->tanggal ? \Carbon\Carbon::parse($riwayat->tanggal)->translatedFormat('d F Y') : '-' }}</h5>
                     </div>
+
                     <hr class="my-3">
                     <div class="col-md-6 d-flex gap-2">
-                        <a href="{{ route('barang.edit', $barang->id) }}" class="btn btn-sm btn-warning" title="Edit">
+                        <a href="{{ route('riwayat.edit', $riwayat->id) }}" class="btn btn-sm btn-warning" title="Edit">
                             <i class="fas fa-pen"></i>
                         </a>
-                        <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" class="form-delete d-inline">
+                        <form action="{{ route('riwayat.destroy', $riwayat->id) }}" method="POST" class="form-delete d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $barang->nama_barang }}" title="Hapus">
+                            <button type="submit" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $riwayat->barang->nama_barang ?? '-' }}" title="Hapus">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -103,7 +80,7 @@
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data barang "${nama}" akan dihapus!`,
+                    text: `Data riwayat dengan nama barang "${nama}" akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

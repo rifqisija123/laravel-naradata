@@ -11,18 +11,18 @@
     <i class="bi bi-geo-alt-fill me-2"></i> Lokasi
 </a>
 
-<a href="#">
+<a href="{{ route('karyawan.index') }}">
     <i class="fas fa-user me-2"></i> Karyawan
 </a>
 
 <a href="{{ route('jenis.index') }}">
-    <i class="bi bi-person-lines-fill me-2"></i> Jenis
+    <i class="fas fa-cubes me-2"></i> Jenis
 </a>
 
 <a href="{{ route('barang.index') }}">
     <i class="fas fa-box-open me-2"></i> Barang
 </a>
 
-<a href="#">
-    <i class="bi bi-gear-fill me-2"></i> Riwayat
+<a href="{{ route('riwayat.index') }}">
+    <i class="bi bi-clock-history me-2"></i> Riwayat
 </a>

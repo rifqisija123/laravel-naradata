@@ -1,6 +1,6 @@
 @extends('layouts.apps')
 
-@section('title', 'Data Barang')
+@section('title', 'Data Karyawan')
 
 @section('content')
     <div class="container mt-4">
@@ -14,20 +14,13 @@
                 {{ session('success_delete') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @elseif(session('success_excel'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success_excel') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
         @endif
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0 fw-semibold">Daftar Barang</h5>
+            <h5 class="mb-0 fw-semibold">Daftar Karyawan</h5>
             <div>
-                <a href="{{ route('barang.create') }}" class="btn btn-primary me-2"><i class="fas fa-plus me-1"></i> Tambah
-                    Barang</a>
-                <a href="{{ route('barang.import') }}" class="btn btn-success me-2"><i class="fas fa-file-excel me-1"></i>
-                    Import Excel</a>
+                <a href="{{ route('karyawan.create') }}" class="btn btn-primary me-2"><i class="fas fa-plus me-1"></i> Tambah
+                    Karyawan</a>
             </div>
         </div>
 
@@ -35,37 +28,35 @@
         <div class="card shadow-sm border-1 rounded-3">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered align-middle" id="tbl_barang">
+                    <table class="table table-bordered align-middle" id="tbl_karyawan">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
-                                <th>Nama Barang</th>
+                                <th>Nama Karyawan</th>
                                 <th>Keterangan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($barangs as $barang)
+                            @forelse($karyawans as $karyawan)
                                 <tr>
-                                    <td>{{ $barang->id }}</td>
-                                    <td>{{ $barang->nama_barang }}</td>
-                                    <td>{{ $barang->keterangan ?? 'Tidak ada keterangan' }}</td>
+                                    <td>{{ $karyawan->nama }}</td>
+                                    <td>{{ $karyawan->keterangan ?? 'Tidak ada keterangan' }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('barang.show', $barang->id) }}" class="btn btn-sm btn-primary"
+                                            <a href="{{ route('karyawan.show', $karyawan->id) }}" class="btn btn-sm btn-primary"
                                                 title="Lihat">
                                                 <i class="fas fa-eye"></i> Show
                                             </a>
-                                            <a href="{{ route('barang.edit', $barang->id) }}" class="btn btn-sm btn-warning"
+                                            <a href="{{ route('karyawan.edit', $karyawan->id) }}" class="btn btn-sm btn-warning"
                                                 title="Edit">
                                                 <i class="fas fa-pen"></i> Edit
                                             </a>
-                                            <form action="{{ route('barang.destroy', $barang->id) }}" method="POST"
+                                            <form action="{{ route('karyawan.destroy', $karyawan->id) }}" method="POST"
                                                 class="form-delete d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger btn-delete"
-                                                    data-nama="{{ $barang->nama_barang }}" title="Hapus">
+                                                    data-nama="{{ $karyawan->nama }}" title="Hapus">
                                                     <i class="fas fa-trash"></i> Delete
                                                 </button>
                                             </form>
@@ -74,7 +65,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">Tidak ada data Barang</td>
+                                    <td colspan="4" class="text-center">Tidak ada data Karyawan</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -88,7 +79,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const table = $('#tbl_barang').DataTable({
+            const table = $('#tbl_karyawan').DataTable({
                 dom: 'lfrtip',
                 pagingType: 'simple_numbers',
                 language: {
@@ -103,14 +94,6 @@
                     emptyTable: "Tidak ada data di tabel",
                 }
             });
-
-            $('#exportPdfBtn').on('click', function() {
-                table.button('.buttons-pdf').trigger();
-            });
-
-            $('#exportExcelBtn').on('click', function() {
-                table.button('.buttons-excel').trigger();
-            });
         });
         $(document).ready(function() {
             $('.form-delete').on('submit', function(e) {
@@ -121,7 +104,7 @@
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data barang "${nama}" akan dihapus!`,
+                    text: `Data karyawan "${nama}" akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',
@@ -143,14 +126,6 @@
                 icon: 'success',
                 title: 'Berhasil!',
                 text: '{{ session('success_delete') }}',
-                showConfirmButton: false,
-                timer: 1500
-            });
-        @elseif(session('success_excel'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('success_excel') }}',
                 showConfirmButton: false,
                 timer: 1500
             });

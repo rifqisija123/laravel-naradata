@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('karyawans', function (Blueprint $table) {
             $table->string('id', 20)->primary()->unique();
-            $table->string('nama', 100);
-            $table->integer('no_telp');
-            $table->string('jabatan', 50);
+            $table->string('nama');
+            $table->string('jabatan', 100);
             $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();

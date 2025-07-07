@@ -40,9 +40,11 @@
             <img src="{{ asset('assets/img/naradata.png') }}" alt="Logo" height="35">
         </a>
 
-        <div class="d-none d-md-block">
-            <a class="navbar-brand text-white fw-semibold" href="{{ url('/') }}">
-                <img src="{{ asset('assets/img/naradata.png') }}" alt="Logo" height="40">
+        <div class="d-none d-md-block text-center">
+            <a class="navbar-brand text-white fw-semibold d-flex align-items-center justify-content-center gap-2"
+                href="{{ url('/') }}">
+                <img src="{{ asset('assets/img/naradata.png') }}" alt="Logo" height="38">
+                <span class="fs-5 fw-semibold text-white">SIMAS</span>
             </a>
         </div>
     </nav>
