@@ -50,7 +50,8 @@
     <table>
         <thead>
             <tr>
-                <th>Jenis Barang</th>
+                <th>Jenis</th>
+                <th>Merek</th>
                 <th>Nama Barang</th>
                 <th>Karyawan</th>
                 <th>Keterangan</th>
@@ -61,6 +62,7 @@
             @foreach ($riwayats as $r)
                 <tr>
                     <td>{{ $r->jenis->jenis ?? '-' }}</td>
+                    <td>{{ $r->jenis->merek ?? '-' }}</td>
                     <td>{{ $r->barang->nama_barang ?? '-' }}</td>
                     <td>{{ $r->karyawan->nama ?? '-' }}</td>
                     <td>{{ $r->keterangan ?? 'Tidak ada keterangan' }}</td>

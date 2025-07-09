@@ -40,7 +40,6 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nama Barang</th>
-                                <th>Keterangan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -49,7 +48,6 @@
                                 <tr>
                                     <td>{{ $barang->id }}</td>
                                     <td>{{ $barang->nama_barang }}</td>
-                                    <td>{{ $barang->keterangan ?? 'Tidak ada keterangan' }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
                                             <a href="{{ route('barang.show', $barang->id) }}" class="btn btn-sm btn-primary"

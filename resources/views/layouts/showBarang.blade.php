@@ -33,9 +33,9 @@
                     </div>
 
                     <div class="col-md-6">
-                        <p class="mb-1 text-muted"><i class="fas fa-cubes me-2 text-secondary"></i><strong>Jenis:</strong>
+                        <p class="mb-1 text-muted"><i class="fas fa-cubes me-2 text-secondary"></i><strong>Jenis & Merek:</strong>
                         </p>
-                        <h5>{{ $barang->jenis->jenis ?? '-' }}</h5>
+                        <h5>{{ $barang->jenis ? $barang->jenis->jenis . ' - ' . $barang->jenis->merek : '-' }}</h5>
                     </div>
 
                     <div class="col-md-6">

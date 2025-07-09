@@ -54,16 +54,17 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="jenis_id" class="form-label">Jenis <span class="text-danger">*</span></label>
+                            <label for="jenis_id" class="form-label">Jenis & Merek <span
+                                    class="text-danger">*</span></label>
                             <div class="d-flex align-items-stretch">
                                 <div class="flex-grow-1">
                                     <select name="jenis_id" id="jenis_id" class="tom-select w-100" required
-                                        data-placeholder="-- Pilih Jenis --">
-                                        <option value="" disabled selected hidden>-- Pilih Jenis --</option>
+                                        data-placeholder="-- Pilih Jenis & Merek --">
+                                        <option value="" disabled selected hidden>-- Pilih Jenis & Merek --</option>
                                         @foreach ($jenisBarang as $jenis)
-                                            <option value="{{ $jenis->id }}"
-                                                {{ $barang->jenis_id == $jenis->id ? 'selected' : '' }}>
-                                                {{ $jenis->jenis }}</option>
+                                            <option value="{{ $jenis->merek_id }}"
+                                                {{ $barang->jenis_id == $jenis->merek_id ? 'selected' : '' }}>
+                                                {{ $jenis->jenis }} - {{ $jenis->merek }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -158,7 +159,17 @@
                 </div>
                 <div class="modal-body">
                     <label for="namaJenisBaru" class="form-label">Jenis:</label>
-                    <input type="text" class="form-control" name="jenis" id="namaJenisBaru" required>
+                    <input type="text" class="form-control" name="jenis" id="namaJenisBaru" list="listJenis"
+                        autocomplete="off" required>
+                    <datalist id="listJenis">
+                        @foreach ($jenisBarang as $j)
+                            <option value="{{ $j->jenis }}"></option>
+                        @endforeach
+                    </datalist>
+                </div>
+                <div class="modal-body">
+                    <label for="namaMerekBaru" class="form-label">Merek:</label>
+                    <input type="text" class="form-control" name="merek" id="namaMerekBaru" required>
                 </div>
                 <div class="modal-body">
                     <button type="button" class="btn btn-sm btn-secondary mb-2" id="toggleKeteranganJenis">Tambah
@@ -244,10 +255,8 @@
                 Swal.fire({
                     title: "Yakin ingin menyimpan perubahan?",
                     icon: "question",
-                    showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonText: "Simpan",
-                    denyButtonText: `Jangan Simpan`,
                     cancelButtonText: "Batal"
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -263,7 +272,7 @@
                         setTimeout(() => {
                             form.submit();
                         }, 1300);
-                    } else if (result.isDenied) {
+                    } else if (result.isCancelled) {
                         Swal.fire("Perubahan tidak disimpan", "", "info");
                     }
                 });

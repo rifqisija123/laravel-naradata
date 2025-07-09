@@ -21,7 +21,7 @@ class Riwayat extends Model
             $model->id = 'RY' . str_pad($number, 3, '0', STR_PAD_LEFT);
         });
     }
-    public function jenis() { return $this->belongsTo(Jenis::class); }
+    public function jenis() { return $this->belongsTo(Jenis::class, 'jenis_id', 'merek_id'); }
     public function barang() { return $this->belongsTo(Barang::class); }
     public function karyawan() { return $this->belongsTo(Karyawan::class); }
 }

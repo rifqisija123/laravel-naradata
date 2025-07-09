@@ -1,7 +1,7 @@
 body {
     font-family: "Inter", sans-serif;
     overflow-x: hidden;
-    background-color: #f8f9fa; /* Tambahan: warna background netral */
+    background-color: #f8f9fa;
 }
 
 .ts-wrapper {
@@ -30,12 +30,12 @@ body {
 }
 
 .ts-control {
-    height: 38px; /* Sesuai form-control Bootstrap */
+    height: 38px;
     padding: 6px 12px;
     font-size: 1rem;
     background-color: #fff;
     border: 1px solid #ced4da;
-    border-radius: 0.375rem 0 0 0.375rem; /* Rounded hanya kiri */
+    border-radius: 0.375rem 0 0 0.375rem;
     box-shadow: none;
 }
 
@@ -61,13 +61,12 @@ body {
     margin-right: 10px;
 }
 
-/* Sidebar */
 .sidebar {
     position: fixed;
     top: 55px;
     left: -250px;
     width: 190px;
-    height: calc(100% - 50px);
+    height: calc(100% - 55px);
     background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);
     padding: 1rem;
     transition: all 0.3s ease-in-out;
@@ -104,12 +103,10 @@ body {
     font-weight: bold;
 }
 
-/* Sidebar Aktif */
 .sidebar.active {
     left: 0;
 }
 
-/* Overlay saat mobile sidebar muncul */
 #overlay {
     display: none;
     position: fixed;
@@ -121,7 +118,6 @@ body {
     z-index: 999;
 }
 
-/* Tombol hamburger */
 .hamburger-btn {
     font-size: 24px;
     cursor: pointer;
@@ -131,10 +127,77 @@ body {
     margin-right: 1rem;
 }
 
-/* Konten utama */
 .main-content {
-    padding: 4.5rem 2rem 2rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-top: 70px;
     transition: all 0.3s ease-in-out;
+    max-width: 760px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.filter-content {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-top: 70px;
+    transition: all 0.3s ease-in-out;
+    max-width: 760px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 768px) {
+    .main-content {
+        margin-top: 80px;
+        margin-left: 230px;
+        max-width: calc(200% - 120px);
+    }
+    .filter-content {
+        margin-top: 80px;
+        margin-left: 230px;
+        max-width: calc(200% - 120px);
+    }
+}
+
+@media (max-width: 767px) {
+    .main-content {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-top: 70px;
+    }
+
+    .filter-content {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-top: 70px;
+    }
+
+    .sidebar {
+        top: 55px;
+        height: calc(100% - 55px);
+        width: 200px;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .navbar-logo img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .stat-box {
+        margin-bottom: 1rem;
+    }
 }
 
 .dashboard-card {
@@ -158,63 +221,47 @@ body {
     align-items: center;
 }
 
-.hero-card{
-    background: linear-gradient(135deg,#0d47a1 0%,#00897b 100%);
+.hero-card {
+    background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);
     padding: 2rem 2.5rem;
 }
 
-/* Desktop View */
-@media (min-width: 768px) {
-    .sidebar {
-        left: 0 !important;
-    }
-
-    .sidebar.active {
-        left: 0 !important;
-    }
-
-    .hamburger-btn {
-        display: none !important;
-    }
-
-    .navbar-logo {
-        display: none !important;
-    }
-
-    #overlay {
-        display: none !important;
-    }
-
-    .main-content {
-        margin-left: 200px; /* sesuai lebar sidebar */
-        max-width: calc(100% - 200px);
-    }
+.dropdown-submenu {
+    position: relative;
 }
 
-/* Mobile View */
-@media (max-width: 767px) {
-    .main-content {
-        margin-left: 0;
-        padding-top: 70px;
-    }
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-left: .1rem;
+    margin-right: .1rem;
+}
 
-    .sidebar {
-        top: 55px;
-        height: calc(100% - 55px);
-        width: 200px;
-    }
+.dropdown-check::after {
+    content: "\f00c";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    float: right;
+    opacity: 0;
+    transition: opacity .15s;
+}
 
-    .sidebar.active {
-        left: 0;
-    }
+.dropdown-check.active::after {
+    opacity: 1;
+}
 
-    .navbar-logo img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .stat-box {
-        margin-bottom: 1rem;
-    }
+.filter-card {
+    width: 100%;
+    max-width: 768px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
 }

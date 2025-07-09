@@ -12,7 +12,7 @@
         @endif
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0 fw-semibold">Daftar Jenis</h5>
+            <h5 class="mb-0 fw-semibold">Daftar Jenis & Merek</h5>
         </div>
 
         {{-- Tabel --}}
@@ -23,7 +23,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Jenis</th>
-                                <th>Keterangan</th>
+                                <th>Merek</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -31,22 +31,22 @@
                             @forelse($jenisBarang as $jenis)
                                 <tr>
                                     <td>{{ $jenis->jenis }}</td>
-                                    <td>{{ $jenis->keterangan ?? 'Tidak ada keterangan' }}</td>
+                                    <td>{{ $jenis->merek }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('jenis.show', $jenis->id) }}" class="btn btn-sm btn-primary"
+                                            <a href="{{ route('jenis.show', $jenis->merek_id) }}" class="btn btn-sm btn-primary"
                                                 title="Lihat">
                                                 <i class="fas fa-eye"></i> Show
                                             </a>
                                             <button type="button" class="btn btn-warning btn-sm btn-edit-jenis"
-                                                title="Edit" data-id="{{ $jenis->id }}"
-                                                data-jenis="{{ $jenis->jenis }}" data-keterangan="{{ $jenis->keterangan }}"
+                                                title="Edit" data-id="{{ $jenis->merek_id }}"
+                                                data-jenis="{{ $jenis->jenis }}" data-merek="{{ $jenis->merek }}" data-keterangan="{{ $jenis->keterangan }}"
                                                 data-bs-toggle="modal" data-bs-target="#editModalJenis"><i
                                                     class="fas fa-pen"></i> Edit</button>
-                                            <form action="{{ route('jenis.destroy', $jenis->id) }}" method="POST" class="form-delete d-inline">
+                                            <form action="{{ route('jenis.destroy', $jenis->merek_id) }}" method="POST" class="form-delete d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $jenis->jenis }}" title="Hapus">
+                                                <button type="submit" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $jenis->jenis }}" data-merek="{{ $jenis->merek }}" title="Hapus">
                                                     <i class="fas fa-trash"></i> Delete
                                                 </button>
                                             </form>
@@ -69,12 +69,16 @@
                                 <input type="hidden" id="edit_id">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Edit Jenis</h5>
+                                        <h5 class="modal-title">Edit Jenis & Merek</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <label for="editJenis" class="form-label">Jenis:</label>
                                         <input type="text" class="form-control" id="editJenis" required>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="editMerek" class="form-label">Merek:</label>
+                                        <input type="text" class="form-control" id="editMerek" required>
                                     </div>
                                     <div class="modal-body">
                                         <button type="button" class="btn btn-sm btn-secondary mb-2"
@@ -128,10 +132,12 @@
         $(document).on('click', '.btn-edit-jenis', function() {
             const id = $(this).data('id');
             const jenis = $(this).data('jenis');
+            const merek = $(this).data('merek');
             const keterangan = $(this).data('keterangan');
 
             $('#edit_id').val(id);
             $('#editJenis').val(jenis);
+            $('#editMerek').val(merek);
             $('#keteranganEditJenis').val(keterangan);
 
             if (keterangan) {
@@ -145,6 +151,7 @@
 
             const id = $('#edit_id').val();
             const jenis = $('#editJenis').val();
+            const merek = $('#editMerek').val();
             const keterangan = $('#keteranganEditJenis').val();
 
             Swal.fire({
@@ -167,6 +174,7 @@
                             _token: '{{ csrf_token() }}',
                             _method: 'PUT',
                             jenis: jenis,
+                            merek: merek,
                             keterangan: keterangan
                         },
                         success: function(response) {
@@ -176,7 +184,7 @@
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil!',
-                                    text: 'Data jenis berhasil diupdate.',
+                                    text: 'Data jenis & merek berhasil diupdate.',
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
@@ -192,7 +200,7 @@
                         },
                         error: function(xhr) {
                             if (xhr.status === 409) {
-                                Swal.fire('Gagal!', 'Jenis sudah ada.', 'warning');
+                                Swal.fire('Gagal!', 'Jenis atau Merek sudah ada.', 'warning');
                             } else {
                                 Swal.fire('Gagal!', 'Terjadi kesalahan saat update data.',
                                     'error');
@@ -208,10 +216,11 @@
 
                 const form = this;
                 const nama = $(this).find('.btn-delete').data('nama');
+                const merek = $(this).find('.btn-delete').data('merek');
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data Jenis "${nama}" akan dihapus!`,
+                    text: `Data Jenis "${nama}" & Merek "${merek}" akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

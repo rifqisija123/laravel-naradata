@@ -55,18 +55,16 @@
                     <table class="table table-bordered align-middle" id="tbl_riwayat">
                         <thead class="table-light">
                             <tr>
-                                <th>Jenis</th>
                                 <th>Nama Barang</th>
-                                <th>Keterangan</th>
+                                <th>Karyawan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($riwayats as $riwayat)
                                 <tr>
-                                    <td>{{ $riwayat->jenis->jenis ?? '-' }}</td>
                                     <td>{{ $riwayat->barang->nama_barang ?? '-' }}</td>
-                                    <td>{{ $riwayat->keterangan ?? 'Tidak ada keterangan' }}</td>
+                                    <td>{{ $riwayat->karyawan->nama ?? '-' }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
                                             <a href="{{ route('riwayat.show', $riwayat->id) }}"
@@ -82,7 +80,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger btn-delete"
-                                                    data-nama="{{ $riwayat->barang->nama_barang ?? '-' }}" title="Hapus">
+                                                    data-nama="{{ $riwayat->barang->nama_barang ?? '-' }}" data-karyawan="{{ $riwayat->karyawan->nama ?? '-' }}" title="Hapus">
                                                     <i class="fas fa-trash"></i> Delete
                                                 </button>
                                             </form>
@@ -91,7 +89,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">Tidak ada data Riwayat</td>
+                                    <td colspan="3" class="text-center">Tidak ada data Riwayat</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -127,10 +125,11 @@
 
                 const form = this;
                 const nama = $(this).find('.btn-delete').data('nama');
+                const karyawan = $(this).find('.btn-delete').data('karyawan');
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data riwayat dengan nama barang "${nama}" akan dihapus!`,
+                    text: `Data riwayat dengan nama barang "${nama}" dan nama karyawan "${karyawan}" akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

@@ -22,6 +22,7 @@ class RiwayatExport implements FromCollection, WithHeadings, WithStyles
         return collect($this->riwayats)->map(function ($r) {
             return [
                 $r->jenis->jenis ?? '-',
+                $r->jenis->merek ?? '-',
                 $r->barang->nama_barang ?? '-',
                 $r->karyawan->nama ?? '-',
                 $r->keterangan ?? 'Tidak ada keterangan',
@@ -33,7 +34,8 @@ class RiwayatExport implements FromCollection, WithHeadings, WithStyles
     public function headings(): array
     {
         return [
-            'Jenis Barang',
+            'Jenis',
+            'Merek',
             'Nama Barang',
             'Karyawan',
             'Keterangan',

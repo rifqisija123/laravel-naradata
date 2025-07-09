@@ -48,6 +48,7 @@
             e.preventDefault();
 
             let jenis = $('#namaJenisBaru').val();
+            let merek = $('#namaMerekBaru').val();
             let keterangan = $('#keteranganJenis').val();
 
             $.ajax({
@@ -56,6 +57,7 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     jenis: jenis,
+                    merek: merek,
                     keterangan: keterangan
                 },
                 success: function(response) {
@@ -63,14 +65,15 @@
                         let selectJenis = $('#jenis_id')[0].tomselect;
 
                         selectJenis.addOption({
-                            value: response.data.id,
-                            text: response.data.jenis
+                            value: response.data.merek_id,
+                            text: response.data.jenis + ' - ' + response.data.merek
                         });
 
                         selectJenis.addItem(response.data.id);
 
                         // Reset & tutup modal
                         $('#namaJenisBaru').val('');
+                        $('#namaMerekBaru').val('');
                         $('#keteranganJenis').val('');
                         $('#exampleModalJenis').modal('hide');
                     }
@@ -79,7 +82,7 @@
                     if (xhr.status === 409) {
                         alert(xhr.responseJSON.message);
                     } else {
-                        alert('Gagal menyimpan jenis.');
+                        alert('Gagal menyimpan jenis dan merek.');
                     }
                 }
             });

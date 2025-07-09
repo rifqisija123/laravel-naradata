@@ -32,7 +32,7 @@ class BarangController extends Controller
             'id' => 'required|string|unique:barangs,id',
             'namaBarang' => 'required|string|max:255',
             'kategori_id' => 'required|string|exists:kategoris,id',
-            'jenis_id' => 'required|string|exists:jenis,id',
+            'jenis_id' => 'required|string|exists:jenis,merek_id',
             'lokasi_id' => 'required|string|exists:lokasis,id',
             'kelengkapan' => 'required|in:0,1',
             'keterangan' => 'nullable|string',
@@ -100,10 +100,18 @@ class BarangController extends Controller
             'id' => 'required|string|unique:barangs,id,' . $id,
             'namaBarang' => 'required|string|max:255',
             'kategori_id' => 'required|string|exists:kategoris,id',
-            'jenis_id' => 'required|string|exists:jenis,id',
+            'jenis_id' => 'required|string|exists:jenis,merek_id',
             'lokasi_id' => 'required|string|exists:lokasis,id',
             'kelengkapan' => 'required|in:0,1',
             'keterangan' => 'nullable|string',
+        ], [
+            'id.required' => 'ID barang harus diisi.',
+            'id.unique' => 'ID barang sudah ada.',
+            'namaBarang.required' => 'Nama barang harus diisi.',
+            'kategori_id.required' => 'Kategori barang harus dipilih.',
+            'jenis_id.required' => 'Jenis barang harus dipilih.',
+            'lokasi_id.required' => 'Lokasi barang harus dipilih.',
+            'kelengkapan.required' => 'Kelengkapan barang harus dipilih.',
         ]);
 
         $barang = Barang::findOrFail($id);
@@ -140,7 +148,8 @@ class BarangController extends Controller
     public function getBarangByJenis($jenisId)
     {
         $barangs = Barang::where('jenis_id', $jenisId)
-        ->select('id', 'nama_barang')
+        ->where('status', 0)
+        ->select('id', 'nama_barang', 'kelengkapan')
         ->orderBy('nama_barang')
         ->get();
 

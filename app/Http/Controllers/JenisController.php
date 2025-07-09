@@ -11,20 +11,25 @@ class JenisController extends Controller
     {
         $request->validate([
             'jenis' => 'required|string',
+            'merek' => 'required|string',
             'keterangan' => 'nullable|string'
         ]);
 
-        $exists = Jenis::whereRaw('LOWER(jenis) = ?', [strtolower($request->jenis)])->exists();
+        $exists = Jenis::whereRaw('LOWER(jenis) = ? AND LOWER(merek) = ?', [
+            strtolower($request->jenis),
+            strtolower($request->merek)
+        ])->exists();
 
         if ($exists) {
             return response()->json([
-                'status' => 'error', 
-                'message' => 'Jenis sudah ada.'
+                'status' => 'error',
+                'message' => 'Kombinasi jenis dan merek sudah ada.'
             ], 409);
         }
 
         $jenis = Jenis::create([
             'jenis' => $request->jenis,
+            'merek' => $request->merek,
             'keterangan' => $request->keterangan,
         ]);
 
@@ -42,22 +47,33 @@ class JenisController extends Controller
     {
         $request->validate([
             'jenis' => 'required|string',
+            'merek' => 'required|string',
             'keterangan' => 'nullable|string'
         ]);
 
         $jenis = Jenis::findOrFail($id);
 
-        $exists = Jenis::whereRaw('LOWER(jenis) = ? AND id != ?', [strtolower($request->jenis), $id])->exists();
+        $isSameJenis = strtolower($request->jenis) === strtolower($jenis->jenis);
+        $isSameMerek = strtolower($request->merek) === strtolower($jenis->merek);
 
-        if ($exists) {
-            return response()->json([
-                'status' => 'error', 
-                'message' => 'Jenis sudah ada.'
-            ], 409);
+        if (!($isSameJenis && $isSameMerek)) {
+            $exists = Jenis::whereRaw('LOWER(jenis) = ? AND LOWER(merek) = ? AND id != ?', [
+                strtolower($request->jenis),
+                strtolower($request->merek),
+                $id
+            ])->exists();
+
+            if ($exists) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Kombinasi jenis dan merek sudah ada.'
+                ], 409);
+            }
         }
 
         $jenis->update([
             'jenis' => $request->jenis,
+            'merek' => $request->merek,
             'keterangan' => $request->keterangan,
         ]);
 

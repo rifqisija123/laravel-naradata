@@ -24,14 +24,16 @@
                     @csrf
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
-                            <label for="jenis_id" class="form-label">Jenis <span class="text-danger">*</span></label>
+                            <label for="jenis_id" class="form-label">Jenis & Merek <span
+                                    class="text-danger">*</span></label>
                             <div class="d-flex align-items-stretch">
                                 <div class="flex-grow-1">
                                     <select name="jenis_id" id="jenis_id" class="tom-select w-100" required
-                                        data-placeholder="-- Pilih Jenis --">
-                                        <option value="" disabled selected hidden>-- Pilih Jenis --</option>
+                                        data-placeholder="-- Pilih Jenis & Merek --">
+                                        <option value="" disabled selected hidden>-- Pilih Jenis & Merek --</option>
                                         @foreach ($jenisBarang as $jenis)
-                                            <option value="{{ $jenis->id }}">{{ $jenis->jenis }}</option>
+                                            <option value="{{ $jenis->merek_id }}">{{ $jenis->jenis }} - {{ $jenis->merek }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -103,7 +105,7 @@
 
             const tsJenis = new TomSelect('#jenis_id', {
                 ...configTomSelect,
-                placeholder: '-- Pilih Jenis --'
+                placeholder: '-- Pilih Jenis & Merek --'
             });
 
             const tsBarang = new TomSelect('#barang_id', {
@@ -132,7 +134,14 @@
                         tsBarang.clear(true);
                         tsBarang.clearOptions();
                         tsBarang.addOptions(
-                            data.map(b => ({value: b.id, text: b.nama_barang}))
+                            data.map(b => {
+                                const statusKelengkapan = b.kelengkapan == 1 ? '(Lengkap)' :
+                                    '(Tidak Lengkap)';
+                                return {
+                                    value: b.id,
+                                    text: `${b.id} - ${b.nama_barang}${statusKelengkapan}`
+                                };
+                            })
                         );
 
                         tsBarang.enable();

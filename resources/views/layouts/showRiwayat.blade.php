@@ -22,8 +22,8 @@
 
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i
-                                class="fas fa-cubes me-2 text-secondary"></i><strong>Jenis Barang:</strong></p>
-                        <h5>{{ $riwayat->jenis->jenis ?? '-' }}</h5>
+                                class="fas fa-cubes me-2 text-secondary"></i><strong>Jenis & Merek:</strong></p>
+                        <h5>{{ $riwayat->jenis ? $riwayat->jenis->jenis . ' - ' . $riwayat->jenis->merek : '-' }}</h5>
                     </div>
 
                     <div class="col-md-6">
@@ -58,7 +58,7 @@
                         <form action="{{ route('riwayat.destroy', $riwayat->id) }}" method="POST" class="form-delete d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $riwayat->barang->nama_barang ?? '-' }}" title="Hapus">
+                            <button type="submit" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $riwayat->barang->nama_barang ?? '-' }}" data-karyawan="{{ $riwayat->karyawan->nama ?? '-' }}" title="Hapus">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -77,10 +77,11 @@
 
                 const form = this;
                 const nama = $(this).find('.btn-delete').data('nama');
+                const karyawan = $(this).find('.btn-delete').data('karyawan');
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data riwayat dengan nama barang "${nama}" akan dihapus!`,
+                    text: `Data riwayat dengan nama barang "${nama}" dan nama karyawan "${karyawan}" akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

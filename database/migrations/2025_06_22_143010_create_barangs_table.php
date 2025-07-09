@@ -24,7 +24,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreign('kategori_id')->references('id')->on('kategoris');
-            $table->foreign('jenis_id')->references('id')->on('jenis');
+            $table->foreign('jenis_id')->references('merek_id')->on('jenis');
             $table->foreign('lokasi_id')->references('id')->on('lokasis');
         });
     }

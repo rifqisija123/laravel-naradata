@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\RiwayatExport;
+use App\Models\Kategori;
+use App\Models\Lokasi;
 use App\Models\Riwayat;
 use App\Models\Barang;
 use App\Models\Karyawan;
@@ -30,7 +32,7 @@ class RiwayatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'jenis_id' => 'required|exists:jenis,id',
+            'jenis_id' => 'required|exists:jenis,merek_id',
             'barang_id' => 'required|exists:barangs,id',
             'karyawan_id' => 'required|exists:karyawans,id',
             'tanggal' => 'required|date',
@@ -76,7 +78,7 @@ class RiwayatController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'jenis_id' => 'required|exists:jenis,id',
+            'jenis_id' => 'required|exists:jenis,merek_id',
             'barang_id' => 'required|exists:barangs,id',
             'karyawan_id' => 'required|exists:karyawans,id',
             'tanggal' => 'required|date',
@@ -87,16 +89,25 @@ class RiwayatController extends Controller
             'karyawan_id.required' => 'Karyawan harus dipilih.',
             'tanggal.required' => 'Tanggal harus diisi.',
         ]);
-        $riwayat = Riwayat::findOrFail($id);
-        $barang = Barang::findOrFail($request->barang_id);
-        $riwayat->update([
-            'jenis_id' => $request->jenis_id,
-            'barang_id' => $barang->id,
-            'nama_barang' => $barang->nama_barang,
-            'karyawan_id' => $request->karyawan_id,
-            'tanggal' => $request->tanggal,
-            'keterangan'  => $request->keterangan,
-        ]);
+        DB::transaction(function () use ($request, $id) {
+            $riwayat = Riwayat::findOrFail($id);
+            $barangBaru = Barang::findOrFail($request->barang_id);
+
+            if ($riwayat->barang_id != $request->barang_id) {
+                Barang::where('id', $riwayat->barang_id)->update(['status' => 0]);
+
+                $barangBaru->update(['status' => 1]);
+            }
+
+            $riwayat->update([
+                'jenis_id' => $request->jenis_id,
+                'barang_id' => $barangBaru->id,
+                'nama_barang' => $barangBaru->nama_barang,
+                'karyawan_id' => $request->karyawan_id,
+                'tanggal' => $request->tanggal,
+                'keterangan' => $request->keterangan,
+            ]);
+        });
         return redirect()->route('riwayat.index')->with('success', 'Riwayat berhasil diperbarui.');
     }
     public function destroy($id)
@@ -127,5 +138,13 @@ class RiwayatController extends Controller
         }
 
         abort(404);
+    }
+    public function filter()
+    {
+        $kategoris = Kategori::all();
+        $jenisBarang = Jenis::all();
+        $lokasis = Lokasi::all();
+        $karyawans = Karyawan::all();
+        return view('filters.filter', compact('kategoris', 'jenisBarang', 'lokasis', 'karyawans'));
     }
 }

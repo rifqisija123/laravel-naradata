@@ -26,3 +26,7 @@
 <a href="{{ route('riwayat.index') }}">
     <i class="bi bi-clock-history me-2"></i> Riwayat
 </a>
+
+<a href="{{ route('riwayat.filter') }}">
+    <i class="bi bi-funnel-fill me-2"></i> Filter
+</a>

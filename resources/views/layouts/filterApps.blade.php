@@ -55,17 +55,10 @@
         </div>
     </nav>
 
-    {{-- Sidebar --}}
-    @if (!Route::is('riwayat.filter*'))
-        <div class="sidebar active" id="sidebar">
-            @include('components.sidebar')
-        </div>
-    @endif
-
-    {{-- Main Content --}}
+    {{--  Main Filter  --}}
     <div class="container-fluid">
-        <div class="main-content" id="main-content">
-            @yield('content')
+        <div class="filter-content" id="filter-content">
+            @yield('content-filter')
         </div>
     </div>
 

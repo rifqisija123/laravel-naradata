@@ -53,3 +53,4 @@ Route::get('/riwayat/edit/{id}', [RiwayatController::class, 'edit'])->name('riwa
 Route::put('/riwayat/update/{id}', [RiwayatController::class, 'update'])->name('riwayat.update');
 Route::delete('/riwayat/delete/{id}', [RiwayatController::class, 'destroy'])->name('riwayat.destroy');
 Route::get('/riwayat/export/{format}', [RiwayatController::class, 'export'])->name('riwayat.export');
+Route::get('/riwayat/filter', [RiwayatController::class, 'filter'])->name('riwayat.filter');
