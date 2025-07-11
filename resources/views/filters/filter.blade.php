@@ -31,7 +31,8 @@
                         <ul class="dropdown-menu">
                             @foreach ($jenisBarang as $jenis)
                                 <li><a href="#" class="dropdown-item dropdown-check" data-filter="jenis"
-                                        data-value="{{ $jenis->merek_id }}">{{ $jenis->jenis }} - {{ $jenis->merek }}</a></li>
+                                        data-value="{{ $jenis->merek_id }}">{{ $jenis->jenis }} - {{ $jenis->merek }}</a>
+                                </li>
                             @endforeach
                         </ul>
                     </li>
@@ -68,36 +69,107 @@
                 </ul>
             </div>
         </div>
+        <div id="result-container" class="mt-4">
+            <div class="text-center text-muted">Silakan pilih filter di atas</div>
+        </div>
     </div>
 @endsection
 
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const summary = document.getElementById('filter-summary')
-            const chosen = {}
+            const chosen = {};
+            const labels = {};
+            const summary = document.getElementById('filter-summary');
+            const resultContainer = document.getElementById('result-container');
 
-            document.querySelectorAll('.dropdown-check').forEach(item => {
-                item.addEventListener('click', e => {
-                    e.preventDefault()
-                    const el = e.currentTarget
-                    const group = el.dataset.filter
-                    const label = el.textContent.trim()
+            function fetchFilteredResults() {
+                const params = new URLSearchParams();
+                for (let key in chosen) {
+                    params.append(key, chosen[key]);
+                }
 
-                    document.querySelectorAll(`[data-filter="${group}"]`).forEach(a => a.classList
-                        .remove('active'))
-                    el.classList.add('active')
-                    chosen[group] = label
-                    renderSummary()
-                })
-            })
+                fetch(`/riwayat/filter/result?${params.toString()}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            resultContainer.innerHTML =
+                                `<div class="alert alert-warning text-center">Tidak ada hasil ditemukan.</div>`;
+                            return;
+                        }
+
+                        let html = '<div class="list-group">';
+                        data.forEach(item => {
+                            html += `
+                        <div class="list-group-item py-2">
+                            <div class="fw-bold" style="color: #0d47a1;">${item.nama_barang}</div>
+                            <small class="text-muted"><i class="fas fa-id-badge me-1"></i>${item.id}</small>
+                        </div>`;
+                        });
+                        html += '</div>';
+                        resultContainer.innerHTML = html;
+                    });
+            }
 
             function renderSummary() {
+                if (Object.keys(chosen).length === 0) {
+                    summary.innerHTML = '';
+                    resultContainer.innerHTML =
+                        `<div class="text-center text-muted">Silakan pilih filter di atas</div>`;
+                    return;
+                }
+
                 summary.innerHTML = Object.entries(chosen)
-                    .map(([k, v]) => `<span class="badge bg-light text-dark me-1">${k}: ${v}</span>`)
-                    .join('')
+                    .map(([key, value]) => {
+                        let label = labels[key] || value;
+                        if (key === 'kelengkapan') {
+                            label = value === '1' ? 'Lengkap' : 'Tidak Lengkap';
+                        }
+
+                        const labelMap = {
+                            kategori: 'Kategori',
+                            jenis: 'Jenis & Merek',
+                            lokasi: 'Lokasi',
+                            kelengkapan: 'Kelengkapan',
+                            karyawan: 'Karyawan'
+                        };
+
+                        return `
+                <span class="badge bg-light text-dark me-1">
+                    ${labelMap[key]}: ${label}
+                    <button class="btn btn-sm btn-close ms-1 remove-filter" data-filter="${key}" aria-label="Close"></button>
+                </span>`;
+                    })
+                    .join('');
+
+                fetchFilteredResults();
+
+                document.querySelectorAll('.remove-filter').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const key = e.target.dataset.filter;
+                        delete chosen[key];
+                        delete labels[key];
+                        renderSummary();
+                    });
+                });
             }
+
+            document.querySelectorAll('.dropdown-check').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const filterKey = e.target.dataset.filter;
+                    const filterValue = e.target.dataset.value;
+                    const filterLabel = e.target.textContent.trim();
+
+                    chosen[filterKey] = filterValue;
+                    labels[filterKey] = filterLabel;
+
+                    renderSummary();
+                });
+            });
         });
+
+        // Dropdown hover tetap seperti sebelumnya
         document.querySelectorAll('.dropdown-submenu > a').forEach(function(element) {
             element.addEventListener('mouseover', function(e) {
                 let nextEl = element.nextElementSibling;

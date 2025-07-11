@@ -149,7 +149,7 @@ class BarangController extends Controller
     {
         $barangs = Barang::where('jenis_id', $jenisId)
         ->where('status', 0)
-        ->select('id', 'nama_barang', 'kelengkapan')
+        ->select('id', 'nama_barang', 'kelengkapan', 'status')
         ->orderBy('nama_barang')
         ->get();
 

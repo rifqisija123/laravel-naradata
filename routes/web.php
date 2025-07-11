@@ -6,6 +6,7 @@ use App\Http\Controllers\JenisController;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\FilterController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -54,3 +55,4 @@ Route::put('/riwayat/update/{id}', [RiwayatController::class, 'update'])->name('
 Route::delete('/riwayat/delete/{id}', [RiwayatController::class, 'destroy'])->name('riwayat.destroy');
 Route::get('/riwayat/export/{format}', [RiwayatController::class, 'export'])->name('riwayat.export');
 Route::get('/riwayat/filter', [RiwayatController::class, 'filter'])->name('riwayat.filter');
+Route::get('/riwayat/filter/result', [FilterController::class, 'filterResult'])->name('filter.result');

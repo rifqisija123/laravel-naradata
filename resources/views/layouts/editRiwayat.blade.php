@@ -25,7 +25,8 @@
                     @method('PUT')
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
-                            <label for="jenis_id" class="form-label">Jenis & Merek <span class="text-danger">*</span></label>
+                            <label for="jenis_id" class="form-label">Jenis & Merek <span
+                                    class="text-danger">*</span></label>
                             <div class="d-flex align-items-stretch">
                                 <div class="flex-grow-1">
                                     <select name="jenis_id" id="jenis_id" class="tom-select w-100" required
@@ -47,10 +48,14 @@
                                     <select name="barang_id" id="barang_id" class="tom-select w-100" required
                                         data-placeholder="-- Pilih Barang --">
                                         <option value="" disabled selected hidden>-- Pilih Barang --</option>
-                                        @foreach ($barangs as $barang)
-                                            <option value="{{ $barang->id }}"
-                                                {{ $riwayat->barang_id == $barang->id ? 'selected' : '' }}>
-                                                {{ $barang->nama_barang }}</option>
+                                        @foreach ($barangs->where('jenis_id', $riwayat->jenis_id) as $barang)
+                                            @if ($barang->status == 0 || $barang->id == $riwayat->barang_id)
+                                                <option value="{{ $barang->id }}"
+                                                    {{ $riwayat->barang_id == $barang->id ? 'selected' : '' }}>
+                                                    {{ $barang->id }} - {{ $barang->nama_barang }}
+                                                    {{ $barang->kelengkapan == 1 ? '(Lengkap)' : '(Tidak Lengkap)' }}
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
@@ -75,7 +80,8 @@
                         </div>
                         <div class="col-md-6">
                             <label for="tanggal" class="form-label">Tanggal <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="tanggal" id="tanggal" value="{{ old('tanggal', $riwayat->tanggal) }}" required>
+                            <input type="date" class="form-control" name="tanggal" id="tanggal"
+                                value="{{ old('tanggal', $riwayat->tanggal) }}" required>
                         </div>
                         <div class="col-md-12">
                             <label for="keterangan" class="form-label">Keterangan</label>
@@ -136,20 +142,41 @@
                     return;
                 }
 
+                const currentBarangId = "{{ $riwayat->barang_id }}";
+
                 fetch("{{ url('api/barang-by-jenis') }}/" + value)
                     .then(res => res.json())
                     .then(data => {
                         tsBarang.clear(true);
                         tsBarang.clearOptions();
 
-                        const opsiBaru = data.map(b => ({
-                            value: b.id,
-                            text: b.nama_barang
-                        }));
-                        tsBarang.addOptions(opsiBaru);
+                        const filteredBarang = data.filter(b => {
+                            return b.status == 0 || b.id == currentBarangId;
+                        });
 
-                        tsBarang.refreshOptions(false);
+                        const alreadyInList = filteredBarang.some(b => b.id == currentBarangId);
+                        if (!alreadyInList && value == "{{ $riwayat->jenis_id }}") {
+                            filteredBarang.push({
+                                id: "{{ $riwayat->barang->id }}",
+                                nama_barang: "{{ $riwayat->barang->nama_barang }}",
+                                kelengkapan: "{{ $riwayat->barang->kelengkapan }}",
+                                status: 1
+                            });
+                        }
+
+                        tsBarang.addOptions(
+                            filteredBarang.map(b => {
+                                const statusKelengkapan = b.kelengkapan == 1 ? '(Lengkap)' :
+                                    '(Tidak Lengkap)';
+                                return {
+                                    value: b.id,
+                                    text: `${b.id} - ${b.nama_barang} ${statusKelengkapan}`
+                                };
+                            })
+                        );
+
                         tsBarang.enable();
+                        tsBarang.refreshOptions(false);
                     })
                     .catch(() => {
                         tsBarang.disable();
