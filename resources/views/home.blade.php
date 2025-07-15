@@ -2,7 +2,7 @@
 
 @section('title', 'Home')
 
-@section('content')
+@section('content-card-dashboard')
     <div class="container mt-4">
         <div
             class="hero-card shadow-sm rounded-4 mb-4 text-white d-flex flex-column flex-lg-row

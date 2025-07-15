@@ -2,7 +2,7 @@
 
 @section('title', 'Home')
 
-@section('content')
+@section('content-card-dashboard')
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-3 fw-semibold">Dashboard</h2>
@@ -46,71 +46,4 @@
             </div>
         </div>
     </div>
-
-    {{-- Styling --}}
-    <style>
-        :root {
-            --primary-blue: #0d47a1;
-            --primary-green: #00897b;
-            --primary-gradient: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
-        }
-
-        .dashboard-card {
-            background: var(--primary-gradient);
-        }
-
-        .stat-box {
-            background-color: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(2px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .stat-box:hover {
-            background-color: rgba(255, 255, 255, 0.12);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-box h6 {
-            font-size: 1rem;
-        }
-
-        .icon-box {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-        }
-
-        .custom-card {
-            max-width: 310px;
-        }
-
-        @media (max-width: 768px) {
-            .stat-box {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-
-            .icon-box {
-                width: 36px;
-                height: 36px;
-                font-size: 1.1rem;
-            }
-
-            .stat-box h6 {
-                font-size: 0.95rem;
-            }
-
-            .custom-card {
-                max-width: 100%;
-            }
-        }
-    </style>
 @endsection
-   

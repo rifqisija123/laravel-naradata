@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barang;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,10 @@ class KategoriController extends Controller
     public function index()
     {
         $kategoris = Kategori::all();
-        return view('layouts.dataKategori', compact('kategoris'));
+        $totalKategori = Kategori::count();
+        $kategoriTanpaKeterangan = Kategori::where('keterangan', null)->count();
+        $kategoriBarang = Barang::distinct('kategori_id')->count('kategori_id');
+        return view('layouts.dataKategori', compact('kategoris', 'totalKategori', 'kategoriTanpaKeterangan', 'kategoriBarang'));
     }
 
     public function update(Request $request, $id)

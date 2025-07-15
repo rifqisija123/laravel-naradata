@@ -62,12 +62,40 @@
         </div>
     @endif
 
-    {{-- Main Content --}}
-    <div class="container-fluid">
-        <div class="main-content" id="main-content">
-            @yield('content')
+    {{-- Content Card Dashboard and Home --}}
+    @if(Route::is('dashboard', 'home'))
+        <div class="container-fluid">
+            <div class="content-card-dashboard" id="main-content">
+                @yield('content-card-dashboard')
+            </div>
         </div>
-    </div>
+    @endif
+
+    {{-- Content Card --}}
+    @if(Route::is('kategori.index', 'lokasi.index', 'jenis.index', 'barang.index'))
+        <div class="container-fluid">
+            <div class="content-card" id="main-content">
+                @yield('content-card')
+            </div>
+        </div>
+    @endif
+    
+    {{-- Main Content --}}
+    @if(Route::is('kategori.index', 'lokasi.index', 'jenis.index', 'barang.index'))
+        <div class="container-fluid">
+            <div class="main-content-index" id="main-content">
+                @yield('content-index')
+            </div>
+        </div>
+    @endif
+
+    @if(!Route::is('dashboard', 'home', 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index'))
+        <div class="container-fluid">
+            <div class="main-content" id="main-content">
+                @yield('content')
+            </div>
+        </div>
+    @endif
 
     {{-- Scripts --}}
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>

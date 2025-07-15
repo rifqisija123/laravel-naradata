@@ -2,7 +2,46 @@
 
 @section('title', 'Data Jenis')
 
-@section('content')
+@section('content-card')
+    <h4 class="fw-bold mb-4">Data Jenis</h4>
+    <div class="row justify-content-center g-5">
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="fas fa-cubes fs-3"></i>
+                </div>
+                <div>
+                    <small>Total Jenis</small>
+                    <h6 class="fw-bold m-0">{{ $totalJenis }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="fas fa-cubes fs-3"></i>
+                </div>
+                <div>
+                    <small>Total Merek</small>
+                    <h6 class="fw-bold m-0">{{ $totalMerek }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="fas fa-align-left fs-3"></i>
+                </div>
+                <div>
+                    <small>Jenis & Merek Tanpa Keterangan</small>
+                    <h6 class="fw-bold m-0">{{ $jenisTanpaKeterangan }}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('content-index')
     <div class="container mt-4">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">

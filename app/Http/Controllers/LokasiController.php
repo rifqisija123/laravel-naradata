@@ -36,7 +36,12 @@ class LokasiController extends Controller
     public function index()
     {
         $lokasis = Lokasi::all();
-        return view('layouts.dataLokasi', compact('lokasis'));
+
+        $lokasiRelasi = Lokasi::withCount('barangs')->get();
+        $totalLokasi = Lokasi::count();
+        $lokasiKosong = $lokasiRelasi->where('barangs_count', 0)->pluck('posisi')->toArray();
+        $lokasiPadat = $lokasiRelasi->sortByDesc('barangs_count')->first();
+        return view('layouts.dataLokasi', compact('lokasis', 'lokasiRelasi', 'totalLokasi', 'lokasiKosong', 'lokasiPadat'));
     }
     public function update(Request $request, $id)
     {

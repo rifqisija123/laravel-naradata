@@ -2,7 +2,52 @@
 
 @section('title', 'Data Lokasi')
 
-@section('content')
+@section('content-card')
+    <h4 class="fw-bold mb-4">Data Lokasi</h4>
+    <div class="row justify-content-center g-5">
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="bi bi-geo-alt-fill fs-3"></i>
+                </div>
+                <div>
+                    <small>Total Lokasi</small>
+                    <h6 class="fw-bold m-0">{{ $totalLokasi }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="bi bi-dash-circle fs-3"></i>
+                </div>
+                <div>
+                    <small>Lokasi Kosong</small>
+                    @if (count($lokasiKosong) > 0)
+                        @foreach ($lokasiKosong as $posisi)
+                            <h6 class="fw-bold m-0">{{ $posisi }}</h6>
+                        @endforeach
+                    @else
+                        <h6 class="fw-bold m-0">Tidak ada</h6>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="bi bi-grid-fill fs-3"></i>
+                </div>
+                <div>
+                    <small>Lokasi Padat</small>
+                    <h6 class="fw-bold m-0">{{ $lokasiPadat ? $lokasiPadat->posisi : 'Tidak ada' }}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('content-index')
     <div class="container mt-4">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -43,10 +88,12 @@
                                                 data-lokasi="{{ $lokasi->posisi }}"
                                                 data-keterangan="{{ $lokasi->keterangan }}" data-bs-toggle="modal"
                                                 data-bs-target="#editModalLokasi"><i class="fas fa-pen"></i> Edit</button>
-                                            <form action="{{ route('lokasi.destroy', $lokasi->id) }}" method="POST" class="form-delete d-inline">
+                                            <form action="{{ route('lokasi.destroy', $lokasi->id) }}" method="POST"
+                                                class="form-delete d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger btn-delete" data-nama="{{ $lokasi->posisi }}" title="Hapus">
+                                                <button type="submit" class="btn btn-sm btn-danger btn-delete"
+                                                    data-nama="{{ $lokasi->posisi }}" title="Hapus">
                                                     <i class="fas fa-trash"></i> Delete
                                                 </button>
                                             </form>

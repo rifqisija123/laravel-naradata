@@ -4,6 +4,73 @@ body {
     background-color: #f8f9fa;
 }
 
+:root {
+    --primary-blue: #0d47a1;
+    --primary-green: #00897b;
+    --primary-gradient: linear-gradient(
+        135deg,
+        var(--primary-blue) 0%,
+        var(--primary-green) 100%
+    );
+}
+
+.dashboard-card {
+    background: var(--primary-gradient);
+}
+
+.stat-box {
+    background-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.stat-box h6 {
+    font-size: 1rem;
+}
+
+.icon-box {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.custom-card {
+    max-width: 310px;
+}
+
+@media (max-width: 768px) {
+    .stat-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .icon-box {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+    }
+
+    .stat-box h6 {
+        font-size: 0.95rem;
+    }
+
+    .custom-card {
+        max-width: 100%;
+    }
+}
+
 .ts-wrapper {
     width: 100% !important;
 }
@@ -127,7 +194,46 @@ body {
     margin-right: 1rem;
 }
 
+.main-content-index {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-top: 70px;
+    transition: all 0.3s ease-in-out;
+    max-width: 760px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .main-content {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-top: 70px;
+    transition: all 0.3s ease-in-out;
+    max-width: 760px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-card {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-top: 70px;
+    transition: all 0.3s ease-in-out;
+    max-width: 760px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-card-dashboard {
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
@@ -154,7 +260,27 @@ body {
 }
 
 @media (min-width: 768px) {
+    .main-content-index {
+        margin-top: 40px;
+        margin-bottom: 50px;
+        margin-left: 230px;
+        max-width: calc(200% - 120px);
+    }
+
     .main-content {
+        margin-top: 80px;
+        margin-bottom: 40px;
+        margin-left: 230px;
+        max-width: calc(200% - 120px);
+    }
+    .content-card {
+        margin-top: 80px;
+        margin-left: 230px;
+        max-width: calc(200% - 120px);
+        background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);
+        color: #fff;
+    }
+    .content-card-dashboard {
         margin-top: 80px;
         margin-left: 230px;
         max-width: calc(200% - 120px);
@@ -233,8 +359,8 @@ body {
 .dropdown-submenu > .dropdown-menu {
     top: 0;
     left: 100%;
-    margin-left: .1rem;
-    margin-right: .1rem;
+    margin-left: 0.1rem;
+    margin-right: 0.1rem;
 }
 
 .dropdown-check::after {
@@ -243,7 +369,7 @@ body {
     font-weight: 900;
     float: right;
     opacity: 0;
-    transition: opacity .15s;
+    transition: opacity 0.15s;
 }
 
 .dropdown-check.active::after {

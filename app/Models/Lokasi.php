@@ -21,4 +21,9 @@ class Lokasi extends Model
             $model->id = 'LS' . str_pad($number, 3, '0', STR_PAD_LEFT);
         });
     }
+
+    public function barangs()
+    {
+        return $this->hasMany(Barang::class, 'lokasi_id');
+    }
 }

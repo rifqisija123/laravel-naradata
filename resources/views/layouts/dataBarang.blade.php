@@ -2,7 +2,57 @@
 
 @section('title', 'Data Barang')
 
-@section('content')
+@section('content-card')
+    <h4 class="fw-bold mb-4">Data Barang</h4>
+    <div class="row justify-content-center g-5">
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="fas fa-box-open fs-3"></i>
+                </div>
+                <div>
+                    <small>Total Barang</small>
+                    <h6 class="fw-bold m-0">-</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="fa-solid fa-layer-group fs-3"></i>
+                </div>
+                <div>
+                    <small>Kategori Terbanyak</small>
+                    <h6 class="fw-bold m-0">-</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="fas fa-cubes fs-3"></i>
+                </div>
+                <div>
+                    <small>Jenis & Merek Terbanyak</small>
+                    <h6 class="fw-bold m-0">-</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="bi bi-geo-alt-fill fs-3"></i>
+                </div>
+                <div>
+                    <small>Lokasi Terbanyak</small>
+                    <h6 class="fw-bold m-0">-</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('content-index')
     <div class="container mt-4">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">

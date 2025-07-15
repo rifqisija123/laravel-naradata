@@ -41,7 +41,10 @@ class JenisController extends Controller
     public function index()
     {
         $jenisBarang = Jenis::all();
-        return view('layouts.dataJenis', compact('jenisBarang'));
+        $totalJenis = Jenis::distinct('id')->count('id');
+        $totalMerek = Jenis::count('merek_id');
+        $jenisTanpaKeterangan = Jenis::where('keterangan', null)->count();
+        return view('layouts.dataJenis', compact('jenisBarang', 'totalJenis', 'totalMerek', 'jenisTanpaKeterangan'));
     }
     public function update(Request $request, $id)
     {
