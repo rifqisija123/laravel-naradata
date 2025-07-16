@@ -19,8 +19,23 @@ class RiwayatController extends Controller
     public function index()
     {
         $riwayats = Riwayat::all();
+        $totalRiwayat = Riwayat::count();
+        $riwayatTanpaKeterangan = Riwayat::where('keterangan', null)->count();
 
-        return view('layouts.dataRiwayat', compact('riwayats'));
+        $karyawanTerbanyak = DB::table('riwayats')
+        ->select('karyawan_id', DB::raw('count(*) as total'))
+        ->groupBy('karyawan_id')
+        ->orderByDesc('total')
+        ->first();
+
+        $namaKaryawanTerbanyak = null;
+
+        if ($karyawanTerbanyak) {
+            $karyawan = Karyawan::find($karyawanTerbanyak->karyawan_id);
+            $namaKaryawanTerbanyak = $karyawan ? $karyawan->nama . ' (' . $karyawanTerbanyak->total . ')' : 'Tidak ada';
+        }
+
+        return view('layouts.dataRiwayat', compact('riwayats', 'totalRiwayat', 'namaKaryawanTerbanyak', 'riwayatTanpaKeterangan'));
     }
     public function create()
     {

@@ -15,7 +15,15 @@ class BarangController extends Controller
     public function index()
     {
         $barangs = Barang::all();
-        return view('layouts.dataBarang', compact('barangs'));
+        $kategoriRelasi = Kategori::withCount('barangs')->get();
+        $jenisRelasi = Jenis::withCount('barangs')->get();
+        $lokasiRelasi = Lokasi::withCount('barangs')->get();
+
+        $totalBarang = Barang::count();
+        $kategoriTerbanyak = $kategoriRelasi->sortByDesc('barangs_count')->first();
+        $jenisTerbanyak = $jenisRelasi->sortByDesc('barangs_count')->first();
+        $lokasiTerbanyak = $lokasiRelasi->sortByDesc('barangs_count')->first();
+        return view('layouts.dataBarang', compact('barangs', 'totalBarang', 'kategoriTerbanyak', 'jenisTerbanyak', 'lokasiTerbanyak'));
     }
 
     public function create()
@@ -142,7 +150,10 @@ class BarangController extends Controller
         $barangLengkap = Barang::where('kelengkapan', 1)->count();
         $barangTidakLengkap = Barang::where('kelengkapan', 0)->count();
 
-        return view('index', compact('totalBarang', 'barangLengkap', 'barangTidakLengkap'));
+        $persenLengkap = $totalBarang > 0 ? round(($barangLengkap / $totalBarang) * 100) : 0;
+        $persenTidakLengkap = $totalBarang > 0 ? round(($barangTidakLengkap / $totalBarang) * 100) : 0;
+
+        return view('index', compact('totalBarang', 'barangLengkap', 'barangTidakLengkap', 'persenLengkap', 'persenTidakLengkap'));
     }
     
     public function getBarangByJenis($jenisId)

@@ -3,72 +3,105 @@
 @section('title', 'Data Filter')
 
 @section('content-filter')
-    <div class="container mt-4 px-3">
-        <div class="d-flex justify-content-center mb-3">
-            <h5 class="mb-0 fw-semibold">Filter Barang</h5>
+    <div class="container-fluid mt-4 px-4">
+        <div class=" mb-3">
+            <h4 class="mb-0 fw-bold">Filter Riwayat</h4>
         </div>
 
-        {{-- Ringkasan filter --}}
+        <hr>
+        </hr>
+
         <div id="filter-summary" class="mb-3 text-center"></div>
 
-        <div class="filter-card">
-            <div class="dropdown d-inline-block me-2">
-                <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bi bi-sliders me-1"></i> Detail
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="dropdown-submenu">
-                        <a href="" class="dropdown-item dropdown-toggle">Kategori</a>
-                        <ul class="dropdown-menu">
-                            @foreach ($kategoris as $kategori)
-                                <li><a href="#" class="dropdown-item dropdown-check" data-filter="kategori"
-                                        data-value="{{ $kategori->id }}">{{ $kategori->kategori }}</a></li>
-                            @endforeach
-                        </ul>
-                    </li>
-                    <li class="dropdown-submenu">
-                        <a href="" class="dropdown-item dropdown-toggle">Jenis & Merek</a>
-                        <ul class="dropdown-menu">
-                            @foreach ($jenisBarang as $jenis)
-                                <li><a href="#" class="dropdown-item dropdown-check" data-filter="jenis"
-                                        data-value="{{ $jenis->merek_id }}">{{ $jenis->jenis }} - {{ $jenis->merek }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </li>
-                    <li class="dropdown-submenu">
-                        <a href="" class="dropdown-item dropdown-toggle">Lokasi</a>
-                        <ul class="dropdown-menu">
-                            @foreach ($lokasis as $lokasi)
-                                <li><a href="#" class="dropdown-item dropdown-check" data-filter="lokasi"
-                                        data-value="{{ $lokasi->id }}">{{ $lokasi->posisi }}</a></li>
-                            @endforeach
-                        </ul>
-                    </li>
-                    <li class="dropdown-submenu">
-                        <a href="" class="dropdown-item dropdown-toggle">Kelengkapan</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" class="dropdown-item dropdown-check" data-filter="kelengkapan"
-                                    data-value="1">Lengkap</a></li>
-                            <li><a href="#" class="dropdown-item dropdown-check" data-filter="kelengkapan"
-                                    data-value="0">Tidak Lengkap</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+        <div class="d-flex justify-content-between align-items-start flex-wrap mb-3">
+            <div class="filter-card">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                        data-bs-toggle="dropdown">Kategori</button>
+                    <ul class="dropdown-menu">
+                        @foreach ($kategoris as $kategori)
+                            <li><a href="#" class="dropdown-item dropdown-check" data-filter="kategori"
+                                    data-value="{{ $kategori->id }}">{{ $kategori->kategori }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
 
-            <div class="dropdown d-inline-block">
-                <button class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="fas fa-user me-1"></i> Karyawan
-                </button>
-                <ul class="dropdown-menu">
-                    @foreach ($karyawans as $karyawan)
-                        <li><a href="#" class="dropdown-item dropdown-check" data-filter="karyawan"
-                                data-value="{{ $karyawan->id }}">{{ $karyawan->nama }}</a></li>
-                    @endforeach
-                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                        data-bs-toggle="dropdown">Ruangan</button>
+                    <ul class="dropdown-menu">
+                        @foreach ($lokasis as $lokasi)
+                            <li><a href="#" class="dropdown-item dropdown-check" data-filter="lokasi"
+                                    data-value="{{ $lokasi->id }}">{{ $lokasi->posisi }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                        data-bs-toggle="dropdown">Karyawan</button>
+                    <ul class="dropdown-menu">
+                        @foreach ($karyawans as $karyawan)
+                            <li><a href="#" class="dropdown-item dropdown-check" data-filter="karyawan"
+                                    data-value="{{ $karyawan->id }}">{{ $karyawan->nama }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                        data-bs-toggle="dropdown">Jenis</button>
+                    <ul class="dropdown-menu">
+                        @foreach ($jenisBarang->unique('jenis') as $jenis)
+                            <li><a href="#" class="dropdown-item dropdown-check" data-filter="jenis_nama"
+                                    data-value="{{ $jenis->jenis }}">{{ $jenis->jenis }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                        data-bs-toggle="dropdown">Merek</button>
+                    <ul class="dropdown-menu">
+                        @foreach ($jenisBarang->unique('merek_id') as $jenis)
+                            <li><a href="#" class="dropdown-item dropdown-check" data-filter="merek"
+                                    data-value="{{ $jenis->merek_id }}">{{ $jenis->merek }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                        data-bs-toggle="dropdown">Kelengkapan</button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-item dropdown-check" data-filter="kelengkapan"
+                                data-value="1">Lengkap</a></li>
+                        <li><a href="#" class="dropdown-item dropdown-check" data-filter="kelengkapan"
+                                data-value="0">Tidak Lengkap</a></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                        data-bs-toggle="dropdown">Status</button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-item dropdown-check" data-filter="status"
+                                data-value="1">Dipakai</a></li>
+                        <li><a href="#" class="dropdown-item dropdown-check" data-filter="status" data-value="0">Tidak
+                                Dipakai</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <input type="date" id="tanggal-filter" class="form-control form-control-sm"
+                        placeholder="Pilih Tanggal">
+                </div>
+            </div>
+            <div class="ms-auto mt-2 mt-md-0" style="max-width: 200px;">
+                <input type="text" id="customSearch" class="form-control form-control-sm" placeholder="Search...">
             </div>
         </div>
+
         <div id="result-container" class="mt-4">
             <div class="text-center text-muted">Silakan pilih filter di atas</div>
         </div>
@@ -86,7 +119,11 @@
             function fetchFilteredResults() {
                 const params = new URLSearchParams();
                 for (let key in chosen) {
-                    params.append(key, chosen[key]);
+                    if (Array.isArray(chosen[key])) {
+                        chosen[key].forEach(value => params.append(`${key}[]`, value));
+                    } else {
+                        params.append(key, chosen[key]);
+                    }
                 }
 
                 fetch(`/riwayat/filter/result?${params.toString()}`)
@@ -98,15 +135,40 @@
                             return;
                         }
 
-                        let html = '<div class="list-group">';
+                        let html = `
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm align-middle" id="tbl_filter_result">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th>Nama Barang</th>
+                                        <th>Kategori</th>
+                                        <th>Ruangan</th>
+                                        <th>Karyawan</th>
+                                        <th>Jenis</th>
+                                        <th>Merek</th>
+                                        <th>Kelengkapan</th>
+                                        <th>Status</th>
+                                        <th>Tanggal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
                         data.forEach(item => {
                             html += `
-                        <div class="list-group-item py-2">
-                            <div class="fw-bold" style="color: #0d47a1;">${item.nama_barang}</div>
-                            <small class="text-muted"><i class="fas fa-id-badge me-1"></i>${item.id}</small>
-                        </div>`;
+                            <tr>
+                                <td>${item.nama_barang}</td>
+                                <td>${item.kategori}</td>
+                                <td>${item.lokasi}</td>
+                                <td>${item.karyawan}</td>
+                                <td>${item.jenis}</td>
+                                <td>${item.merek}</td>
+                                <td>${item.kelengkapan}</td>
+                                <td>${item.status}</td>
+                                <td>${item.tanggal}</td>
+                            </tr>`;
                         });
-                        html += '</div>';
+
+                        html += `</tbody></table></div>`;
                         resultContainer.innerHTML = html;
                     });
             }
@@ -120,35 +182,53 @@
                 }
 
                 summary.innerHTML = Object.entries(chosen)
-                    .map(([key, value]) => {
-                        let label = labels[key] || value;
-                        if (key === 'kelengkapan') {
-                            label = value === '1' ? 'Lengkap' : 'Tidak Lengkap';
-                        }
-
+                    .flatMap(([key, values]) => {
                         const labelMap = {
                             kategori: 'Kategori',
-                            jenis: 'Jenis & Merek',
-                            lokasi: 'Lokasi',
+                            jenis_nama: 'Jenis',
+                            jenis: 'Jenis',
+                            lokasi: 'Ruangan',
                             kelengkapan: 'Kelengkapan',
-                            karyawan: 'Karyawan'
+                            karyawan: 'Karyawan',
+                            merek: 'Merek',
+                            status: 'Status',
+                            tanggal: 'Tanggal',
                         };
 
-                        return `
-                <span class="badge bg-light text-dark me-1">
-                    ${labelMap[key]}: ${label}
-                    <button class="btn btn-sm btn-close ms-1 remove-filter" data-filter="${key}" aria-label="Close"></button>
-                </span>`;
-                    })
-                    .join('');
+                        if (!Array.isArray(values)) values = [values];
+                        return values.map((value, index) => {
+                            let label = labels[key][index] || value;
+
+                            if (key === 'kelengkapan') label = value === '1' ? 'Lengkap' :
+                                'Tidak Lengkap';
+                            if (key === 'status') label = value === '1' ? 'Dipakai' : 'Tidak Dipakai';
+
+                            return `<span class="badge bg-light text-dark me-1">${labelMap[key]}: ${label} <button class="btn btn-sm btn-close ms-1 remove-filter" data-filter="${key}" data-value="${value}" aria-label="Close"></button></span>`;
+                        });
+                    }).join('');
 
                 fetchFilteredResults();
 
                 document.querySelectorAll('.remove-filter').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const key = e.target.dataset.filter;
-                        delete chosen[key];
-                        delete labels[key];
+                        const value = e.target.dataset.value;
+
+                        if (Array.isArray(chosen[key])) {
+                            const index = chosen[key].indexOf(value);
+                            if (index > -1) {
+                                chosen[key].splice(index, 1);
+                                labels[key].splice(index, 1);
+                            }
+                            if (chosen[key].length === 0) {
+                                delete chosen[key];
+                                delete labels[key];
+                            }
+                        } else {
+                            delete chosen[key];
+                            delete labels[key];
+                        }
+
                         renderSummary();
                     });
                 });
@@ -161,27 +241,46 @@
                     const filterValue = e.target.dataset.value;
                     const filterLabel = e.target.textContent.trim();
 
-                    chosen[filterKey] = filterValue;
-                    labels[filterKey] = filterLabel;
+                    if (!chosen[filterKey]) {
+                        chosen[filterKey] = [];
+                        labels[filterKey] = [];
+                    }
+
+                    if (!chosen[filterKey].includes(filterValue)) {
+                        chosen[filterKey].push(filterValue);
+                        labels[filterKey].push(filterLabel);
+                    }
 
                     renderSummary();
                 });
             });
-        });
 
-        // Dropdown hover tetap seperti sebelumnya
-        document.querySelectorAll('.dropdown-submenu > a').forEach(function(element) {
-            element.addEventListener('mouseover', function(e) {
-                let nextEl = element.nextElementSibling;
-                if (nextEl && nextEl.classList.contains('dropdown-menu')) {
-                    nextEl.classList.add('show');
+            const tanggalInput = document.getElementById('tanggal-filter');
+            tanggalInput.addEventListener('change', () => {
+                if (tanggalInput.value) {
+                    chosen['tanggal'] = tanggalInput.value;
+                    labels['tanggal'] = tanggalInput.value;
+                } else {
+                    delete chosen['tanggal'];
+                    delete labels['tanggal'];
                 }
+                renderSummary();
             });
-            element.parentElement.addEventListener('mouseleave', function(e) {
-                let nextEl = element.nextElementSibling;
-                if (nextEl && nextEl.classList.contains('dropdown-menu')) {
-                    nextEl.classList.remove('show');
-                }
+
+            fetchFilteredResults();
+
+        });
+        document.getElementById('customSearch').addEventListener('keyup', function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#tbl_filter_result tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const matches = Array.from(cells).some(cell =>
+                    cell.textContent.toLowerCase().includes(query)
+                );
+
+                row.style.display = matches ? '' : 'none';
             });
         });
     </script>

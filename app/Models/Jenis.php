@@ -35,4 +35,8 @@ class Jenis extends Model
     {
         return $this->belongsTo(Jenis::class, 'jenis_id', 'merek_id');
     }
+    public function barangs()
+    {
+        return $this->hasMany(Barang::class, 'jenis_id');
+    }
 }

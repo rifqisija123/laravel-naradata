@@ -2,7 +2,46 @@
 
 @section('title', 'Data Riwayat')
 
-@section('content')
+@section('content-card')
+    <h4 class="fw-bold mb-4">Data Riwayat</h4>
+    <div class="row justify-content-center g-5">
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="bi bi-clock-history fs-3"></i>
+                </div>
+                <div>
+                    <small>Total Riwayat</small>
+                    <h6 class="fw-bold m-0">{{ $totalRiwayat }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="fas fa-user fs-3"></i>
+                </div>
+                <div>
+                    <small>Karyawan Terbanyak</small>
+                    <h6 class="fw-bold m-0">{{ $namaKaryawanTerbanyak ?? 'Tidak ada' }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">
+            <div class="stat-box p-3 rounded-3 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <i class="fas fa-align-left fs-3"></i>
+                </div>
+                <div>
+                    <small>Riwayat Tanpa Keterangan</small>
+                    <h6 class="fw-bold m-0">{{ $riwayatTanpaKeterangan }}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('content-index')
     <div class="container mt-4">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">

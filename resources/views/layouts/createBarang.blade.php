@@ -67,12 +67,12 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="lokasi_id" class="form-label">Lokasi <span class="text-danger">*</span></label>
+                            <label for="lokasi_id" class="form-label">Ruangan <span class="text-danger">*</span></label>
                             <div class="d-flex align-items-stretch">
                                 <div class="flex-grow-1">
                                     <select name="lokasi_id" id="lokasi_id" class="tom-select w-100" required
-                                        data-placeholder="-- Pilih Lokasi --">
-                                        <option value="" disabled selected hidden>-- Pilih Lokasi --</option>
+                                        data-placeholder="-- Pilih Ruangan --">
+                                        <option value="" disabled selected hidden>-- Pilih Ruangan --</option>
                                         @foreach ($lokasis as $lokasi)
                                             <option value="{{ $lokasi->id }}">{{ $lokasi->posisi }}</option>
                                         @endforeach
@@ -185,7 +185,7 @@
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Lokasi</h5>
+                    <h5 class="modal-title">Tambah Ruangan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

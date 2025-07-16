@@ -27,15 +27,50 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    {{--  style  --}}
+    <style>
+        .filter-card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .dropdown,
+        .form-control {
+            flex-shrink: 0;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table.table {
+            width: 100%;
+            white-space: normal;
+            font-size: 0.8rem;
+        }
+
+        #customSearch {
+            min-width: 180px;
+        }
+
+        @media (max-width: 768px) {
+            table.table {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
     @include('sweetalert2::index')
 
-    {{-- Overlay --}}
+    <!-- Overlay -->
     <div id="overlay"></div>
 
-    {{-- Navbar --}}
+    <!-- Navbar -->
     <nav class="navbar navbar-dark fixed-top px-3"
         style="background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%); height: 55px;">
         <button class="hamburger-btn d-md-none" id="toggleSidebar">
@@ -55,23 +90,27 @@
         </div>
     </nav>
 
-    {{--  Main Filter  --}}
+    <!-- Main Filter Content -->
     <div class="container-fluid">
         <div class="filter-content" id="filter-content">
             @yield('content-filter')
         </div>
     </div>
 
-    {{-- Scripts --}}
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables & Export -->
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+
+    <!-- Custom Script -->
     <script src="{{ asset('assets/scripts/script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>

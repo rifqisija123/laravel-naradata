@@ -40,7 +40,7 @@
 
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i
-                                class="fas fa-map-marker-alt me-2 text-secondary"></i><strong>Lokasi:</strong></p>
+                                class="fas fa-map-marker-alt me-2 text-secondary"></i><strong>Ruangan:</strong></p>
                         <h5>{{ $barang->lokasi->posisi ?? '-' }}</h5>
                     </div>
 

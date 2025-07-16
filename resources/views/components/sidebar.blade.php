@@ -8,7 +8,7 @@
 </a>
 
 <a href="{{ route('lokasi.index') }}">
-    <i class="bi bi-geo-alt-fill me-2"></i> Lokasi
+    <i class="bi bi-geo-alt-fill me-2"></i> Ruangan
 </a>
 
 <a href="{{ route('karyawan.index') }}">
@@ -29,4 +29,8 @@
 
 <a href="{{ route('riwayat.filter') }}">
     <i class="bi bi-funnel-fill me-2"></i> Filter
+</a>
+
+<a href="{{ route('logout') }}">
+    <i class="fas fa-sign-out me-2"></i> Logout
 </a>

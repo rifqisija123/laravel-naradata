@@ -11,7 +11,7 @@
                     <i class="bi bi-geo-alt-fill fs-3"></i>
                 </div>
                 <div>
-                    <small>Total Lokasi</small>
+                    <small>Total Ruangan</small>
                     <h6 class="fw-bold m-0">{{ $totalLokasi }}</h6>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                     <i class="bi bi-dash-circle fs-3"></i>
                 </div>
                 <div>
-                    <small>Lokasi Kosong</small>
+                    <small>Ruangan Kosong</small>
                     @if (count($lokasiKosong) > 0)
                         @foreach ($lokasiKosong as $posisi)
                             <h6 class="fw-bold m-0">{{ $posisi }}</h6>
@@ -39,8 +39,8 @@
                     <i class="bi bi-grid-fill fs-3"></i>
                 </div>
                 <div>
-                    <small>Lokasi Padat</small>
-                    <h6 class="fw-bold m-0">{{ $lokasiPadat ? $lokasiPadat->posisi : 'Tidak ada' }}</h6>
+                    <small>Ruangan Padat</small>
+                    <h6 class="fw-bold m-0">{{ $lokasiPadat ? $lokasiPadat->posisi . ' (' . $lokasiPadat->barangs_count . ')' : 'Tidak ada' }}</h6>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
         @endif
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0 fw-semibold">Daftar Lokasi</h5>
+            <h5 class="mb-0 fw-semibold">Daftar Ruangan</h5>
         </div>
 
         {{-- Tabel --}}
@@ -116,7 +116,7 @@
                                 <input type="hidden" id="edit_id">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Edit Lokasi</h5>
+                                        <h5 class="modal-title">Edit Ruangan</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
@@ -258,7 +258,7 @@
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data Lokasi "${nama}" akan dihapus!`,
+                    text: `Data Ruangan "${nama}" akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

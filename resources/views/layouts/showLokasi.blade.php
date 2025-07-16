@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container mt-4">
-        <h3 class="mb-4"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Detail Lokasi</h3>
+        <h3 class="mb-4"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Detail Ruangan</h3>
 
         <div class="card shadow-sm rounded-4">
             <div class="card-body px-4 py-4">
@@ -16,7 +16,7 @@
 
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i
-                                class="fas fa-map-marker-alt me-2 text-secondary"></i><strong>Lokasi:</strong></p>
+                                class="fas fa-map-marker-alt me-2 text-secondary"></i><strong>Ruangan:</strong></p>
                         <h5>{{ $lokasi->posisi }}</h5>
                     </div>
                     <div class="col-md-12">
@@ -55,7 +55,7 @@
                     <input type="hidden" id="edit_id">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Lokasi</h5>
+                            <h5 class="modal-title">Edit Ruangan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
@@ -175,7 +175,7 @@
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data Lokasi "${nama}" akan dihapus!`,
+                    text: `Data Ruangan "${nama}" akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

@@ -287,8 +287,10 @@ body {
     }
     .filter-content {
         margin-top: 80px;
-        margin-left: 230px;
-        max-width: calc(200% - 120px);
+        margin-left: 10px;
+        margin-bottom: 50px;
+        max-width: 1318px;
+        width: 100%;
     }
 }
 
@@ -352,11 +354,11 @@ body {
     padding: 2rem 2.5rem;
 }
 
-.dropdown-submenu {
+.dropdown {
     position: relative;
 }
 
-.dropdown-submenu > .dropdown-menu {
+.dropdown > .dropdown-menu {
     top: 0;
     left: 100%;
     margin-left: 0.1rem;
@@ -374,31 +376,6 @@ body {
 
 .dropdown-check.active::after {
     opacity: 1;
-}
-
-.filter-card {
-    width: 100%;
-    max-width: 768px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1.5rem;
-    border: 1px solid #dee2e6;
-    border-radius: 0.75rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-}
-
-#result-container {
-    max-height: 450px;
-    overflow-y: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 10px;
-    background-color: #fff;
 }
 
 .list-group-item {

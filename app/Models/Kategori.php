@@ -21,4 +21,8 @@ class Kategori extends Model
             $model->id = 'KT' . str_pad($number, 3, '0', STR_PAD_LEFT);
         });
     }
+    public function barangs()
+    {
+        return $this->hasMany(Barang::class, 'kategori_id');
+    }
 }

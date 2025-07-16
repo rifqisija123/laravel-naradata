@@ -12,7 +12,7 @@
                 </div>
                 <div>
                     <small>Total Barang</small>
-                    <h6 class="fw-bold m-0">-</h6>
+                    <h6 class="fw-bold m-0">{{ $totalBarang }}</h6>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
                 </div>
                 <div>
                     <small>Kategori Terbanyak</small>
-                    <h6 class="fw-bold m-0">-</h6>
+                    <h6 class="fw-bold m-0">{{ $kategoriTerbanyak ? $kategoriTerbanyak->kategori . ' (' . $kategoriTerbanyak->barangs_count . ')' : 'Tidak ada' }}</h6>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <small>Jenis & Merek Terbanyak</small>
-                    <h6 class="fw-bold m-0">-</h6>
+                    <h6 class="fw-bold m-0">{{ $jenisTerbanyak ? $jenisTerbanyak->jenis . ($jenisTerbanyak->merek ? ' - ' . $jenisTerbanyak->merek : '') . ' (' . $jenisTerbanyak->barangs_count . ')' : 'Tidak ada' }}</h6>
                 </div>
             </div>
         </div>
@@ -44,8 +44,8 @@
                     <i class="bi bi-geo-alt-fill fs-3"></i>
                 </div>
                 <div>
-                    <small>Lokasi Terbanyak</small>
-                    <h6 class="fw-bold m-0">-</h6>
+                    <small>Ruangan Terbanyak</small>
+                    <h6 class="fw-bold m-0">{{ $lokasiTerbanyak ? $lokasiTerbanyak->posisi . ' (' . $lokasiTerbanyak->barangs_count . ')' : 'Tidak ada' }}</h6>
                 </div>
             </div>
         </div>

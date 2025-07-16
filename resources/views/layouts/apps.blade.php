@@ -63,7 +63,7 @@
     @endif
 
     {{-- Content Card Dashboard and Home --}}
-    @if(Route::is('dashboard', 'home'))
+    @if(Route::is( 'home'))
         <div class="container-fluid">
             <div class="content-card-dashboard" id="main-content">
                 @yield('content-card-dashboard')
@@ -72,7 +72,7 @@
     @endif
 
     {{-- Content Card --}}
-    @if(Route::is('kategori.index', 'lokasi.index', 'jenis.index', 'barang.index'))
+    @if(Route::is('dashboard', 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
         <div class="container-fluid">
             <div class="content-card" id="main-content">
                 @yield('content-card')
@@ -81,7 +81,7 @@
     @endif
     
     {{-- Main Content --}}
-    @if(Route::is('kategori.index', 'lokasi.index', 'jenis.index', 'barang.index'))
+    @if(Route::is('kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
         <div class="container-fluid">
             <div class="main-content-index" id="main-content">
                 @yield('content-index')
@@ -89,7 +89,7 @@
         </div>
     @endif
 
-    @if(!Route::is('dashboard', 'home', 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index'))
+    @if(!Route::is('dashboard', 'home', 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
         <div class="container-fluid">
             <div class="main-content" id="main-content">
                 @yield('content')
