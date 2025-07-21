@@ -41,7 +41,7 @@ class LokasiController extends Controller
         $totalLokasi = Lokasi::count();
         $lokasiKosong = $lokasiRelasi->where('barangs_count', 0)->pluck('posisi')->toArray();
         $lokasiPadat = $lokasiRelasi->sortByDesc('barangs_count')->first();
-        return view('layouts.dataLokasi', compact('lokasis', 'lokasiRelasi', 'totalLokasi', 'lokasiKosong', 'lokasiPadat'));
+        return view('ruangan.dataLokasi', compact('lokasis', 'lokasiRelasi', 'totalLokasi', 'lokasiKosong', 'lokasiPadat'));
     }
     public function update(Request $request, $id)
     {
@@ -75,7 +75,7 @@ class LokasiController extends Controller
     public function show($id)
     {
         $lokasi = Lokasi::findOrFail($id);
-        return view('layouts.showLokasi', compact('lokasi'));
+        return view('ruangan.showLokasi', compact('lokasi'));
     }
 
     public function destroy($id)

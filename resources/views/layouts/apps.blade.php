@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') | Aplikasi Gudang</title>
 
+    <link rel="icon" href="{{ asset('assets/img/naradata.png') }}">
+
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -27,6 +29,9 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Apex Charts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.41.0/dist/apexcharts.css">
 </head>
 
 <body>
@@ -62,8 +67,21 @@
         </div>
     @endif
 
-    {{-- Content Card Dashboard and Home --}}
+    {{-- Content Card Home --}}
     @if(Route::is( 'home'))
+        <div class="container-fluid d-none d-md-block">
+            <div class="content-card-home" id="main-content">
+                @yield('content-card-home')
+            </div>
+        </div>
+
+        <div class="container-fluid d-block d-md-none mt-5 pt-4">
+            @yield('content-card-home')
+        </div>
+    @endif
+
+    {{--  Content Card Dashboard  --}}
+    @if(Route::is('dashboard'))
         <div class="container-fluid">
             <div class="content-card-dashboard" id="main-content">
                 @yield('content-card-dashboard')
@@ -72,7 +90,7 @@
     @endif
 
     {{-- Content Card --}}
-    @if(Route::is('dashboard', 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
+    @if(Route::is( 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
         <div class="container-fluid">
             <div class="content-card" id="main-content">
                 @yield('content-card')
@@ -110,6 +128,7 @@
     <script src="{{ asset('assets/scripts/script.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     @stack('scripts')
 </body>

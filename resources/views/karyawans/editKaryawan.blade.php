@@ -52,10 +52,8 @@
                 Swal.fire({
                     title: "Yakin ingin menyimpan perubahan?",
                     icon: "question",
-                    showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonText: "Simpan",
-                    denyButtonText: `Jangan Simpan`,
                     cancelButtonText: "Batal"
                 }).then((result) => {
                     if (result.isConfirmed) {

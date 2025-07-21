@@ -20,7 +20,7 @@
                 <h3 class="fw-bold mb-3" style="color: #0d47a1;">Tambah Riwayat</h3>
                 <hr
                     style="height: 4px; border: none; background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%); border-radius: 10px; margin-top: -10px;">
-                <form method="POST" action="{{ route('riwayat.store') }}">
+                <form method="POST" action="{{ route('riwayat.store') }}" id="formCreateRiwayat">
                     @csrf
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
@@ -146,11 +146,54 @@
 
                         tsBarang.enable();
                         tsBarang.refreshOptions(false);
+
+                        tsBarang.on('change', value => {
+                            const selectedItem = tsBarang.options[value];
+                            if (selectedItem && selectedItem.text.includes('(Tidak Lengkap)')) {
+                                Swal.fire({
+                                    icon: 'question',
+                                    title: 'Perhatian',
+                                    text: 'Barang ini "Tidak Lengkap", apakah ingin melanjutkan?',
+                                    showConfirmButton: true,
+                                    showCancelButton: true,
+                                    confirmButtonText: "Lanjut",
+                                    cancelButtonText: "Batal",
+                                });
+                            }
+                        });
                     })
                     .catch(() => {
                         tsBarang.disable();
                         Swal.fire('Error', 'Gagal memuat data barang', 'error');
                     });
+            });
+            const form = document.getElementById('formCreateRiwayat');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: `Yakin ingin menambahkan?`,
+                    text: "Data akan disimpan ke dalam tabel.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, tambahkan!',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Ditambahkan!",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false,
+                        });
+                        setTimeout(() => {
+                            form.submit();
+                        }, 1300);
+                    }
+                });
             });
         });
     </script>

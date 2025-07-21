@@ -23,7 +23,7 @@ class BarangController extends Controller
         $kategoriTerbanyak = $kategoriRelasi->sortByDesc('barangs_count')->first();
         $jenisTerbanyak = $jenisRelasi->sortByDesc('barangs_count')->first();
         $lokasiTerbanyak = $lokasiRelasi->sortByDesc('barangs_count')->first();
-        return view('layouts.dataBarang', compact('barangs', 'totalBarang', 'kategoriTerbanyak', 'jenisTerbanyak', 'lokasiTerbanyak'));
+        return view('barangs.dataBarang', compact('barangs', 'totalBarang', 'kategoriTerbanyak', 'jenisTerbanyak', 'lokasiTerbanyak'));
     }
 
     public function create()
@@ -31,7 +31,7 @@ class BarangController extends Controller
         $kategoris = Kategori::all();
         $jenisBarang = Jenis::all();
         $lokasis = Lokasi::all();
-        return view('layouts.createBarang', compact('kategoris', 'jenisBarang', 'lokasis'));
+        return view('barangs.createBarang', compact('kategoris', 'jenisBarang', 'lokasis'));
     }
 
     public function store(Request $request)
@@ -70,7 +70,7 @@ class BarangController extends Controller
     public function show($id)
     {
         $barang = Barang::with(['kategori', 'jenis', 'lokasi'])->findOrFail($id);
-        return view('layouts.showBarang', compact('barang'));
+        return view('barangs.showBarang', compact('barang'));
     }
 
     public function importPage()
@@ -99,7 +99,7 @@ class BarangController extends Controller
         $jenisBarang = Jenis::all();
         $lokasis = Lokasi::all();
 
-        return view('layouts.editBarang', compact('barang', 'kategoris', 'jenisBarang', 'lokasis'));
+        return view('barangs.editBarang', compact('barang', 'kategoris', 'jenisBarang', 'lokasis'));
     }
 
     public function update(Request $request, $id)
@@ -149,11 +149,13 @@ class BarangController extends Controller
         $totalBarang = Barang::count();
         $barangLengkap = Barang::where('kelengkapan', 1)->count();
         $barangTidakLengkap = Barang::where('kelengkapan', 0)->count();
+        $lokasiRelasi = Lokasi::withCount('barangs')->get();
 
         $persenLengkap = $totalBarang > 0 ? round(($barangLengkap / $totalBarang) * 100) : 0;
         $persenTidakLengkap = $totalBarang > 0 ? round(($barangTidakLengkap / $totalBarang) * 100) : 0;
+        $lokasiTerbanyak = $lokasiRelasi->sortByDesc('barangs_count')->first();
 
-        return view('index', compact('totalBarang', 'barangLengkap', 'barangTidakLengkap', 'persenLengkap', 'persenTidakLengkap'));
+        return view('index', compact('totalBarang', 'barangLengkap', 'barangTidakLengkap', 'persenLengkap', 'persenTidakLengkap', 'lokasiTerbanyak'));
     }
     
     public function getBarangByJenis($jenisId)

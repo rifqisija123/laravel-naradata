@@ -10,11 +10,11 @@ class KaryawanController extends Controller
     public function index()
     {
         $karyawans = Karyawan::all();
-        return view('layouts.dataKaryawan', compact('karyawans'));
+        return view('karyawans.dataKaryawan', compact('karyawans'));
     }
     public function create()
     {
-        return view('layouts.createKaryawan');
+        return view('karyawans.createKaryawan');
     }
     public function store(Request $request)
     {
@@ -38,12 +38,12 @@ class KaryawanController extends Controller
     public function show($id)
     {
         $karyawan = Karyawan::findOrFail($id);
-        return view('layouts.showKaryawan', compact('karyawan'));
+        return view('karyawans.showKaryawan', compact('karyawan'));
     }
     public function edit($id)
     {
         $karyawan = Karyawan::findOrFail($id);
-        return view('layouts.editKaryawan', compact('karyawan'));
+        return view('karyawans.editKaryawan', compact('karyawan'));
     }
     public function update(Request $request, $id)
     {

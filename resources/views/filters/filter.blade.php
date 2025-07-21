@@ -174,10 +174,11 @@
             }
 
             function renderSummary() {
+                summary.innerHTML = '';
                 if (Object.keys(chosen).length === 0) {
-                    summary.innerHTML = '';
                     resultContainer.innerHTML =
                         `<div class="text-center text-muted">Silakan pilih filter di atas</div>`;
+                        fetchFilteredResults();
                     return;
                 }
 

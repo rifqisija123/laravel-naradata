@@ -25,16 +25,20 @@ class BarangImport implements ToModel, WithHeadingRow
         })->all();
 
         $kategori = Kategori::firstOrCreate(['kategori' => $row['kategori_id']]);
-        $jenis    = Jenis   ::firstOrCreate(['jenis'    => $row['jenis_id']]);
-        $lokasi   = Lokasi  ::firstOrCreate(['posisi'   => $row['lokasi_id']]);
-
+        $jenis = Jenis::firstOrCreate(
+            [
+                'jenis' => $row['jenis_id'],
+                'merek' => $row['merek_id'],
+            ]
+        );
+        $lokasi   = Lokasi::firstOrCreate(['posisi'   => $row['lokasi_id']]);
         $kelengkapan = Str::lower($row['kelengkapan']) === 'lengkap' ? 1 : 0;
 
         return new Barang([
             'id'           => $row['id'],
             'nama_barang'  => $row['nama_barang'],
             'kategori_id'  => $kategori->id,
-            'jenis_id'     => $jenis->id,
+            'jenis_id'     => $jenis->merek_id,
             'lokasi_id'    => $lokasi->id,
             'kelengkapan'  => $kelengkapan,
             'keterangan'   => $row['keterangan'] ?? null,

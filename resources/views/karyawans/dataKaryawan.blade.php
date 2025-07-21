@@ -80,7 +80,9 @@
     <script>
         $(document).ready(function() {
             const table = $('#tbl_karyawan').DataTable({
-                dom: 'lfrtip',
+                dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-2'<'col-sm-6'i><'col-sm-6'p>>",
                 pagingType: 'simple_numbers',
                 language: {
                     lengthMenu: 'Tampilkan _MENU_ entri',
@@ -116,7 +118,7 @@
                     buttonsStyling: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit(); // submit form jika user yakin
+                        form.submit();
                     }
                 });
             });

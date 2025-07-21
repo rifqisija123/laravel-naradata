@@ -12,6 +12,26 @@ class FilterController extends Controller
         $query = Barang::query()
             ->with(['kategori', 'jenis', 'lokasi', 'riwayats.karyawan']);
 
+        if (empty($request->all())) {
+            $barangs = $query->get()->map(function ($barang) {
+                return [
+                    'nama_barang' => $barang->nama_barang,
+                    'kategori' => $barang->kategori->kategori ?? '-',
+                    'jenis' => $barang->jenis->jenis ?? '-',
+                    'merek' => $barang->jenis->merek ?? '-',
+                    'lokasi' => $barang->lokasi->posisi ?? '-',
+                    'kelengkapan' => $barang->kelengkapan == 1 ? 'Lengkap' : 'Tidak Lengkap',
+                    'status' => $barang->status == 1 ? 'Dipakai' : 'Tidak Dipakai',
+                    'karyawan' => optional($barang->riwayats->last()?->karyawan)->nama ?? '-',
+                    'tanggal' => optional($barang->riwayats->last())->tanggal
+                        ? \Carbon\Carbon::parse($barang->riwayats->last()->tanggal)->translatedFormat('d F Y')
+                        : '-',
+                ];
+            });
+
+            return response()->json($barangs);
+        }
+
         // Filter berdasarkan karyawan (status = 1)
         if ($request->karyawan) {
             $query->where('status', 1);

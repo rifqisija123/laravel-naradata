@@ -1,7 +1,9 @@
 body {
     font-family: "Inter", sans-serif;
     overflow-x: hidden;
-    background-color: #f8f9fa;
+    background-color: #f5f8fa;
+    margin: 0;
+    padding: 0;
 }
 
 :root {
@@ -31,6 +33,17 @@ body {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
+.stat-box-dashboard {
+    background-color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
+}
+
+.stat-box-dashboard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
 .stat-box h6 {
     font-size: 1rem;
 }
@@ -45,8 +58,34 @@ body {
     border-radius: 10px;
 }
 
+.icon-box-dashboard {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .custom-card {
-    max-width: 310px;
+    max-width: 280px;
+}
+
+.custom-card-dashboard {
+    padding: 0.5rem;
+}
+
+.card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 600;
 }
 
 @media (max-width: 768px) {
@@ -68,6 +107,143 @@ body {
 
     .custom-card {
         max-width: 100%;
+    }
+
+    .hero-card {
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .hero-card h2 {
+        font-size: 2rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .hero-card p {
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .content-card-home {
+        width: 90%;
+        margin-top: 60px;
+        padding: 1.5rem;
+    }
+
+    .content-card-dashboard {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-card h2 {
+        font-size: 1.3rem;
+    }
+
+    .hero-card p {
+        font-size: 0.88rem;
+        max-width: 100%;
+    }
+
+    .table td,
+    .table th {
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table .btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .d-flex.gap-1 {
+        flex-direction: column !important;
+        gap: 0 !important;
+    }
+
+    .main-content-index {
+        padding: 1rem;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        text-align: left !important;
+    }
+
+    .dataTables_paginate {
+        justify-content: center !important;
+    }
+
+    .dataTables_info {
+        font-size: 0.85rem;
+        margin-top: 10px;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+    }
+
+    .dataTables_filter input {
+        width: 100% !important;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .dataTables_length select {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .stat-box h6 {
+        font-size: 0.85rem;
+    }
+
+    .stat-box small {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .hero-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .hero-card p {
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .hero-card h2 {
+        font-size: 1.1rem;
+    }
+
+    .hero-card p {
+        font-size: 0.75rem;
+    }
+
+    .stat-box h6 {
+        font-size: 0.75rem;
+        line-height: 1.1;
+    }
+
+    .stat-box small {
+        font-size: 0.65rem;
+        line-height: 1;
     }
 }
 
@@ -174,6 +350,10 @@ body {
     left: 0;
 }
 
+.sidebar a.active {
+    background-color: #5fa2cb;
+}
+
 #overlay {
     display: none;
     position: fixed;
@@ -221,6 +401,21 @@ body {
 }
 
 .content-card {
+    background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);
+    color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-top: 70px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease-in-out;
+    max-width: 760px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-card-home {
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
@@ -234,16 +429,9 @@ body {
 }
 
 .content-card-dashboard {
-    background-color: white;
-    border-radius: 1rem;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-    padding: 2rem;
-    margin-top: 70px;
-    transition: all 0.3s ease-in-out;
-    max-width: 760px;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 180px;
+    padding: 20px;
+    margin-top: 55px;
 }
 
 .filter-content {
@@ -257,6 +445,53 @@ body {
     width: 70%;
     margin-left: auto;
     margin-right: auto;
+}
+
+.custom-swal-popup {
+    width: 470px !important;
+    padding: 0.5rem !important;
+    border-radius: 0.75rem !important;
+    font-size: 0.9rem !important;
+}
+
+.table .btn:hover {
+    transform: scale(1.03);
+    transition: 0.2s ease;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 6px 12px;
+    margin: 0 3px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #000;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #0d47a1 !important;
+    color: #fff !important;
+    border-color: #0d47a1 !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #ebeaea !important;
+    color: #000 !important;
+    border: 1px solid #ddd !important;
+    cursor: default;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    color: #999 !important;
+    background-color: #f5f5f5 !important;
+    border: 1px solid #ddd !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    pointer-events: none;
+    text-decoration: none !important;
 }
 
 @media (min-width: 768px) {
@@ -280,7 +515,7 @@ body {
         background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);
         color: #fff;
     }
-    .content-card-dashboard {
+    .content-card-home {
         margin-top: 80px;
         margin-left: 230px;
         max-width: calc(200% - 120px);
@@ -351,7 +586,9 @@ body {
 
 .hero-card {
     background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);
-    padding: 2rem 2.5rem;
+    padding: 2rem;
+    border-radius: 1.25rem;
+    transition: all 0.3s ease-in-out;
 }
 
 .dropdown {

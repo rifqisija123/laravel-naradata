@@ -148,7 +148,9 @@
     <script>
         $(document).ready(function() {
             const table = $('#tbl_jenis').DataTable({
-                dom: 'lfrtip',
+                dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-2'<'col-sm-6'i><'col-sm-6'p>>",
                 pagingType: 'simple_numbers',
                 language: {
                     lengthMenu: 'Tampilkan _MENU_ entri',

@@ -35,14 +35,14 @@ class RiwayatController extends Controller
             $namaKaryawanTerbanyak = $karyawan ? $karyawan->nama . ' (' . $karyawanTerbanyak->total . ')' : 'Tidak ada';
         }
 
-        return view('layouts.dataRiwayat', compact('riwayats', 'totalRiwayat', 'namaKaryawanTerbanyak', 'riwayatTanpaKeterangan'));
+        return view('riwayats.dataRiwayat', compact('riwayats', 'totalRiwayat', 'namaKaryawanTerbanyak', 'riwayatTanpaKeterangan'));
     }
     public function create()
     {
         $jenisBarang = Jenis::all();
         $barangs = Barang::all();
         $karyawans = Karyawan::all();
-        return view('layouts.createRiwayat', compact('jenisBarang', 'barangs', 'karyawans'));
+        return view('riwayats.createRiwayat', compact('jenisBarang', 'barangs', 'karyawans'));
     }
     public function store(Request $request)
     {
@@ -80,7 +80,7 @@ class RiwayatController extends Controller
     public function show($id)
     {
         $riwayat = Riwayat::with(['barang', 'karyawan', 'jenis'])->findOrFail($id);
-        return view('layouts.showRiwayat', compact('riwayat'));
+        return view('riwayats.showRiwayat', compact('riwayat'));
     }
     public function edit($id)
     {
@@ -88,7 +88,7 @@ class RiwayatController extends Controller
         $jenisBarang = Jenis::all();
         $barangs = Barang::all();
         $karyawans = Karyawan::all();
-        return view('layouts.editRiwayat', compact('riwayat', 'jenisBarang', 'barangs', 'karyawans'));
+        return view('riwayats.editRiwayat', compact('riwayat', 'jenisBarang', 'barangs', 'karyawans'));
     }
     public function update(Request $request, $id)
     {

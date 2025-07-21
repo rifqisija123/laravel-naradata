@@ -14,7 +14,7 @@ class KategoriController extends Controller
         $totalKategori = Kategori::count();
         $kategoriTanpaKeterangan = Kategori::where('keterangan', null)->count();
         $kategoriBarang = Barang::distinct('kategori_id')->count('kategori_id');
-        return view('layouts.dataKategori', compact('kategoris', 'totalKategori', 'kategoriTanpaKeterangan', 'kategoriBarang'));
+        return view('kategori.dataKategori', compact('kategoris', 'totalKategori', 'kategoriTanpaKeterangan', 'kategoriBarang'));
     }
 
     public function update(Request $request, $id)
@@ -84,6 +84,6 @@ class KategoriController extends Controller
     public function show($id)
     {
         $kategori = Kategori::findOrFail($id);
-        return view('layouts.showKategori', compact('kategori'));
+        return view('kategori.showKategori', compact('kategori'));
     }
 }
