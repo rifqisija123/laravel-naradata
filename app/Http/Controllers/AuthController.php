@@ -31,6 +31,33 @@ class AuthController extends Controller
         ]);
     }
 
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password',
+        ], [
+            'confirm_password.same' => 'Confirm Password tidak sesuai.',
+            'email.unique' => 'Akun sudah terdaftar, silahkan login.',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'tanggal' => now(),
+        ]);
+
+        return redirect()->route('login')->with('message', 'Akun berhasil dibuat. Silakan login.');
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();

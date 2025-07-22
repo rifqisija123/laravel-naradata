@@ -5,6 +5,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\JenisController;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\AuthController;
@@ -63,23 +64,28 @@ Route::middleware('auth')->group(function () {
     //route untuk halaman riwayat
     Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
     Route::get('/riwayat/create', [RiwayatController::class, 'create'])->name('riwayat.create');
-    Route::post('/riwayat/store', [RiwayatController::class, 'store'])->name('riwayat.store');
+    Route::post('/riwayat/store', [RiwayatController::class, 'store'])->name('riwayat.peminjaman.store');
     Route::get('/riwayat/show/{id}', [RiwayatController::class, 'show'])->name('riwayat.show');
     Route::get('/riwayat/edit/{id}', [RiwayatController::class, 'edit'])->name('riwayat.edit');
     Route::put('/riwayat/update/{id}', [RiwayatController::class, 'update'])->name('riwayat.update');
     Route::delete('/riwayat/delete/{id}', [RiwayatController::class, 'destroy'])->name('riwayat.destroy');
     Route::get('/riwayat/export/{format}', [RiwayatController::class, 'export'])->name('riwayat.export');
     Route::get('/riwayat/filter', [RiwayatController::class, 'filter'])->name('riwayat.filter');
+
+    //route untuk edit profile
+    Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('edit.profile');
+    Route::put('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
 });
 
 //route untuk API barang berdasarkan jenis
 Route::get('/api/barang-by-jenis/{jenis}', [BarangController::class, 'getBarangByJenis'])->name('barang.byJenis');
 
-
 //route untuk filter riwayat
 Route::get('/riwayat/filter/result', [FilterController::class, 'filterResult'])->name('filter.result');
 
-// route auth
+// route auth  
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.action');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.action');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

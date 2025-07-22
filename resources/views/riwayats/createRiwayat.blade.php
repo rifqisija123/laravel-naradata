@@ -15,68 +15,40 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
-        <div class="card shadow-sm rounded-4">
-            <div class="card-body px-4 py-4">
-                <h3 class="fw-bold mb-3" style="color: #0d47a1;">Tambah Riwayat</h3>
-                <hr
-                    style="height: 4px; border: none; background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%); border-radius: 10px; margin-top: -10px;">
-                <form method="POST" action="{{ route('riwayat.store') }}" id="formCreateRiwayat">
-                    @csrf
-                    <div class="row g-3 mt-2">
-                        <div class="col-md-6">
-                            <label for="jenis_id" class="form-label">Jenis & Merek <span
-                                    class="text-danger">*</span></label>
-                            <div class="d-flex align-items-stretch">
-                                <div class="flex-grow-1">
-                                    <select name="jenis_id" id="jenis_id" class="tom-select w-100" required
-                                        data-placeholder="-- Pilih Jenis & Merek --">
-                                        <option value="" disabled selected hidden>-- Pilih Jenis & Merek --</option>
-                                        @foreach ($jenisBarang as $jenis)
-                                            <option value="{{ $jenis->merek_id }}">{{ $jenis->jenis }} - {{ $jenis->merek }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="barang_id" class="form-label">Barang <span class="text-danger">*</span></label>
-                            <div class="d-flex align-items-stretch">
-                                <div class="flex-grow-1">
-                                    <select name="barang_id" id="barang_id" class="tom-select w-100"
-                                        data-placeholder="-- Pilih Barang --">
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="karyawan_id" class="form-label">Karyawan <span class="text-danger">*</span></label>
-                            <div class="d-flex align-items-stretch">
-                                <div class="flex-grow-1">
-                                    <select name="karyawan_id" id="karyawan_id" class="tom-select w-100" required
-                                        data-placeholder="-- Pilih Karyawan --">
-                                        <option value="" disabled selected hidden>-- Pilih Karyawan --</option>
-                                        @foreach ($karyawans as $karyawan)
-                                            <option value="{{ $karyawan->id }}">{{ $karyawan->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="tanggal" class="form-label">Tanggal <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="tanggal" id="tanggal" required>
-                        </div>
-                        <div class="col-md-12">
-                            <label for="keterangan" class="form-label">Keterangan</label>
-                            <textarea id="keterangan" name="keterangan" class="form-control" rows="5"></textarea>
-                        </div>
+        <ul class="nav nav-tabs mb-3" id="riwayatTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="peminjaman-tab" data-bs-toggle="tab" data-bs-target="#peminjaman"
+                    type="button" role="tab" aria-controls="peminjaman" aria-selected="true">
+                    Peminjaman
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pengembalian-tab" data-bs-toggle="tab" data-bs-target="#pengembalian"
+                    type="button" role="tab" aria-controls="pengembalian" aria-selected="false">
+                    Pengembalian
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="riwayatTabContent">
+            <div class="tab-pane fade show active" id="peminjaman" role="tabpanel" aria-labelledby="peminjaman-tab">
+                <div class="card shadow-sm rounded-4">
+                    <div class="card-body px-4 py-4">
+                        <h3 class="fw-bold mb-3" style="color: #0d47a1;">Tambah Riwayat Peminjaman</h3>
+                        <hr
+                            style="height: 4px; border: none; background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%); border-radius: 10px; margin-top: -10px;">
+                        @include('riwayats.formPeminjaman')
                     </div>
-                    <div class="col-12 d-flex justify-content-end my-5">
-                        <a href="{{ route('riwayat.index') }}" class="btn btn-secondary me-2">Kembali</a>
-                        <button type="submit" class="btn btn-primary px-4">Submit</button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pengembalian" role="tabpanel" aria-labelledby="pengembalian-tab">
+                <div class="card shadow-sm rounded-4">
+                    <div class="card-body px-4 py-4">
+                        <h3 class="fw-bold mb-3" style="color: #0d47a1;">Tambah Riwayat Pengembalian</h3>
+                        <hr
+                            style="height: 4px; border: none; background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%); border-radius: 10px; margin-top: -10px;">
+                        @include('riwayats.formPengembalian')
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -194,6 +166,19 @@
                         }, 1300);
                     }
                 });
+            });
+        });
+        document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(function(tabButton) {
+            tabButton.addEventListener("shown.bs.tab", function() {
+                setTimeout(() => {
+                    document.querySelectorAll("select.tom-select").forEach(function(el) {
+                        if (!el.tomselect) {
+                            new TomSelect(el, {
+                                placeholder: el.dataset.placeholder || "-- Pilih --"
+                            });
+                        }
+                    });
+                }, 100);
             });
         });
     </script>

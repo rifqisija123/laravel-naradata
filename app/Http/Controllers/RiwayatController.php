@@ -23,10 +23,10 @@ class RiwayatController extends Controller
         $riwayatTanpaKeterangan = Riwayat::where('keterangan', null)->count();
 
         $karyawanTerbanyak = DB::table('riwayats')
-        ->select('karyawan_id', DB::raw('count(*) as total'))
-        ->groupBy('karyawan_id')
-        ->orderByDesc('total')
-        ->first();
+            ->select('karyawan_id', DB::raw('count(*) as total'))
+            ->groupBy('karyawan_id')
+            ->orderByDesc('total')
+            ->first();
 
         $namaKaryawanTerbanyak = null;
 

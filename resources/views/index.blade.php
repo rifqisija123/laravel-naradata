@@ -95,5 +95,15 @@
     </div>
 @endsection
 @push('scripts')
+    <script>
+        const kategoriLabels = {!! json_encode($kategoriData->pluck('kategori')->toArray()) !!};
+        const kategoriValues = {!! json_encode($kategoriData->pluck('barangs_count')->toArray()) !!};
+
+        const lokasiLabels = {!! json_encode($lokasiRelasi->pluck('posisi')->toArray()) !!};
+        const lokasiValues = {!! json_encode($lokasiRelasi->pluck('barangs_count')->toArray()) !!};
+
+        const lengkap = {{ $barangLengkap }};
+        const tidakLengkap = {{ $barangTidakLengkap }};
+    </script>
     <script src="{{ asset('assets/scripts/apexcharts.js') }}"></script>
 @endpush

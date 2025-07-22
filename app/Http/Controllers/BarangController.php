@@ -150,12 +150,13 @@ class BarangController extends Controller
         $barangLengkap = Barang::where('kelengkapan', 1)->count();
         $barangTidakLengkap = Barang::where('kelengkapan', 0)->count();
         $lokasiRelasi = Lokasi::withCount('barangs')->get();
+        $kategoriData = Kategori::withCount('barangs')->get();
 
         $persenLengkap = $totalBarang > 0 ? round(($barangLengkap / $totalBarang) * 100) : 0;
         $persenTidakLengkap = $totalBarang > 0 ? round(($barangTidakLengkap / $totalBarang) * 100) : 0;
         $lokasiTerbanyak = $lokasiRelasi->sortByDesc('barangs_count')->first();
 
-        return view('index', compact('totalBarang', 'barangLengkap', 'barangTidakLengkap', 'persenLengkap', 'persenTidakLengkap', 'lokasiTerbanyak'));
+        return view('index', compact('totalBarang', 'barangLengkap', 'barangTidakLengkap', 'persenLengkap', 'persenTidakLengkap', 'lokasiTerbanyak', 'kategoriData', 'lokasiRelasi'));
     }
     
     public function getBarangByJenis($jenisId)

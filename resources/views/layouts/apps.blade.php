@@ -58,7 +58,53 @@
                 <span class="fs-5 fw-semibold text-white">SIMAS</span>
             </a>
         </div>
+
+        <div class="ms-auto d-flex align-items-center">
+            <div class="dropdown">
+                <a href="#" class="text-white text-decoration-none d-flex align-items-center gap-2"
+                    data-bs-toggle="modal" data-bs-target="#profileModal" aria-expanded="false">
+                    <i class="fas fa-user-circle fa-2x"></i>
+                    <span class="d-none d-md-inline fw-semibold">{{ Auth::user()->name ?? 'User' }}</span>
+                </a>
+            </div>
+        </div>
     </nav>
+
+    <!-- Modal Profil Pengguna -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header text-white"
+                    style="background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);">
+                    <h5 class="modal-title fw-bold" id="profileModalLabel">Profil Pengguna</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Nama:</th>
+                            <td>{{ Auth::user()->name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ Auth::user()->email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Bergabung:</th>
+                            <td>{{ \Carbon\Carbon::parse(Auth::user()->tanggal)->translatedFormat('d F Y') }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <a href="{{ route('edit.profile') }}" class="btn w-100 text-white fw-semibold"
+                        style="background: linear-gradient(135deg, #0d47a1 0%, #00897b 100%);">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{-- Sidebar --}}
     @if (!Route::is('riwayat.filter*'))
@@ -68,7 +114,7 @@
     @endif
 
     {{-- Content Card Home --}}
-    @if(Route::is( 'home'))
+    @if (Route::is('home'))
         <div class="container-fluid d-none d-md-block">
             <div class="content-card-home" id="main-content">
                 @yield('content-card-home')
@@ -81,7 +127,7 @@
     @endif
 
     {{--  Content Card Dashboard  --}}
-    @if(Route::is('dashboard'))
+    @if (Route::is('dashboard'))
         <div class="container-fluid">
             <div class="content-card-dashboard" id="main-content">
                 @yield('content-card-dashboard')
@@ -90,16 +136,16 @@
     @endif
 
     {{-- Content Card --}}
-    @if(Route::is( 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
+    @if (Route::is('edit.profile', 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
         <div class="container-fluid">
-            <div class="content-card" id="main-content">
+            <div class="content-card shadow-sm" id="main-content">
                 @yield('content-card')
             </div>
         </div>
     @endif
-    
+
     {{-- Main Content --}}
-    @if(Route::is('kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
+    @if (Route::is('kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
         <div class="container-fluid">
             <div class="main-content-index" id="main-content">
                 @yield('content-index')
@@ -107,10 +153,18 @@
         </div>
     @endif
 
-    @if(!Route::is('dashboard', 'home', 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
+    @if (!Route::is('edit.profile', 'dashboard', 'home', 'kategori.index', 'lokasi.index', 'jenis.index', 'barang.index', 'riwayat.index'))
         <div class="container-fluid">
             <div class="main-content" id="main-content">
                 @yield('content')
+            </div>
+        </div>
+    @endif
+
+    @if (Route::is('edit.profile'))
+        <div class="container-fluid">
+            <div class="main-content-profile" id="main-content">
+                @yield('content-edit-profile')
             </div>
         </div>
     @endif

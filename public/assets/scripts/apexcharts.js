@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Chart 1: Distribusi Barang per Kategori
     const chartKategoriOptions = {
-        series: [65, 55],
+        series: kategoriValues,
         chart: {
             type: 'donut',
             height: 300,
             fontFamily: 'Inter, sans-serif',
         },
-        labels: ['Peralatan Kantor', 'Perlengkapan Kantor'],
+        labels: kategoriLabels,
         colors: ['#3B82F6', '#10B981'],
         legend: {
             position: 'bottom'
@@ -29,35 +29,56 @@ document.addEventListener('DOMContentLoaded', function () {
                     size: '55%'
                 }
             }
-        }
-    };
-
-    // Chart 2: Status Kelengkapan Barang
-    const chartKelengkapanOptions = {
-        series: [85, 35],
-        chart: {
-            height: 300,
-            type: 'pie',
-            fontFamily: 'Inter, sans-serif',
         },
-        labels: ['Lengkap (71%)', 'Tidak Lengkap (29%)'],
-        colors: ['#10B981', '#EF4444'],
-        legend: {
-            position: 'bottom',
-            formatter: function (seriesName, opts) {
-                return [seriesName, ' - ', opts.w.globals.series[opts.seriesIndex], ' barang']
+        dataLabels: {
+            enabled: true,
+            formatter: function (val, opts) {
+                let total = kategoriValues.reduce((a, b) => a + b, 0);
+                let count = kategoriValues[opts.seriesIndex];
+                let percent = total > 0 ? (count / total * 100).toFixed(1) : 0;
+                return `${count} barang (${percent}%)`;
             }
         },
         tooltip: {
             y: {
                 formatter: function (value) {
-                    return value + " barang"
+                    let total = kategoriValues.reduce((a, b) => a + b, 0);
+                    let percent = total > 0 ? (value / total * 100).toFixed(1) : 0;
+                    return `${value} barang (${percent}%)`;
+                }
+            }
+        }
+    };
+
+    // Chart 2: Status Kelengkapan Barang
+    const chartKelengkapanOptions = {
+        series: [lengkap, tidakLengkap],
+        chart: {
+            height: 300,
+            type: 'pie',
+            fontFamily: 'Inter, sans-serif',
+        },
+        labels: [
+            `Lengkap (${(lengkap / (lengkap + tidakLengkap) * 100).toFixed(1)}%)`,
+            `Tidak Lengkap (${(tidakLengkap / (lengkap + tidakLengkap) * 100).toFixed(1)}%)`
+        ],
+        colors: ['#10B981', '#EF4444'],
+        legend: {
+            position: 'bottom',
+            formatter: function (seriesName, opts) {
+                return `${seriesName} - ${opts.w.globals.series[opts.seriesIndex]} barang`;
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (value) {
+                    return `${value} barang`;
                 }
             }
         },
         dataLabels: {
             formatter: function (val, opts) {
-                return opts.w.globals.series[opts.seriesIndex] + " barang"
+                return `${opts.w.globals.series[opts.seriesIndex]} barang`;
             }
         }
     };
@@ -66,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const chartLokasiOptions = {
         series: [{
             name: 'Jumlah Barang',
-            data: [42, 35, 43]
+            data: lokasiValues
         }],
         chart: {
             type: 'bar',
@@ -94,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 colors: ['#fff']
             },
             formatter: function (val) {
-                return val;
+                return `${val} barang`;
             },
             offsetX: 0,
             dropShadow: {
@@ -102,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         xaxis: {
-            categories: ['Ruang Depan', 'Ruang Tengah', 'Ruang Belakang']
+            categories: lokasiLabels
         },
         yaxis: {
             labels: {

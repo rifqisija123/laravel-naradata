@@ -4,15 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Aplikasi Gudang</title>
+    <title>Register | Aplikasi Gudang</title>
 
     <link rel="icon" href="{{ asset('assets/img/naradata.png') }}">
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         body,
         html {
@@ -56,16 +53,6 @@
             width: 100%;
         }
 
-        .input-group-text {
-            background: transparent;
-            border-left: none;
-            cursor: pointer;
-        }
-
-        .input-group .form-control {
-            border-right: none;
-        }
-
         .center-wrapper {
             min-height: 100vh;
             display: flex;
@@ -82,37 +69,36 @@
 
     <div class="center-wrapper">
         <div class="login-card text-center">
-
-            <!-- Logo -->
             <img src="{{ asset('assets/img/naradata.png') }}" alt="Logo" class="logo">
+            <h5 class="mb-1 fw-bold">Register Akun</h5>
+            <p class="text-muted mb-4" style="font-size: 14px;">Silakan buat akun baru Anda</p>
 
-            <!-- Title -->
-            <h5 class="mb-1 fw-bold">SIMAS-App</h5>
-            <p class="text-muted mb-4" style="font-size: 14px;">Masukkan email dan password Anda</p>
-
-            @if (session('message'))
-                <div class="alert alert-success alert-dismissible fade show text-start" role="alert">
-                    {{ session('message') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if ($errors->has('login'))
+            @if ($errors->has('confirm_password'))
                 <div class="alert alert-danger alert-dismissible fade show text-start" role="alert">
-                    {{ $errors->first('login') }}
+                    {{ $errors->first('confirm_password') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @elseif ($errors->has('email'))
+                <div class="alert alert-danger alert-dismissible fade show text-start" role="alert">
+                    {{ $errors->first('email') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('login.action') }}">
+            <form method="POST" action="{{ route('register.action') }}">
                 @csrf
                 <div class="mb-3 text-start">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" required autofocus>
+                    <label class="form-label">Name</label>
+                    <input type="text" name="name" class="form-control" required>
                 </div>
 
-                <div class="mb-4 text-start">
-                    <label for="password" class="form-label">Password</label>
+                <div class="mb-3 text-start">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="mb-3 text-start">
+                    <label class="form-label">Password</label>
                     <div class="input-group">
                         <input type="password" name="password" class="form-control" id="password" required>
                         <span class="input-group-text" onclick="togglePassword()">
@@ -121,19 +107,26 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" type="submit">Login</button>
+                <div class="mb-4 text-start">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="input-group">
+                        <input type="password" name="confirm_password" class="form-control" id="confirm-password" required>
+                        <span class="input-group-text" onclick="toggleConfirmPassword()">
+                            <i class="bi bi-eye-slash" id="toggleIconConfirm"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Register</button>
+
+                <p class="mt-3 mb-0 text-muted" style="font-size: 14px;">
+                    Sudah punya akun? <a href="{{ route('login') }}">Login di sini</a>
+                </p>
             </form>
-            <p class="mt-3 text-center">
-                Belum punya akun?
-                <a href="{{ route('register') }}" class="text-primary">Daftar di sini</a>
-            </p>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Particles.js -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
     <script>
@@ -144,6 +137,14 @@
             passwordInput.type = isPassword ? 'text' : 'password';
             icon.classList.toggle('bi-eye');
             icon.classList.toggle('bi-eye-slash');
+        }
+        function toggleConfirmPassword() {
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            const iconConfirm = document.getElementById('toggleIconConfirm');
+            const isConfirmPassword = confirmPasswordInput.type === 'password';
+            confirmPasswordInput.type = isConfirmPassword ? 'text' : 'password';
+            iconConfirm.classList.toggle('bi-eye');
+            iconConfirm.classList.toggle('bi-eye-slash');
         }
     </script>
 
