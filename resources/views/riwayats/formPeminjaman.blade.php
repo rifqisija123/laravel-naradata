@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('riwayat.peminjaman.store') }}" id="formCreateRiwayat">
+<form method="POST" action="{{ route('riwayat.peminjaman.store') }}" id="formPeminjaman">
     @csrf
     <div class="row g-3 mt-2">
         <div class="col-md-6">

@@ -11,21 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('riwayats', function (Blueprint $table) {
+        Schema::create('riwayats_pengembalians', function (Blueprint $table) {
             $table->string('id', 20)->primary()->unique();
+            $table->string('karyawan_id');
+            $table->string('nama_karyawan');
             $table->string('jenis_id');
             $table->string('barang_id');
             $table->string('nama_barang');
-            $table->string('karyawan_id');
             $table->text('keterangan')->nullable();
             $table->date('tanggal');
-            $table->tinyInteger('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('karyawan_id')->references('id')->on('karyawans');
             $table->foreign('jenis_id')->references('merek_id')->on('jenis');
             $table->foreign('barang_id')->references('id')->on('barangs');
-            $table->foreign('karyawan_id')->references('id')->on('karyawans');
         });
     }
 
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('riwayats');
+        Schema::dropIfExists('riwayats_pengembalians');
     }
 };

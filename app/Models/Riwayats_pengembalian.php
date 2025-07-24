@@ -6,26 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Riwayat extends Model
+class Riwayats_pengembalian extends Model
 {
     use HasFactory, SoftDeletes;
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $fillable = ['id', 'jenis_id', 'barang_id', 'nama_barang', 'karyawan_id', 'keterangan', 'tanggal', 'status'];
+    protected $fillable = ['id', 'karyawan_id', 'nama_karyawan', 'jenis_id', 'barang_id', 'nama_barang', 'keterangan', 'tanggal'];
     protected static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
             $lastId = self::withTrashed()->latest('id')->first();
             $number = $lastId ? (int) substr($lastId->id, 2) + 1 : 1;
-            $model->id = 'RY' . str_pad($number, 3, '0', STR_PAD_LEFT);
+            $model->id = 'RP' . str_pad($number, 3, '0', STR_PAD_LEFT);
         });
     }
     public function jenis() { return $this->belongsTo(Jenis::class, 'jenis_id', 'merek_id'); }
     public function barang() { return $this->belongsTo(Barang::class); }
     public function karyawan() { return $this->belongsTo(Karyawan::class); }
-    public function riwayatsPengembalian()
-    {
-        return $this->hasMany(Riwayats_pengembalian::class);
-    }
+    public function riwayat() { return $this->belongsTo(Riwayat::class); }
 }

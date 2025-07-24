@@ -9,6 +9,7 @@ use App\Models\Riwayat;
 use App\Models\Barang;
 use App\Models\Karyawan;
 use App\Models\Jenis;
+use App\Models\Riwayats_pengembalian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,6 +20,7 @@ class RiwayatController extends Controller
     public function index()
     {
         $riwayats = Riwayat::all();
+        $riwayatsPengembalian = Riwayats_pengembalian::all();
         $totalRiwayat = Riwayat::count();
         $riwayatTanpaKeterangan = Riwayat::where('keterangan', null)->count();
 
@@ -35,14 +37,19 @@ class RiwayatController extends Controller
             $namaKaryawanTerbanyak = $karyawan ? $karyawan->nama . ' (' . $karyawanTerbanyak->total . ')' : 'Tidak ada';
         }
 
-        return view('riwayats.dataRiwayat', compact('riwayats', 'totalRiwayat', 'namaKaryawanTerbanyak', 'riwayatTanpaKeterangan'));
+        return view('riwayats.dataRiwayat', compact('riwayats', 'riwayatsPengembalian', 'totalRiwayat', 'namaKaryawanTerbanyak', 'riwayatTanpaKeterangan'));
     }
     public function create()
     {
         $jenisBarang = Jenis::all();
         $barangs = Barang::all();
         $karyawans = Karyawan::all();
-        return view('riwayats.createRiwayat', compact('jenisBarang', 'barangs', 'karyawans'));
+
+        $karyawanPeminjaman = Karyawan::whereIn('id', function ($query) {
+            $query->select('karyawan_id')->from('riwayats');
+        })->get();
+
+        return view('riwayats.createRiwayat', compact('jenisBarang', 'barangs', 'karyawans', 'karyawanPeminjaman'));
     }
     public function store(Request $request)
     {
@@ -75,7 +82,7 @@ class RiwayatController extends Controller
             $barang->update(['status' => 1]);
         });
 
-        return redirect()->route('riwayat.index')->with('success', 'Riwayat berhasil ditambahkan.');
+        return redirect()->route('riwayat.index')->with('success', 'Riwayat Peminjaman berhasil ditambahkan.');
     }
     public function show($id)
     {
@@ -129,7 +136,18 @@ class RiwayatController extends Controller
     {
         DB::transaction(function () use ($id) {
             $riwayat = Riwayat::findOrFail($id);
-            $riwayat->barang()->update(['status' => 0]);
+
+            $barang = $riwayat->barang;
+
+            if ($riwayat->status == 0) {
+                $riwayatTerakhir = Riwayat::where('barang_id', $barang->id)
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                if ($riwayatTerakhir && $riwayatTerakhir->id == $riwayat->id) {
+                    $barang->update(['status' => 0]);
+                }
+            }
             $riwayat->delete();
         });
 
@@ -161,5 +179,63 @@ class RiwayatController extends Controller
         $lokasis = Lokasi::all();
         $karyawans = Karyawan::all();
         return view('filters.filter', compact('kategoris', 'jenisBarang', 'lokasis', 'karyawans'));
+    }
+    public function createPengembalian()
+    {
+        $jenisBarang = Jenis::all();
+        $barangs = Barang::all();
+
+        $karyawans = Karyawan::whereIn('id', function ($query) {
+            $query->select('karyawan_id')
+                ->from('riwayats')
+                ->whereNull('keterangan');
+        })->get();
+
+        return view('riwayats.createRiwayat', compact('jenisBarang', 'barangs', 'karyawans'));
+    }
+    public function storePengembalian(Request $request)
+    {
+        $request->validate([
+            'karyawan_id' => 'required|exists:karyawans,id',
+            'jenis_id' => 'required|exists:jenis,merek_id',
+            'barang_id' => 'required|exists:barangs,id',
+            'tanggal' => 'required|date',
+            'keterangan' => 'nullable|string',
+        ], [
+            'jenis_id.required' => 'Jenis barang harus dipilih.',
+            'barang_id.required' => 'Barang harus dipilih.',
+            'karyawan_id.required' => 'Karyawan harus dipilih.',
+            'tanggal.required' => 'Tanggal harus diisi.',
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            $barang = Barang::lockForUpdate()->findOrFail($request->barang_id);
+            $karyawan = Karyawan::lockForUpdate()->findOrFail($request->karyawan_id);
+
+            Riwayats_pengembalian::create([
+                'karyawan_id' => $karyawan->id,
+                'nama_karyawan' => $karyawan->nama,
+                'jenis_id' => $request->jenis_id,
+                'barang_id' => $barang->id,
+                'nama_barang' => $barang->nama_barang,
+                'tanggal' => $request->tanggal,
+                'keterangan'  => $request->keterangan,
+            ]);
+
+            $barang->update(['status' => 0]);
+
+            $riwayat = Riwayat::where('barang_id', $barang->id)
+                ->where('karyawan_id', $karyawan->id)
+                ->where('status', 0)
+                ->latest()
+                ->first();
+
+            if ($riwayat) {
+                $riwayat->update(['status' => 1]);
+            }
+        });
+
+        return redirect()->route('riwayat.index')->with('success', 'Riwayat Pengembalian berhasil ditambahkan.');
     }
 }

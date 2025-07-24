@@ -1,4 +1,4 @@
-<form method="POST" action="" id="formCreateRiwayat">
+<form method="POST" action="{{ route('riwayat.pengembalian.store') }}" id="formPengembalian">
     @csrf
     <div class="row g-3 mt-2">
         <div class="col-md-6">
@@ -8,7 +8,7 @@
                     <select name="karyawan_id" id="karyawan_id" class="tom-select w-100" required
                         data-placeholder="-- Pilih Karyawan --">
                         <option value="" disabled selected hidden>-- Pilih Karyawan --</option>
-                        @foreach ($karyawans as $karyawan)
+                        @foreach ($karyawanPeminjaman as $karyawan)
                             <option value="{{ $karyawan->id }}">{{ $karyawan->nama }}</option>
                         @endforeach
                     </select>

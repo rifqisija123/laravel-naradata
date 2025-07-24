@@ -92,13 +92,11 @@
                     </ul>
                 </div>
 
-                <div>
+                <div class="d-inline-flex align-items-center gap-2">
                     <input type="date" id="tanggal-filter" class="form-control form-control-sm"
                         placeholder="Pilih Tanggal">
+                    <button id="resetFilterBtn" class="btn btn-outline-danger btn-sm">Reset</button>
                 </div>
-            </div>
-            <div class="ms-auto mt-2 mt-md-0" style="max-width: 200px;">
-                <input type="text" id="customSearch" class="form-control form-control-sm" placeholder="Search...">
             </div>
         </div>
 
@@ -136,40 +134,64 @@
                         }
 
                         let html = `
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm align-middle" id="tbl_filter_result">
-                                <thead class="table-light text-center">
-                                    <tr>
-                                        <th>Nama Barang</th>
-                                        <th>Kategori</th>
-                                        <th>Ruangan</th>
-                                        <th>Karyawan</th>
-                                        <th>Jenis</th>
-                                        <th>Merek</th>
-                                        <th>Kelengkapan</th>
-                                        <th>Status</th>
-                                        <th>Tanggal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>`;
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm align-middle" id="tbl_filter_result">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>Nama Barang</th>
+                            <th>Kategori</th>
+                            <th>Ruangan</th>
+                            <th>Karyawan</th>
+                            <th>Jenis</th>
+                            <th>Merek</th>
+                            <th>Kelengkapan</th>
+                            <th>Status</th>
+                            <th>Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
 
                         data.forEach(item => {
                             html += `
-                            <tr>
-                                <td>${item.nama_barang}</td>
-                                <td>${item.kategori}</td>
-                                <td>${item.lokasi}</td>
-                                <td>${item.karyawan}</td>
-                                <td>${item.jenis}</td>
-                                <td>${item.merek}</td>
-                                <td>${item.kelengkapan}</td>
-                                <td>${item.status}</td>
-                                <td>${item.tanggal}</td>
-                            </tr>`;
+                <tr>
+                    <td>${item.nama_barang}</td>
+                    <td>${item.kategori}</td>
+                    <td>${item.lokasi}</td>
+                    <td>${item.karyawan}</td>
+                    <td>${item.jenis}</td>
+                    <td>${item.merek}</td>
+                    <td>${item.kelengkapan}</td>
+                    <td>${item.status}</td>
+                    <td>${item.tanggal}</td>
+                </tr>`;
                         });
 
                         html += `</tbody></table></div>`;
                         resultContainer.innerHTML = html;
+
+                        // 🔁 Hapus dulu kalau sebelumnya udah pernah diinit
+                        if ($.fn.DataTable.isDataTable('#tbl_filter_result')) {
+                            $('#tbl_filter_result').DataTable().destroy();
+                        }
+
+                        // ✅ Inisialisasi DataTables di sini (DOM udah siap)
+                        $('#tbl_filter_result').DataTable({
+                            dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                                "<'row'<'col-sm-12'tr>>" +
+                                "<'row mt-2'<'col-sm-6'i><'col-sm-6'p>>",
+                            pagingType: 'simple_numbers',
+                            language: {
+                                lengthMenu: 'Tampilkan _MENU_ entri',
+                                paginate: {
+                                    previous: '<button class="btn btn-sm me-1">Sebelumnya</button>',
+                                    next: '<button class="btn btn-sm ms-1">Selanjutnya</button>'
+                                },
+                                search: "Cari:",
+                                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                                infoEmpty: "Tidak ada data tersedia",
+                                emptyTable: "Tidak ada data di tabel",
+                            }
+                        });
                     });
             }
 
@@ -178,7 +200,7 @@
                 if (Object.keys(chosen).length === 0) {
                     resultContainer.innerHTML =
                         `<div class="text-center text-muted">Silakan pilih filter di atas</div>`;
-                        fetchFilteredResults();
+                    fetchFilteredResults();
                     return;
                 }
 
@@ -270,6 +292,18 @@
 
             fetchFilteredResults();
 
+            document.getElementById('resetFilterBtn').addEventListener('click', () => {
+                for (let key in chosen) {
+                    delete chosen[key];
+                    delete labels[key];
+                }
+
+                // Reset input tanggal juga
+                document.getElementById('tanggal-filter').value = '';
+
+                // Tampilkan ulang hasil tanpa filter
+                renderSummary();
+            });
         });
         document.getElementById('customSearch').addEventListener('keyup', function() {
             const query = this.value.toLowerCase();

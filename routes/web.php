@@ -64,7 +64,8 @@ Route::middleware('auth')->group(function () {
     //route untuk halaman riwayat
     Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
     Route::get('/riwayat/create', [RiwayatController::class, 'create'])->name('riwayat.create');
-    Route::post('/riwayat/store', [RiwayatController::class, 'store'])->name('riwayat.peminjaman.store');
+    Route::post('/riwayat/peminjaman/store', [RiwayatController::class, 'store'])->name('riwayat.peminjaman.store');
+    Route::post('/riwayat/pengembalian/store', [RiwayatController::class, 'storePengembalian'])->name('riwayat.pengembalian.store');
     Route::get('/riwayat/show/{id}', [RiwayatController::class, 'show'])->name('riwayat.show');
     Route::get('/riwayat/edit/{id}', [RiwayatController::class, 'edit'])->name('riwayat.edit');
     Route::put('/riwayat/update/{id}', [RiwayatController::class, 'update'])->name('riwayat.update');
@@ -75,10 +76,17 @@ Route::middleware('auth')->group(function () {
     //route untuk edit profile
     Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('edit.profile');
     Route::put('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/update/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
 });
 
 //route untuk API barang berdasarkan jenis
 Route::get('/api/barang-by-jenis/{jenis}', [BarangController::class, 'getBarangByJenis'])->name('barang.byJenis');
+
+//route untuk API barang berdasarkan karyawan
+Route::get('/api/barang-by-karyawan/{karyawan_id}', [BarangController::class, 'getBarangByKaryawan']);
+
+//route untuk API barang berdasarkan karyawan dan jenis & merek
+Route::get('/barang-by-jenis-karyawan/{jenis_id}/{karyawan_id}', [BarangController::class, 'getBarangByJenisAndKaryawan']);
 
 //route untuk filter riwayat
 Route::get('/riwayat/filter/result', [FilterController::class, 'filterResult'])->name('filter.result');

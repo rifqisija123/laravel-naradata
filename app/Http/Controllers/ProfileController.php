@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -28,6 +29,34 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('edit.profile')->with('success', 'Profil berhasil diperbarui.');
+        return redirect()->route('edit.profile')->with('success_profile', 'Profile berhasil diperbarui.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'passwordSaatIni' => 'required',
+            'password' => 'required|min:6',
+            'confirmPassword' => 'required|same:password'
+        ], [
+            'passwordSaatIni.required' => 'Password lama wajib diisi.',
+            'password.required' => 'Password baru wajib diisi.',
+            'password.min' => 'Password baru minimal 6 karakter.',
+            'confirmPassword.same' => 'Konfirmasi password tidak sesuai.',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->passwordSaatIni, $user->password)) {
+            return back()->withErrors(['passwordSaatIni' => 'Password saat ini tidak sesuai.']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('edit.profile')->with('success_password', 'Password berhasil diperbarui.');
     }
 }

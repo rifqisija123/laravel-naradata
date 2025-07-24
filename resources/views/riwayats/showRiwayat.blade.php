@@ -9,7 +9,7 @@
                 <i class="fas fa-arrow-left me-2"></i> Kembali
             </a>
         </div>
-        <h3 class="mb-4"><i class="bi bi-clock-history me-2 text-primary"></i>Detail Riwayat</h3>
+        <h3 class="mb-4"><i class="bi bi-clock-history me-2 text-primary"></i>Detail Riwayat Peminjaman</h3>
 
         <div class="card shadow-sm rounded-4">
             <div class="card-body px-4 py-4">

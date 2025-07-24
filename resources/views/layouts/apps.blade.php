@@ -166,6 +166,9 @@
             <div class="main-content-profile" id="main-content">
                 @yield('content-edit-profile')
             </div>
+            <div class="main-content-profile" id="main-content">
+                @yield('content-edit-password')
+            </div>
         </div>
     @endif
 

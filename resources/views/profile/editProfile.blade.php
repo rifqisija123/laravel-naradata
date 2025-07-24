@@ -14,12 +14,12 @@
     <div class="bg-white fw-bold mb-2" style="font-size: 120%;">
         Informasi Profile
     </div>
-    <span style="color: #666; font-size: 90%;">Perbarui informasi profil akun Anda.</span>
+    <span style="color: #666; font-size: 90%;">Perbarui informasi profile akun Anda.</span>
     <hr>
     <div class="mt-4">
-        @if (session('success'))
+        @if (session('success_profile'))
             <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                {{ session('success') }}
+                {{ session('success_profile') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
@@ -51,6 +51,77 @@
             </div>
 
             <button type="submit" class="btn btn-primary mt-4" id="btnUpdate">
+                Simpan Perubahan
+            </button>
+        </form>
+    </div>
+@endsection
+@section('content-edit-password')
+    <div class="bg-white fw-bold mb-2" style="font-size: 120%;">
+        Ubah Password
+    </div>
+    <span style="color: #666; font-size: 90%;">Perbarui password profile akun Anda.</span>
+    <hr>
+    <div class="mt-4">
+        @if (session('success_password'))
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                {{ session('success_password') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        <form method="POST" action="{{ route('profile.update.password') }}">
+            @csrf
+            @method('PUT')
+
+            <div class="mb-3">
+                <label for="passwordSaatIni" class="form-label">Password Saat Ini</label>
+                <div class="input-group">
+                    <input type="password" id="passwordSaatIni" name="passwordSaatIni"
+                        class="form-control @error('passwordSaatIni') is-invalid @enderror" required>
+                    <span class="input-group-text" onclick="togglePasswordLama()">
+                        <i class="bi bi-eye-slash" id="toggleIconLama"></i>
+                    </span>
+                    @error('passwordSaatIni')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password Baru</label>
+                <div class="input-group">
+                    <input type="password" id="password" name="password"
+                        class="form-control @error('password') is-invalid @enderror" required>
+                    <span class="input-group-text" onclick="togglePassword()">
+                        <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                    </span>
+                    @error('password')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Konfirmasi Password</label>
+                <div class="input-group">
+                    <input type="password" id="confirmPassword" name="confirmPassword"
+                        class="form-control @error('confirmPassword') is-invalid @enderror" required>
+                    <span class="input-group-text" onclick="toggleConfirmPassword()">
+                        <i class="bi bi-eye-slash" id="toggleIconConfirm"></i>
+                    </span>
+                    @error('confirmPassword')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4" id="btnUpdatePassword">
                 Simpan Perubahan
             </button>
         </form>
@@ -91,5 +162,31 @@
                 });
             });
         });
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.getElementById('toggleIcon');
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            icon.classList.toggle('bi-eye');
+            icon.classList.toggle('bi-eye-slash');
+        }
+
+        function toggleConfirmPassword() {
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const iconConfirm = document.getElementById('toggleIconConfirm');
+            const isConfirmPassword = confirmPasswordInput.type === 'password';
+            confirmPasswordInput.type = isConfirmPassword ? 'text' : 'password';
+            iconConfirm.classList.toggle('bi-eye');
+            iconConfirm.classList.toggle('bi-eye-slash');
+        }
+
+        function togglePasswordLama() {
+            const PasswordLamaInput = document.getElementById('passwordSaatIni');
+            const iconPassword = document.getElementById('toggleIconLama');
+            const isPasswordLama = PasswordLamaInput.type === 'password';
+            PasswordLamaInput.type = isPasswordLama ? 'text' : 'password';
+            iconPassword.classList.toggle('bi-eye');
+            iconPassword.classList.toggle('bi-eye-slash');
+        }
     </script>
 @endpush

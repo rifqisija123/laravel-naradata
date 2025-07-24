@@ -28,4 +28,8 @@ class Barang extends Model
     {
         return $this->hasMany(Riwayat::class);
     }
+    public function riwayat_pengembalian()
+    {
+        return $this->hasMany(Riwayats_pengembalian::class);
+    }
 }

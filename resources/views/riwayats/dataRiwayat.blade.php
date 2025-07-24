@@ -79,6 +79,24 @@
 
 @section('content-index')
     <div class="container mt-4">
+        <div class="d-flex justify-content-center mt-4 mb-5">
+            <ul class="nav nav-pills rounded-pill bg-light px-2 py-1 shadow-sm" id="tabRiwayat" role="tablist">
+                <li class="nav-item mx-2" role="presentation">
+                    <button class="nav-link active rounded-pill px-4 py-2 fw-semibold" id="tab-peminjaman"
+                        data-bs-toggle="pill" data-bs-target="#peminjaman" type="button" role="tab"
+                        aria-controls="peminjaman" aria-selected="true">
+                        <i class="bi bi-box-arrow-in-down me-1"></i> Peminjaman
+                    </button>
+                </li>
+                <li class="nav-item mx-2" role="presentation">
+                    <button class="nav-link rounded-pill px-4 py-2 fw-semibold" id="tab-pengembalian" data-bs-toggle="pill"
+                        data-bs-target="#pengembalian" type="button" role="tab" aria-controls="pengembalian"
+                        aria-selected="false">
+                        <i class="bi bi-box-arrow-up me-1"></i> Pengembalian
+                    </button>
+                </li>
+            </ul>
+        </div>
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -90,86 +108,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
-
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0 fw-semibold">Daftar Riwayat</h5>
-            <div>
-                <a href="{{ route('riwayat.create') }}" class="btn btn-primary me-2"><i class="fas fa-plus me-1"></i> Tambah
-                    Riwayat</a>
-                <div class="btn-group me-2">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="fas fa-print me-1"></i> Cetak
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="{{ route('riwayat.export', ['format' => 'pdf']) }}">
-                                <i class="fas fa-file-pdf me-1 text-danger"></i> PDF
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('riwayat.export', ['format' => 'excel']) }}">
-                                <i class="fas fa-file-excel me-1 text-success"></i> Excel
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('riwayat.export', ['format' => 'print']) }}"
-                                target="_blank">
-                                <i class="fas fa-print me-1 text-dark"></i> Print
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+        <div class="tab-content" id="riwayatTabContent">
+            <div class="tab-pane fade show active" id="peminjaman" role="tabpanel" aria-labelledby="tab-peminjaman">
+                @include('riwayats.partials.dataRiwayatPeminjaman')
             </div>
-        </div>
-
-        {{-- Tabel --}}
-        <div class="card shadow-sm border-1 rounded-3">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle" id="tbl_riwayat">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Nama Barang</th>
-                                <th>Karyawan</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($riwayats as $riwayat)
-                                <tr>
-                                    <td>{{ $riwayat->barang->nama_barang ?? '-' }}</td>
-                                    <td>{{ $riwayat->karyawan->nama ?? '-' }}</td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <a href="{{ route('riwayat.show', $riwayat->id) }}"
-                                                class="btn btn-sm btn-primary" title="Lihat">
-                                                <i class="fas fa-eye"></i> Show
-                                            </a>
-                                            <a href="{{ route('riwayat.edit', $riwayat->id) }}"
-                                                class="btn btn-sm btn-warning" title="Edit">
-                                                <i class="fas fa-pen"></i> Edit
-                                            </a>
-                                            <form action="{{ route('riwayat.destroy', $riwayat->id) }}" method="POST"
-                                                class="form-delete d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger btn-delete"
-                                                    data-nama="{{ $riwayat->barang->nama_barang ?? '-' }}" data-karyawan="{{ $riwayat->karyawan->nama ?? '-' }}" title="Hapus">
-                                                    <i class="fas fa-trash"></i> Delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3" class="text-center">Tidak ada data Riwayat</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+            <div class="tab-pane fade" id="pengembalian" role="tabpanel" aria-labelledby="tab-pengembalian">
+                @include('riwayats.partials.dataRiwayatPengembalian')
             </div>
         </div>
     </div>
@@ -178,7 +122,25 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const table = $('#tbl_riwayat').DataTable({
+            $('#tbl_riwayat_peminjaman').DataTable({
+                dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-2'<'col-sm-6'i><'col-sm-6'p>>",
+                pagingType: 'simple_numbers',
+                language: {
+                    lengthMenu: 'Tampilkan _MENU_ entri',
+                    paginate: {
+                        previous: '<button class="btn btn-light btn-sm me-1">Sebelumnya</button>',
+                        next: '<button class="btn btn-light btn-sm ms-1">Selanjutnya</button>'
+                    },
+                    search: "Cari:",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                    infoEmpty: "Tidak ada data tersedia",
+                    emptyTable: "Tidak ada data di tabel",
+                }
+            });
+
+            $('#tbl_riwayat_pengembalian').DataTable({
                 dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row mt-2'<'col-sm-6'i><'col-sm-6'p>>",

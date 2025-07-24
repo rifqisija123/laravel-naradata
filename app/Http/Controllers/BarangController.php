@@ -6,8 +6,10 @@ use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Jenis;
 use App\Models\Lokasi;
+use App\Models\Riwayat;
 use Illuminate\Http\Request;
 use App\Imports\BarangImport;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BarangController extends Controller
@@ -18,12 +20,20 @@ class BarangController extends Controller
         $kategoriRelasi = Kategori::withCount('barangs')->get();
         $jenisRelasi = Jenis::withCount('barangs')->get();
         $lokasiRelasi = Lokasi::withCount('barangs')->get();
+        $statusDipakai = Barang::where('status', 1)->count();
+        $statusTidakDipakai = Barang::where('status', 0)->count();
 
         $totalBarang = Barang::count();
         $kategoriTerbanyak = $kategoriRelasi->sortByDesc('barangs_count')->first();
         $jenisTerbanyak = $jenisRelasi->sortByDesc('barangs_count')->first();
         $lokasiTerbanyak = $lokasiRelasi->sortByDesc('barangs_count')->first();
-        return view('barangs.dataBarang', compact('barangs', 'totalBarang', 'kategoriTerbanyak', 'jenisTerbanyak', 'lokasiTerbanyak'));
+
+        if ($statusDipakai >= $statusTidakDipakai) {
+            $statusTerbanyak = 'Dipakai (' . $statusDipakai . ')';
+        } else {
+            $statusTerbanyak = 'Tidak Dipakai (' . $statusTidakDipakai . ')';
+        }
+        return view('barangs.dataBarang', compact('barangs', 'totalBarang', 'statusTerbanyak', 'kategoriTerbanyak', 'jenisTerbanyak', 'lokasiTerbanyak'));
     }
 
     public function create()
@@ -158,14 +168,49 @@ class BarangController extends Controller
 
         return view('index', compact('totalBarang', 'barangLengkap', 'barangTidakLengkap', 'persenLengkap', 'persenTidakLengkap', 'lokasiTerbanyak', 'kategoriData', 'lokasiRelasi'));
     }
-    
+
     public function getBarangByJenis($jenisId)
     {
         $barangs = Barang::where('jenis_id', $jenisId)
-        ->where('status', 0)
-        ->select('id', 'nama_barang', 'kelengkapan', 'status')
-        ->orderBy('nama_barang')
-        ->get();
+            ->where('status', 0)
+            ->select('id', 'nama_barang', 'kelengkapan', 'status')
+            ->orderBy('nama_barang')
+            ->get();
+
+        return response()->json($barangs);
+    }
+
+    public function getBarangByKaryawan($karyawan_id)
+    {
+        $riwayatBarang = Riwayat::where('karyawan_id', $karyawan_id)
+            ->whereNull('keterangan')
+            ->with('barang', 'jenis')
+            ->get()
+            ->map(function ($r) {
+                return [
+                    'id' => $r->barang->id,
+                    'nama_barang' => $r->barang->nama_barang,
+                    'jenis_id' => $r->jenis->merek_id,
+                    'jenis' => $r->jenis->jenis,
+                    'merek' => $r->jenis->merek,
+                    'kelengkapan' => $r->barang->kelengkapan,
+                ];
+            });
+
+        return response()->json($riwayatBarang);
+    }
+    public function getBarangByJenisAndKaryawan($jenis_id, $karyawan_id)
+    {
+        $barangDipinjam = DB::table('riwayats')
+            ->whereNull('keterangan')
+            ->where('karyawan_id', $karyawan_id)
+            ->where('status', 0)
+            ->pluck('barang_id');
+
+        $barangs = Barang::whereIn('id', $barangDipinjam)
+            ->where('jenis_id', $jenis_id)
+            ->where('status', 1)
+            ->get();
 
         return response()->json($barangs);
     }

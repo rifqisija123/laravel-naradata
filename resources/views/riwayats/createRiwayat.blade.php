@@ -75,6 +75,98 @@
                 }
             };
 
+            const tsJenisPengembalian = new TomSelect('#pengembalian #jenis_id', {
+                ...configTomSelect,
+                placeholder: '-- Pilih Jenis & Merek --'
+            });
+            const tsBarangPengembalian = new TomSelect('#pengembalian #barang_id', {
+                ...configTomSelect,
+                placeholder: '-- Pilih Barang --'
+            });
+            const tsKaryawanPengembalian = new TomSelect('#pengembalian #karyawan_id', {
+                ...configTomSelect,
+                placeholder: '-- Pilih Karyawan --'
+            });
+
+            tsJenisPengembalian.disable();
+            tsBarangPengembalian.disable();
+
+            tsKaryawanPengembalian.on('change', karyawanId => {
+                if (!karyawanId) {
+                    tsJenisPengembalian.disable();
+                    tsBarangPengembalian.disable();
+                    return;
+                }
+
+                fetch(`/api/barang-by-karyawan/${karyawanId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        tsJenisPengembalian.clear(true);
+                        tsJenisPengembalian.clearOptions();
+                        tsBarangPengembalian.clear(true);
+                        tsBarangPengembalian.clearOptions();
+
+                        const jenisMap = new Map();
+                        const barangOptions = [];
+
+                        data.forEach(b => {
+                            const jenisKey = b.jenis_id;
+                            if (!jenisMap.has(jenisKey)) {
+                                jenisMap.set(jenisKey, {
+                                    value: b.jenis_id,
+                                    text: `${b.jenis} - ${b.merek}`
+                                });
+                            }
+
+                            barangOptions.push({
+                                value: b.id,
+                                text: `${b.id} - ${b.nama_barang}${b.kelengkapan == 1 ? ' (Lengkap)' : ' (Tidak Lengkap)'}`
+                            });
+                        });
+
+                        tsJenisPengembalian.addOptions(Array.from(jenisMap.values()));
+                        tsJenisPengembalian.enable();
+                        tsBarangPengembalian.disable();
+                        tsBarangPengembalian.clear();
+                        tsBarangPengembalian.clearOptions();
+                    })
+                    .catch(() => {
+                        Swal.fire('Error', 'Gagal memuat data riwayat pengembalian', 'error');
+                    });
+            });
+
+            tsJenisPengembalian.on('change', jenisId => {
+                if (!jenisId) {
+                    tsBarangPengembalian.disable();
+                    tsBarangPengembalian.clear();
+                    return;
+                }
+
+                const selectedKaryawanId = tsKaryawanPengembalian.getValue();
+
+                fetch(`/barang-by-jenis-karyawan/${jenisId}/${selectedKaryawanId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const options = data.map(b => {
+                            const status = b.kelengkapan == 1 ? '(Lengkap)' : '(Tidak Lengkap)';
+                            return {
+                                value: b.id,
+                                text: `${b.id} - ${b.nama_barang} ${status}`
+                            };
+                        });
+
+                        tsBarangPengembalian.clear(true);
+                        tsBarangPengembalian.clearOptions();
+                        tsBarangPengembalian.addOptions(options);
+                        tsBarangPengembalian.enable();
+                        tsBarangPengembalian.refreshOptions(false);
+                    })
+                    .catch(() => {
+                        tsBarangPengembalian.disable();
+                        Swal.fire('Error', 'Gagal memuat data barang', 'error');
+                    });
+            });
+
             const tsJenis = new TomSelect('#jenis_id', {
                 ...configTomSelect,
                 placeholder: '-- Pilih Jenis & Merek --'
@@ -139,34 +231,39 @@
                         Swal.fire('Error', 'Gagal memuat data barang', 'error');
                     });
             });
-            const form = document.getElementById('formCreateRiwayat');
+            const handleFormSubmitWithConfirm = (formId, confirmText) => {
+                const form = document.getElementById(formId);
+                if (!form) return;
 
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
 
-                Swal.fire({
-                    title: `Yakin ingin menambahkan?`,
-                    text: "Data akan disimpan ke dalam tabel.",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, tambahkan!',
-                    cancelButtonText: 'Batal',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "Ditambahkan!",
-                            icon: "success",
-                            timer: 1500,
-                            showConfirmButton: false,
-                        });
-                        setTimeout(() => {
-                            form.submit();
-                        }, 1300);
-                    }
+                    Swal.fire({
+                        title: `Yakin ingin menambahkan?`,
+                        text: confirmText,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, tambahkan!',
+                        cancelButtonText: 'Batal',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: "Ditambahkan!",
+                                icon: "success",
+                                timer: 1500,
+                                showConfirmButton: false,
+                            });
+                            setTimeout(() => {
+                                form.submit();
+                            }, 1300);
+                        }
+                    });
                 });
-            });
+            };
+            handleFormSubmitWithConfirm('formPeminjaman', 'Data peminjaman akan disimpan ke dalam tabel.');
+            handleFormSubmitWithConfirm('formPengembalian', 'Data pengembalian akan disimpan ke dalam tabel.');
         });
         document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(function(tabButton) {
             tabButton.addEventListener("shown.bs.tab", function() {

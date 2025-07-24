@@ -19,6 +19,10 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
+        ], [
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid.',
+            'password.required' => 'Password harus diisi.',
         ]);
 
         if (Auth::attempt($credentials)) {
@@ -44,8 +48,13 @@ class AuthController extends Controller
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password',
         ], [
-            'confirm_password.same' => 'Confirm Password tidak sesuai.',
+            'name.required' => 'Nama wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Akun sudah terdaftar, silahkan login.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 6 karakter.',
+            'confirm_password.same' => 'Confirm Password tidak sesuai.',
         ]);
 
         User::create([
