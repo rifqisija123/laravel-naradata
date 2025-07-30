@@ -21,6 +21,8 @@
             <div>
                 <a href="{{ route('karyawan.create') }}" class="btn btn-primary me-2"><i class="fas fa-plus me-1"></i> Tambah
                     Karyawan</a>
+                <a href="{{ route('karyawan.import') }}" class="btn btn-success me-2"><i class="fas fa-file-excel me-1"></i>
+                    Import Excel</a>
             </div>
         </div>
 
@@ -106,7 +108,7 @@
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data karyawan "${nama}" akan dihapus!`,
+                    text: `Data karyawan ${nama} akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',
@@ -128,6 +130,14 @@
                 icon: 'success',
                 title: 'Berhasil!',
                 text: '{{ session('success_delete') }}',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @elseif(session('success_excel'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success_excel') }}',
                 showConfirmButton: false,
                 timer: 1500
             });

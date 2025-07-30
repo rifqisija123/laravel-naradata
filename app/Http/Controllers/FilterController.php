@@ -32,11 +32,6 @@ class FilterController extends Controller
             return response()->json($barangs);
         }
 
-        // Filter berdasarkan karyawan (status = 1)
-        if ($request->karyawan) {
-            $query->where('status', 1);
-        }
-
         // Filter kategori
         if ($request->kategori) {
             $query->whereIn('kategori_id', (array)$request->kategori);
@@ -61,11 +56,15 @@ class FilterController extends Controller
         if ($request->karyawan) {
             $query->whereHas('riwayats', function ($q) use ($request) {
                 $q->whereIn('karyawan_id', (array)$request->karyawan);
+
+                if (request('status_riwayat') !== null) {
+                    $q->whereIn('status', (array)request('status_riwayat'));
+                }
             });
         }
 
         // Filter status
-        if ($request->status !== null) {
+        if ($request->status !== null && !$request->karyawan) {
             $query->whereIn('status', (array)$request->status);
         }
 

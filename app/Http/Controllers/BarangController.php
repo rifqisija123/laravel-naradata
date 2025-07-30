@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Imports\BarangImport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Karyawan;
 
 class BarangController extends Controller
 {
@@ -41,7 +42,9 @@ class BarangController extends Controller
         $kategoris = Kategori::all();
         $jenisBarang = Jenis::all();
         $lokasis = Lokasi::all();
-        return view('barangs.createBarang', compact('kategoris', 'jenisBarang', 'lokasis'));
+
+        $jenisCount = Jenis::count();
+        return view('barangs.createBarang', compact('kategoris', 'jenisBarang', 'lokasis', 'jenisCount'));
     }
 
     public function store(Request $request)
@@ -85,7 +88,7 @@ class BarangController extends Controller
 
     public function importPage()
     {
-        return view('importExcel');
+        return view('barangs.importBarang');
     }
 
     public function import(Request $request)
@@ -109,7 +112,8 @@ class BarangController extends Controller
         $jenisBarang = Jenis::all();
         $lokasis = Lokasi::all();
 
-        return view('barangs.editBarang', compact('barang', 'kategoris', 'jenisBarang', 'lokasis'));
+        $jenisCount = Jenis::count();
+        return view('barangs.editBarang', compact('barang', 'kategoris', 'jenisBarang', 'lokasis', 'jenisCount'));
     }
 
     public function update(Request $request, $id)
@@ -180,6 +184,26 @@ class BarangController extends Controller
         return response()->json($barangs);
     }
 
+    public function getMerekByJenis($jenisId)
+    {
+        $mereks = Jenis::where('id', $jenisId)
+            ->select('merek_id', 'merek')
+            ->get();
+
+        return response()->json($mereks);
+    }
+
+    public function getBarangByJenisMerek($jenisId, $merekId)
+    {
+        $barang = Barang::where('jenis_id', $merekId)
+            ->where('status', 0)
+            ->select('id', 'nama_barang', 'kelengkapan', 'status')
+            ->orderBy('nama_barang')
+            ->get();
+
+        return response()->json($barang);
+    }
+
     public function getBarangByKaryawan($karyawan_id)
     {
         $riwayatBarang = Riwayat::where('karyawan_id', $karyawan_id)
@@ -213,5 +237,117 @@ class BarangController extends Controller
             ->get();
 
         return response()->json($barangs);
+    }
+
+    public function getMerekByJenisAndKaryawan($jenis_id, $karyawan_id)
+    {
+        // Ambil semua Jenis dengan merek_id = jenis_id dan barang yang terkait dengan karyawan
+        $jenisList = Jenis::where('merek_id', $jenis_id)
+            ->with(['barangs' => function ($query) use ($karyawan_id) {
+                $query->whereHas('riwayats', function ($q) use ($karyawan_id) {
+                    $q->where('karyawan_id', $karyawan_id);
+                });
+            }])
+            ->get();
+
+        // Ambil semua merek unik dari hasil barangs yang diambil
+        $merekList = collect();
+        foreach ($jenisList as $jenis) {
+            foreach ($jenis->barangs as $barang) {
+                $merekList->push([
+                    'merek_id' => $barang->jenis->merek_id,
+                    'merek' => $barang->jenis->merek,
+                ]);
+            }
+        }
+
+        $merekList = $merekList->unique('merek_id')->values();
+
+        return response()->json($merekList);
+    }
+
+    public function getBarangByKaryawanJenisMerek($karyawan_id, $jenis_id, $merek_id)
+    {
+        $barangDipinjam = Riwayat::where('karyawan_id', $karyawan_id)
+            ->where('jenis_id', $jenis_id)
+            ->whereHas('jenis', function ($q) use ($merek_id) {
+                $q->where('merek_id', $merek_id);
+            })
+            ->whereNull('keterangan')
+            ->pluck('barang_id');
+
+        $barangs = Barang::whereIn('id', $barangDipinjam)
+            ->where('jenis_id', $merek_id)
+            ->where('status', 1)
+            ->select('id', 'nama_barang', 'kelengkapan', 'status')
+            ->orderBy('nama_barang')
+            ->get();
+
+        return response()->json($barangs);
+    }
+
+    public function getMerekByKaryawanAndJenis($karyawan_id, $jenis_id)
+    {
+        $riwayatBarang = Riwayat::where('karyawan_id', $karyawan_id)
+            ->whereNull('keterangan')
+            ->where('jenis_id', $jenis_id)
+            ->with('jenis')
+            ->get();
+
+        $merek = $riwayatBarang->map(function ($r) {
+            return [
+                'merek_id' => $r->jenis->merek_id,
+                'merek' => $r->jenis->merek
+            ];
+        })->unique('merek_id')->values();
+
+        return response()->json($merek);
+    }
+
+    public function getJenisByKaryawan($karyawan_id)
+    {
+        $riwayatBarang = Riwayat::where('karyawan_id', $karyawan_id)
+            ->whereNull('keterangan')
+            ->with('barang.jenis')
+            ->get();
+
+        $jenis = $riwayatBarang->map(function ($r) {
+            return [
+                'jenis_id' => $r->barang->jenis->id,
+                'nama_jenis' => $r->barang->jenis->jenis
+            ];
+        })->unique('jenis_id')->values();
+
+        return response()->json($jenis);
+    }
+
+    public function getFunFacts()
+    {
+        $totalBarang = Barang::count();
+        $kategoriTerbanyak = Kategori::withCount('barangs')->orderByDesc('barangs_count')->first();
+        $lokasiTerbanyak = Lokasi::withCount('barangs')->orderByDesc('barangs_count')->first();
+        $barangDipakai = Barang::where('status', 1)->count();
+        $barangTidakDipakai = Barang::where('status', 0)->count();
+        $topUser = Karyawan::withCount('barangs')->orderByDesc('barangs_count')->first();
+
+        $funFacts = [];
+
+        $funFacts[] = "<strong>{$totalBarang}</strong> barang terdata sejauh ini. Belum kayak gudang sih, tapi bisa jadi awal mula inventory empire 💼✨.";
+
+        if ($kategoriTerbanyak) {
+            $funFacts[] = "<strong>{$kategoriTerbanyak->kategori}</strong> masih jadi kategori paling ngetop. Barang-barang kayaknya pada pengen ngantor juga 🤓🖇️.";
+        }
+
+        if ($lokasiTerbanyak) {
+            $funFacts[] = "Spot paling rame? <strong>{$lokasiTerbanyak->posisi}</strong>. Mungkin karena cozy atau sinyal Wi-Fi-nya paling kuat di situ 📶😆.";
+        }
+
+        $funFacts[] = "Yang lagi dipake sekarang ada <strong>{$barangDipakai}</strong> barang. Lagi on duty, no time for santuy 💪📤.";
+        $funFacts[] = "<strong>{$barangTidakDipakai}</strong> barang standby. Ready kalau ada ‘request pinjam’ masuk, tinggal klik, langsung OTW 🖱️🚀.";
+        if ($topUser) {
+            $funFacts[] = "Mr. <strong>{$topUser->nama}</strong> jadi peminjam tersukses sejagat sistem ini: <strong>{$topUser->barangs_count}</strong> barang! Karyawan lain, jangan mau kalah 💪.";;
+        }
+
+        return response()->json($funFacts);
     }
 }

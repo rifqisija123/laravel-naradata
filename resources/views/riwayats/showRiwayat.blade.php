@@ -1,6 +1,6 @@
 @extends('layouts.apps')
 
-@section('title', 'Detail Riwayat')
+@section('title', 'Detail Riwayat Peminjaman')
 
 @section('content')
     <div class="container mt-4">
@@ -22,14 +22,20 @@
 
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i
-                                class="fas fa-cubes me-2 text-secondary"></i><strong>Jenis & Merek:</strong></p>
-                        <h5>{{ $riwayat->jenis ? $riwayat->jenis->jenis . ' - ' . $riwayat->jenis->merek : '-' }}</h5>
+                                class="fas fa-cubes me-2 text-secondary"></i><strong>Jenis:</strong></p>
+                        <h5>{{ $riwayat->jenis ? $riwayat->jenis->jenis : '-' }}</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted"><i
+                                class="fas fa-cubes me-2 text-secondary"></i><strong>Merek:</strong></p>
+                        <h5>{{ $riwayat->jenis ? $riwayat->jenis->merek : '-' }}</h5>
                     </div>
 
                     <div class="col-md-6">
                         <p class="mb-1 text-muted"><i class="fas fa-tag me-2 text-secondary"></i><strong>Nama Barang:</strong>
                         </p>
-                        <h5>{{ $riwayat->barang->nama_barang ?? '-' }}</h5>
+                        <h5>{{ $riwayat->barang->nama_barang . ' (' . ($riwayat->barang->kelengkapan == 1 ? 'Lengkap' : 'Tidak Lengkap') . ')' ?? '-' }}</h5>
                     </div>
 
                     <div class="col-md-6">
@@ -81,7 +87,7 @@
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data riwayat dengan nama barang "${nama}" dan nama karyawan "${karyawan}" akan dihapus!`,
+                    text: `Data riwayat peminjaman dengan nama barang ${nama} dan nama karyawan ${karyawan} akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

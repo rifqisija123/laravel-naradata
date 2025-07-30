@@ -48,7 +48,7 @@
                 </div>
                 <div>
                     <small>Total Riwayat</small>
-                    <h6 class="fw-bold m-0">-</h6>
+                    <h6 class="fw-bold m-0">{{ $totalRiwayatPengembalian }}</h6>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                 </div>
                 <div>
                     <small>Karyawan Terbanyak</small>
-                    <h6 class="fw-bold m-0">-</h6>
+                    <h6 class="fw-bold m-0">{{ $namaKaryawanPengembalianTerbanyak ?? 'Tidak ada' }}</h6>
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
                 </div>
                 <div>
                     <small>Riwayat Tanpa Keterangan</small>
-                    <h6 class="fw-bold m-0">-</h6>
+                    <h6 class="fw-bold m-0">{{ $riwayatPengembalianTanpaKeterangan }}</h6>
                 </div>
             </div>
         </div>
@@ -168,7 +168,34 @@
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data riwayat dengan nama barang "${nama}" dan nama karyawan "${karyawan}" akan dihapus!`,
+                    text: `Data riwayat peminjaman dengan nama barang ${nama} dan nama karyawan ${karyawan} akan dihapus!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                        cancelButton: 'btn btn-secondary ms-2'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // submit form jika user yakin
+                    }
+                });
+            });
+        });
+        $(document).ready(function() {
+            $('.form-delete-pengembalian').on('submit', function(e) {
+                e.preventDefault();
+
+                const form = this;
+                const nama = $(this).find('.btn-delete-pengembalian').data('nama');
+                const karyawan = $(this).find('.btn-delete-pengembalian').data('karyawan');
+
+                Swal.fire({
+                    title: 'Apakah kamu yakin?',
+                    text: `Data riwayat pengembalian dengan nama barang ${nama} dan nama karyawan ${karyawan} akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

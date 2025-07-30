@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\KaryawanImport;
 use App\Models\Karyawan;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class KaryawanController extends Controller
@@ -70,5 +72,24 @@ class KaryawanController extends Controller
         $karyawan = Karyawan::findOrFail($id);
         $karyawan->delete();
         return redirect()->route('karyawan.index')->with('success_delete', 'Data karyawan berhasil dihapus.');
+    }
+
+    public function importPage()
+    {
+        return view('karyawans.importKaryawan');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'file_excel.required' => 'File harus diunggah.',
+            'file_excel.mimes' => 'File harus berupa file Excel (xlsx, xls, csv).',
+        ]);
+
+        Excel::import(new KaryawanImport, $request->file('file_excel'));
+
+        return redirect()->route('karyawan.index')->with('success_excel', 'Data Karyawan berhasil diimport.');
     }
 }

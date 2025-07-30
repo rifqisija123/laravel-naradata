@@ -11,6 +11,7 @@ use App\Http\Controllers\FilterController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
+
 //route untuk halaman utama
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
@@ -36,6 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/kategori/store', [KategoriController::class, 'store'])->name('kategori.store');
     Route::get('/kategori/show/{id}', [KategoriController::class, 'show'])->name('kategori.show');
     Route::put('/kategori/update/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::get('/kategori/import', [KategoriController::class, 'importPage'])->name('kategori.import');
+    Route::post('/import/kategori', [KategoriController::class, 'import'])->name('import.kategori');
     Route::delete('/kategori/delete/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
     //route untuk halaman lokasi
@@ -43,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/lokasi/store', [LokasiController::class, 'store'])->name('lokasi.store');
     Route::get('/lokasi/show/{id}', [LokasiController::class, 'show'])->name('lokasi.show');
     Route::put('/lokasi/update/{id}', [LokasiController::class, 'update'])->name('lokasi.update');
+    Route::get('/lokasi/import', [LokasiController::class, 'importPage'])->name('lokasi.import');
+    Route::post('/import/lokasi', [LokasiController::class, 'import'])->name('import.lokasi');
     Route::delete('/lokasi/delete/{id}', [LokasiController::class, 'destroy'])->name('lokasi.destroy');
 
     //route untuk halaman karyawan
@@ -52,6 +57,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/karyawan/show/{id}', [KaryawanController::class, 'show'])->name('karyawan.show');
     Route::get('/karyawan/edit/{id}', [KaryawanController::class, 'edit'])->name('karyawan.edit');
     Route::put('/karyawan/update/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
+    Route::get('/karyawan/import', [KaryawanController::class, 'importPage'])->name('karyawan.import');
+    Route::post('/import/karyawan', [KaryawanController::class, 'import'])->name('import.karyawan');
     Route::delete('/karyawan/delete/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
 
     //route untuk halaman jenis
@@ -59,18 +66,25 @@ Route::middleware('auth')->group(function () {
     Route::post('/jenis/store', [JenisController::class, 'store'])->name('jenis.store');
     Route::get('/jenis/show/{id}', [JenisController::class, 'show'])->name('jenis.show');
     Route::put('/jenis/update/{id}', [JenisController::class, 'update'])->name('jenis.update');
+    Route::get('/jenis/import', [JenisController::class, 'importPage'])->name('jenis.import');
+    Route::post('/import/jenis', [JenisController::class, 'import'])->name('import.jenis');
     Route::delete('/jenis/delete/{id}', [JenisController::class, 'destroy'])->name('jenis.destroy');
 
-    //route untuk halaman riwayat
+    //route untuk halaman riwayat peminjaman dan pengembalian
     Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
     Route::get('/riwayat/create', [RiwayatController::class, 'create'])->name('riwayat.create');
     Route::post('/riwayat/peminjaman/store', [RiwayatController::class, 'store'])->name('riwayat.peminjaman.store');
     Route::post('/riwayat/pengembalian/store', [RiwayatController::class, 'storePengembalian'])->name('riwayat.pengembalian.store');
     Route::get('/riwayat/show/{id}', [RiwayatController::class, 'show'])->name('riwayat.show');
+    Route::get('/riwayat/show/pengembalian/{id}', [RiwayatController::class, 'showPengembalian'])->name('riwayat.pengembalian.show');
     Route::get('/riwayat/edit/{id}', [RiwayatController::class, 'edit'])->name('riwayat.edit');
+    Route::get('/riwayat/edit/pengembalian/{id}', [RiwayatController::class, 'editPengembalian'])->name('riwayat.pengembalian.edit');
     Route::put('/riwayat/update/{id}', [RiwayatController::class, 'update'])->name('riwayat.update');
+    Route::put('/riwayat/update/pengembalian/{id}', [RiwayatController::class, 'updatePengembalian'])->name('riwayat.pengembalian.update');
     Route::delete('/riwayat/delete/{id}', [RiwayatController::class, 'destroy'])->name('riwayat.destroy');
+    Route::delete('/riwayat/delete/pengembalian/{id}', [RiwayatController::class, 'destroyPengembalian'])->name('riwayat.pengembalian.destroy');
     Route::get('/riwayat/export/{format}', [RiwayatController::class, 'export'])->name('riwayat.export');
+    Route::get('/riwayat/export/pengembalian/{format}', [RiwayatController::class, 'exportPengembalian'])->name('riwayat.pengembalian.export');
     Route::get('/riwayat/filter', [RiwayatController::class, 'filter'])->name('riwayat.filter');
 
     //route untuk edit profile
@@ -82,11 +96,42 @@ Route::middleware('auth')->group(function () {
 //route untuk API barang berdasarkan jenis
 Route::get('/api/barang-by-jenis/{jenis}', [BarangController::class, 'getBarangByJenis'])->name('barang.byJenis');
 
+//route untuk API merek berdasarkan jenis
+Route::get('/api/merek-by-jenis/{jenisId}', [BarangController::class, 'getMerekByJenis']);
+
+//route untuk API barang berdasarkan jenis dan merek
+Route::get('/api/barang-by-jenis-merek/{jenisId}/{merekId}', [BarangController::class, 'getBarangByJenisMerek']);
+
 //route untuk API barang berdasarkan karyawan
 Route::get('/api/barang-by-karyawan/{karyawan_id}', [BarangController::class, 'getBarangByKaryawan']);
 
+//route untuk API edit barang berdasarkan barang yang sedang dipakai
+Route::get('/api/barang-tersedia', [RiwayatController::class, 'getBarangTersedia']);
+
+Route::get('/api/merek-by-jenis-karyawan/{jenis_id}/{karyawan_id}', [RiwayatController::class, 'getMerekByJenisAndKaryawan']);
+
+Route::get('/api/barang-edit', [RiwayatController::class, 'getBarangEdit']);
+
+Route::get('/api/jenisByKaryawan/{karyawan_id}', [RiwayatController::class, 'getJenisByKaryawan']);
+
 //route untuk API barang berdasarkan karyawan dan jenis & merek
 Route::get('/barang-by-jenis-karyawan/{jenis_id}/{karyawan_id}', [BarangController::class, 'getBarangByJenisAndKaryawan']);
+
+Route::get('/merek-by-jenis-karyawan/{jenis_id}/{karyawan_id}', [BarangController::class, 'getMerekByJenisAndKaryawan']);
+
+Route::get('/barang-by-karyawan-jenis-merek/{karyawan_id}/{jenis_id}/{merek_id}', [BarangController::class, 'getBarangByKaryawanJenisMerek']);
+
+//route untuk API merek berdasarkan karyawan dan jenis
+Route::get('/api/merek-by-karyawan-jenis/{karyawan_id}/{jenis_id}', [BarangController::class, 'getMerekByKaryawanAndJenis']);
+
+//route untuk API barang berdasarkan karyawan, jenis, dan merek
+Route::get('/api/barang-by-karyawan-jenis-merek/{karyawan_id}/{jenis_id}/{merek_id}', [BarangController::class, 'getBarangByKaryawanJenisMerek']);
+
+//route untuk API jenis berdasarkan karyawan
+Route::get('/api/jenis-by-karyawan/{karyawan_id}', [BarangController::class, 'getJenisByKaryawan']);
+
+// Route API Fun Fact
+Route::get('/api/fun-facts', [BarangController::class, 'getFunFacts'])->name('api.funfacts');
 
 //route untuk filter riwayat
 Route::get('/riwayat/filter/result', [FilterController::class, 'filterResult'])->name('filter.result');
@@ -96,4 +141,8 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.action');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.action');
+Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot.password');
+Route::post('/forgot-password', [AuthController::class, 'handleForgotPassword'])->name('forgot.password.submit');
+Route::get('/reset-password', [AuthController::class, 'showResetPassword'])->name('forgot.reset.password');
+Route::post('/reset-password', [AuthController::class, 'handleResetPassword'])->name('forgot.reset.password.submit');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');

@@ -96,7 +96,13 @@
 @endsection
 @push('scripts')
     <script>
-        const kategoriLabels = {!! json_encode($kategoriData->pluck('kategori')->toArray()) !!};
+        @php
+            $kategoriLabelsWithCount = $kategoriData->map(function ($item) {
+                return $item->kategori . ' (' . $item->barangs_count . ' barang)';
+            });
+        @endphp
+
+        const kategoriLabels = {!! json_encode($kategoriLabelsWithCount->toArray()) !!};
         const kategoriValues = {!! json_encode($kategoriData->pluck('barangs_count')->toArray()) !!};
 
         const lokasiLabels = {!! json_encode($lokasiRelasi->pluck('posisi')->toArray()) !!};

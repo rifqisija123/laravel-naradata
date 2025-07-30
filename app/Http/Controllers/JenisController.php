@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\JenisImport;
 use App\Models\Jenis;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class JenisController extends Controller
 {
@@ -12,24 +15,47 @@ class JenisController extends Controller
         $request->validate([
             'jenis' => 'required|string',
             'merek' => 'required|string',
-            'keterangan' => 'nullable|string'
+            'keterangan' => 'nullable|string',
+            'manual' => 'nullable|boolean'
         ]);
 
-        $exists = Jenis::whereRaw('LOWER(jenis) = ? AND LOWER(merek) = ?', [
-            strtolower($request->jenis),
-            strtolower($request->merek)
-        ])->exists();
+        $jenisInput = strtolower($request->jenis);
+        $merekInput = strtolower($request->merek);
+        $isManual = $request->manual;
 
-        if ($exists) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Kombinasi jenis dan merek sudah ada.'
-            ], 409);
+        if ($isManual) {
+            $existingJenis = Jenis::all();
+            foreach ($existingJenis as $existing) {
+                similar_text($jenisInput, strtolower($existing->jenis), $percent);
+                if ($percent > 85) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Jenis sudah ada!'
+                    ], 409);
+                }
+            }
+        }
+
+        $existingCombinations = Jenis::all();
+
+        foreach ($existingCombinations as $item) {
+            $jenisDB = strtolower($item->jenis);
+            $merekDB = strtolower($item->merek);
+
+            if ($jenisDB === $jenisInput) {
+                similar_text($merekInput, $merekDB, $percent);
+                if ($percent > 85) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Kombinasi jenis dan merek sudah ada!'
+                    ], 409);
+                }
+            }
         }
 
         $jenis = Jenis::create([
-            'jenis' => $request->jenis,
-            'merek' => $request->merek,
+            'jenis' => ucfirst($jenisInput),
+            'merek' => ucfirst($merekInput),
             'keterangan' => $request->keterangan,
         ]);
 
@@ -96,5 +122,24 @@ class JenisController extends Controller
         $jenis->delete();
 
         return redirect()->route('jenis.index')->with('success', 'Jenis berhasil dihapus.');
+    }
+
+    public function importPage()
+    {
+        return view('jenis.importJenis');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'file_excel.required' => 'File harus diunggah.',
+            'file_excel.mimes' => 'File harus berupa file Excel (xlsx, xls, csv).',
+        ]);
+
+        Excel::import(new JenisImport, $request->file('file_excel'));
+
+        return redirect()->route('jenis.index')->with('success_excel', 'Data Jenis & Merek berhasil diimport.');
     }
 }

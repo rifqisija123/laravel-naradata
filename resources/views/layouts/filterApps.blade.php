@@ -88,6 +88,27 @@
                 <span class="fs-5 fw-semibold text-white">SIMAS</span>
             </a>
         </div>
+        
+        <div class="navbar-decoration position-absolute w-100 h-100" style="pointer-events: none; z-index: 0;">
+            <i class="fas fa-box icon-navbar" style="top: 15%; left: 5%;"></i>
+            <i class="fas fa-couch icon-navbar" style="top: 40%; left: 30%;"></i>
+            <i class="fas fa-desktop icon-navbar" style="top: 10%; left: 70%;"></i>
+            <i class="fas fa-keyboard icon-navbar" style="top: 60%; left: 90%;"></i>
+            <i class="fas fa-chair icon-navbar" style="top: 20%; left: 15%;"></i>
+            <i class="fas fa-table icon-navbar" style="top: 35%; left: 50%;"></i>
+            <i class="fas fa-tv icon-navbar" style="top: 5%; left: 80%;"></i>
+            <i class="fas fa-mouse icon-navbar" style="top: 50%; left: 10%;"></i>
+            <i class="fas fa-server icon-navbar" style="top: 65%; left: 25%;"></i>
+            <i class="fas fa-boxes-stacked icon-navbar" style="top: 30%; left: 75%;"></i>
+            <i class="fas fa-tools icon-navbar" style="top: 45%; left: 60%;"></i>
+            <i class="fas fa-hdd icon-navbar" style="top: 12%; left: 40%;"></i>
+            <i class="fas fa-plug icon-navbar" style="top: 70%; left: 85%;"></i>
+            <i class="fas fa-warehouse icon-navbar" style="top: 22%; left: 92%;"></i>
+            <i class="fas fa-screwdriver-wrench icon-navbar" style="top: 55%; left: 35%;"></i>
+            <i class="fas fa-key icon-navbar" style="top: 10%; left: 20%;"></i>
+            <i class="fas fa-laptop-code icon-navbar" style="top: 38%; left: 65%;"></i>
+            <i class="fas fa-pallet icon-navbar" style="top: 66%; left: 45%;"></i>
+        </div>
     </nav>
 
     <!-- Main Filter Content -->

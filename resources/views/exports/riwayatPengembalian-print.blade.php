@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Cetak Riwayat Peminjaman Barang</title>
+    <title>Cetak Riwayat Pengembalian Barang</title>
     <style>
         body {
             font-family: sans-serif;
@@ -45,30 +45,30 @@
         <button onclick="window.print()">🖨️ Cetak Halaman</button>
     </div>
 
-    <h2>Data Riwayat Peminjaman Barang</h2>
+    <h2>Data Riwayat Pengembalian Barang</h2>
 
     <table>
         <thead>
             <tr>
+                <th>Karyawan</th>
                 <th>Jenis</th>
                 <th>Merek</th>
                 <th>Nama Barang</th>
-                <th>Karyawan</th>
+                <th>Kondisi</th>
                 <th>Keterangan</th>
                 <th>Tanggal</th>
-                <th>Status</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($riwayats as $r)
                 <tr>
+                    <td>{{ $r->karyawan->nama ?? '-' }}</td>
                     <td>{{ $r->jenis->jenis ?? '-' }}</td>
                     <td>{{ $r->jenis->merek ?? '-' }}</td>
                     <td>{{ $r->barang->nama_barang ?? '-' }}</td>
-                    <td>{{ $r->karyawan->nama ?? '-' }}</td>
+                    <td>{{ $r->kondisi ?? '-' }}</td>
                     <td>{{ $r->keterangan ?? 'Tidak ada keterangan' }}</td>
                     <td>{{ \Carbon\Carbon::parse($r->tanggal)->translatedFormat('d F Y') }}</td>
-                    <td>{{ $r->status == 1 ? 'Dikembalikan' : '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

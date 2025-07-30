@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('barang_id');
             $table->string('nama_barang');
             $table->text('keterangan')->nullable();
+            $table->text('kondisi');
             $table->date('tanggal');
             $table->timestamps();
             $table->softDeletes();

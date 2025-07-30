@@ -52,6 +52,10 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0 fw-semibold">Daftar Kategori</h5>
+            <div>
+                <a href="{{ route('kategori.import') }}" class="btn btn-success me-2"><i class="fas fa-file-excel me-1"></i>
+                    Import Excel</a>
+            </div>
         </div>
 
         <div class="card shadow-sm border-1 rounded-3">
@@ -280,6 +284,14 @@
                 icon: 'success',
                 title: 'Berhasil!',
                 text: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @elseif(session('success_excel'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success_excel') }}',
                 showConfirmButton: false,
                 timer: 1500
             });

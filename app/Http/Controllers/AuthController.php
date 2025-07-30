@@ -67,6 +67,62 @@ class AuthController extends Controller
         return redirect()->route('login')->with('message', 'Akun berhasil dibuat. Silakan login.');
     }
 
+    public function showForgotPassword()
+    {
+        return view('auth.forgotPassword.email');
+    }
+
+    public function handleForgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ], [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email tidak terdaftar.']);
+        }
+
+        $token = base64_encode($request->email . now());
+        return redirect()->route('forgot.reset.password', ['email' => $user->email, 'token' => $token]);
+    }
+
+    public function showResetPassword(Request $request)
+    {
+        $email = $request->input('email');
+        $token = $request->input('token');
+        return view('auth.forgotPassword.resetPassword', compact('email', 'token'));
+    }
+
+    public function handleResetPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password',
+            'email' => 'required|email'
+        ], [
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 6 karakter.',
+            'confirm_password.required' => 'Konfirmasi password wajib diisi.',
+            'confirm_password.same' => 'Konfirmasi password tidak sesuai.',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('login')->with('message', 'Reset password berhasil, Silakan login!');
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();

@@ -13,8 +13,8 @@
 
         <div id="filter-summary" class="mb-3 text-center"></div>
 
-        <div class="d-flex justify-content-between align-items-start flex-wrap mb-3">
-            <div class="filter-card">
+        <div class="d-flex justify-content-center mb-3">
+            <div class="filter-card justify-content-center">
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle"
                         data-bs-toggle="dropdown">Kategori</button>
@@ -169,12 +169,10 @@
                         html += `</tbody></table></div>`;
                         resultContainer.innerHTML = html;
 
-                        // 🔁 Hapus dulu kalau sebelumnya udah pernah diinit
                         if ($.fn.DataTable.isDataTable('#tbl_filter_result')) {
                             $('#tbl_filter_result').DataTable().destroy();
                         }
 
-                        // ✅ Inisialisasi DataTables di sini (DOM udah siap)
                         $('#tbl_filter_result').DataTable({
                             dom: "<'row mb-2'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
                                 "<'row'<'col-sm-12'tr>>" +
@@ -298,10 +296,8 @@
                     delete labels[key];
                 }
 
-                // Reset input tanggal juga
                 document.getElementById('tanggal-filter').value = '';
 
-                // Tampilkan ulang hasil tanpa filter
                 renderSummary();
             });
         });

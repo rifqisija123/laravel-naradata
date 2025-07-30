@@ -159,13 +159,14 @@
                 </div>
                 <div class="modal-body">
                     <label for="namaJenisBaru" class="form-label">Jenis:</label>
-                    <input type="text" class="form-control" name="jenis" id="namaJenisBaru" list="listJenis"
-                        autocomplete="off" required>
-                    <datalist id="listJenis">
+                    <select id="selectJenisExisting" class="w-100" placeholder="Ketik untuk mencari jenis...">
+                        <option value="" selected disabled>-- Pilih atau cari Jenis --</option>
                         @foreach ($jenisBarang as $j)
-                            <option value="{{ $j->jenis }}"></option>
+                            <option value="{{ $j->jenis }}">{{ $j->jenis }}</option>
                         @endforeach
-                    </datalist>
+                    </select>
+
+                    <input type="text" class="form-control mt-2 d-none" name="jenis" id="inputJenisManual" />
                 </div>
                 <div class="modal-body">
                     <label for="namaMerekBaru" class="form-label">Merek:</label>
@@ -219,6 +220,86 @@
 </div>
 @push('scripts')
     @include('layouts.ajax')
+    <script>
+        const jenisCount = {{ $jenisCount }};
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let manualMode = false;
+
+            const inputJenisManual = document.getElementById('inputJenisManual');
+            const selectJenisExisting = document.getElementById('selectJenisExisting');
+
+            const selectJenis = new TomSelect("#selectJenisExisting", {
+                create: false,
+                maxOptions: 100,
+                persist: false,
+                placeholder: "Cari jenis...",
+                render: {
+                    option: function(data, escape) {
+                        return `<div class="py-2 px-2">${escape(data.text)}</div>`;
+                    }
+                },
+                onDropdownOpen: function(dropdown) {
+                    const existingBtn = dropdown.querySelector('#btnTambahJenisBaruWrapper');
+                    if (existingBtn) existingBtn.remove();
+
+                    const wrapper = document.createElement('div');
+                    wrapper.id = 'btnTambahJenisBaruWrapper';
+                    wrapper.innerHTML = `
+                <div class="text-center p-2 border-top bg-light">
+                    <button type="button" class="btn btn-sm btn-outline-primary w-100" id="btnTambahJenisBaru">
+                        + Tambah Jenis Baru
+                    </button>
+                </div>
+            `;
+                    dropdown.appendChild(wrapper);
+                }
+            });
+
+            // === Jika tidak ada jenis, langsung pakai mode input manual ===
+            {{--  if (jenisCount === 0) {
+                manualMode = true;
+                selectJenis.control.classList.add('d-none');
+                inputJenisManual.classList.remove('d-none');
+                inputJenisManual.removeAttribute('disabled');
+                inputJenisManual.setAttribute('required', true);
+                inputJenisManual.focus();
+            }  --}}
+
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('#btnTambahJenisBaru');
+                if (btn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    manualMode = true;
+
+                    selectJenis.control.classList.add('d-none');
+                    inputJenisManual.classList.remove('d-none');
+                    inputJenisManual.removeAttribute('disabled');
+                    inputJenisManual.setAttribute('required', true);
+                    inputJenisManual.value = '';
+                    inputJenisManual.focus();
+
+                    selectJenis.clear();
+                    selectJenis.close();
+                }
+            });
+
+            inputJenisManual.addEventListener('input', function() {
+                if (manualMode && inputJenisManual.value.trim() === '') {
+                    manualMode = false;
+
+                    inputJenisManual.classList.add('d-none');
+                    inputJenisManual.setAttribute('disabled', true);
+                    inputJenisManual.removeAttribute('required');
+
+                    selectJenis.control.classList.remove('d-none');
+                }
+            });
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const selectors = ['#kategori_id', '#jenis_id', '#lokasi_id'];

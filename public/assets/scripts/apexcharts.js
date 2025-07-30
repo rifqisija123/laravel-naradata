@@ -127,7 +127,12 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         yaxis: {
             labels: {
-                show: false
+                show: true,
+                style: {
+                    colors: '#000',
+                    fontSize: '14px',
+                    fontWeight: 600
+                }
             }
         },
         legend: {

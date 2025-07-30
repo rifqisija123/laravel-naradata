@@ -11,7 +11,7 @@ class Riwayats_pengembalian extends Model
     use HasFactory, SoftDeletes;
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $fillable = ['id', 'karyawan_id', 'nama_karyawan', 'jenis_id', 'barang_id', 'nama_barang', 'keterangan', 'tanggal'];
+    protected $fillable = ['id', 'riwayat_id', 'karyawan_id', 'nama_karyawan', 'jenis_id', 'barang_id', 'nama_barang', 'keterangan', 'kondisi', 'tanggal'];
     protected static function boot()
     {
         parent::boot();
@@ -24,5 +24,5 @@ class Riwayats_pengembalian extends Model
     public function jenis() { return $this->belongsTo(Jenis::class, 'jenis_id', 'merek_id'); }
     public function barang() { return $this->belongsTo(Barang::class); }
     public function karyawan() { return $this->belongsTo(Karyawan::class); }
-    public function riwayat() { return $this->belongsTo(Riwayat::class); }
+    public function riwayat() { return $this->belongsTo(Riwayat::class, 'riwayat_id'); }
 }

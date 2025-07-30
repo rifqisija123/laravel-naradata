@@ -144,7 +144,6 @@
                     cancelButtonText: "Batal"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Tampilkan alert sukses singkat
                         Swal.fire({
                             title: "Disimpan!",
                             icon: "success",
@@ -152,7 +151,6 @@
                             showConfirmButton: false
                         });
 
-                        // Submit form setelah sedikit delay agar alert terlihat
                         setTimeout(() => {
                             form.submit();
                         }, 1300);
@@ -162,6 +160,7 @@
                 });
             });
         });
+
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const icon = document.getElementById('toggleIcon');
@@ -188,5 +187,38 @@
             iconPassword.classList.toggle('bi-eye');
             iconPassword.classList.toggle('bi-eye-slash');
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnUpdatePassword = document.getElementById('btnUpdatePassword');
+            const formPassword = btnUpdatePassword.closest('form');
+
+            btnUpdatePassword.addEventListener('click', function(e) {
+                e.preventDefault(); // Mencegah submit form langsung
+
+                Swal.fire({
+                    title: "Yakin ingin menyimpan perubahan?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Simpan",
+                    cancelButtonText: "Batal"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Disimpan!",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        setTimeout(() => {
+                            formPassword.submit();
+                        }, 1300);
+                    } else if (result.isCancelled) {
+                        Swal.fire("Perubahan tidak disimpan", "", "info");
+                    }
+                });
+            });
+        });
     </script>
 @endpush

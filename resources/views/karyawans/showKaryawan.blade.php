@@ -65,7 +65,7 @@
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: `Data karyawan "${nama}" akan dihapus!`,
+                    text: `Data karyawan ${nama} akan dihapus!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus!',

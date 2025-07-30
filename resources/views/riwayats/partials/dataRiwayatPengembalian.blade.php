@@ -10,17 +10,17 @@
             </button>
             <ul class="dropdown-menu">
                 <li>
-                    <a class="dropdown-item" href="{{ route('riwayat.export', ['format' => 'pdf']) }}">
+                    <a class="dropdown-item" href="{{ route('riwayat.pengembalian.export', ['format' => 'pdf']) }}">
                         <i class="fas fa-file-pdf me-1 text-danger"></i> PDF
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="{{ route('riwayat.export', ['format' => 'excel']) }}">
+                    <a class="dropdown-item" href="{{ route('riwayat.pengembalian.export', ['format' => 'excel']) }}">
                         <i class="fas fa-file-excel me-1 text-success"></i> Excel
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="{{ route('riwayat.export', ['format' => 'print']) }}"
+                    <a class="dropdown-item" href="{{ route('riwayat.pengembalian.export', ['format' => 'print']) }}"
                         target="_blank">
                         <i class="fas fa-print me-1 text-dark"></i> Print
                     </a>
@@ -49,19 +49,19 @@
                             <td>{{ $riwayat->karyawan->nama ?? '-' }}</td>
                             <td>
                                 <div class="d-flex gap-1">
-                                    <a href="{{ route('riwayat.show', $riwayat->id) }}" class="btn btn-sm btn-primary"
+                                    <a href="{{ route('riwayat.pengembalian.show', $riwayat->id) }}" class="btn btn-sm btn-primary"
                                         title="Lihat">
                                         <i class="fas fa-eye"></i> Show
                                     </a>
-                                    <a href="{{ route('riwayat.edit', $riwayat->id) }}" class="btn btn-sm btn-warning"
+                                    <a href="{{ route('riwayat.pengembalian.edit', $riwayat->id) }}" class="btn btn-sm btn-warning"
                                         title="Edit">
                                         <i class="fas fa-pen"></i> Edit
                                     </a>
-                                    <form action="{{ route('riwayat.destroy', $riwayat->id) }}" method="POST"
-                                        class="form-delete d-inline">
+                                    <form action="{{ route('riwayat.pengembalian.destroy', $riwayat->id) }}" method="POST"
+                                        class="form-delete-pengembalian d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger btn-delete"
+                                        <button type="submit" class="btn btn-sm btn-danger btn-delete-pengembalian"
                                             data-nama="{{ $riwayat->barang->nama_barang ?? '-' }}"
                                             data-karyawan="{{ $riwayat->karyawan->nama ?? '-' }}" title="Hapus">
                                             <i class="fas fa-trash"></i> Delete

@@ -21,4 +21,9 @@ class Karyawan extends Model
             $model->id = 'KY' . str_pad($number, 3, '0', STR_PAD_LEFT);
         });
     }
+
+    public function barangs()
+    {
+        return $this->hasMany(\App\Models\Riwayat::class, 'karyawan_id', 'id')->whereNull('keterangan');
+    }
 }

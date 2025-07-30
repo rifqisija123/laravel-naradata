@@ -61,7 +61,7 @@
                 const jabatan = jabatanInput.value.trim();
 
                 Swal.fire({
-                    title: `Yakin ingin menambahkan karyawan "${nama}" dengan jabatan "${jabatan}"?`,
+                    title: `Yakin ingin menambahkan karyawan ${nama} dengan jabatan ${jabatan}?`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

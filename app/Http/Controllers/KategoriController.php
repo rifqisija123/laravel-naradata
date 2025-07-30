@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\KategoriImport;
 use App\Models\Barang;
 use App\Models\Kategori;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
@@ -85,5 +87,24 @@ class KategoriController extends Controller
     {
         $kategori = Kategori::findOrFail($id);
         return view('kategori.showKategori', compact('kategori'));
+    }
+
+    public function importPage()
+    {
+        return view('kategori.importKategori');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'file_excel.required' => 'File harus diunggah.',
+            'file_excel.mimes' => 'File harus berupa file Excel (xlsx, xls, csv).',
+        ]);
+
+        Excel::import(new KategoriImport, $request->file('file_excel'));
+
+        return redirect()->route('kategori.index')->with('success_excel', 'Data kategori berhasil diimport.');
     }
 }

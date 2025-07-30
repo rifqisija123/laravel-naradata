@@ -111,16 +111,19 @@
                     <input type="email" name="email" class="form-control" id="email" required autofocus>
                 </div>
 
-                <div class="mb-4 text-start">
+                <div class="mb-3 text-start">
                     <label for="password" class="form-label">Password</label>
-                    <div class="input-group">
+                    <div class="input-group mb-2">
                         <input type="password" name="password" class="form-control" id="password" required>
                         <span class="input-group-text" onclick="togglePassword()">
                             <i class="bi bi-eye-slash" id="toggleIcon"></i>
                         </span>
                     </div>
+                    <a href="{{ route('forgot.password') }}"
+                        class="d-block text-end mt-1 text-primary text-decoration" style="font-size: 15px;">
+                        Lupa password?
+                    </a>
                 </div>
-
                 <button class="btn btn-primary" type="submit">Login</button>
             </form>
             <p class="mt-3 text-center">

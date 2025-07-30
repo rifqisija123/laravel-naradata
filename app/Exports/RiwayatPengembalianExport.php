@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class RiwayatExport implements FromCollection, WithHeadings, WithStyles
+class RiwayatPengembalianExport implements FromCollection, WithHeadings, WithStyles
 {
     protected $riwayats;
 
@@ -21,13 +21,13 @@ class RiwayatExport implements FromCollection, WithHeadings, WithStyles
     {
         return collect($this->riwayats)->map(function ($r) {
             return [
+                $r->karyawan->nama ?? '-',
                 $r->jenis->jenis ?? '-',
                 $r->jenis->merek ?? '-',
                 $r->barang->nama_barang ?? '-',
-                $r->karyawan->nama ?? '-',
+                $r->kondisi ?? '-',
                 $r->keterangan ?? 'Tidak ada keterangan',
                 \Carbon\Carbon::parse($r->tanggal)->translatedFormat('d F Y'),
-                $r->status == 1 ? 'Dikembalikan' : '-',
             ];
         });
     }
@@ -35,13 +35,13 @@ class RiwayatExport implements FromCollection, WithHeadings, WithStyles
     public function headings(): array
     {
         return [
+            'Karyawan',
             'Jenis',
             'Merek',
             'Nama Barang',
-            'Karyawan',
+            'kondisi',
             'Keterangan',
             'Tanggal',
-            'Status',
         ];
     }
 

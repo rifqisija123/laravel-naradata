@@ -77,7 +77,11 @@
 
             const tsJenisPengembalian = new TomSelect('#pengembalian #jenis_id', {
                 ...configTomSelect,
-                placeholder: '-- Pilih Jenis & Merek --'
+                placeholder: '-- Pilih Jenis --'
+            });
+            const tsMerekPengembalian = new TomSelect('#pengembalian #merek_id', {
+                ...configTomSelect,
+                placeholder: '-- Pilih Merek --'
             });
             const tsBarangPengembalian = new TomSelect('#pengembalian #barang_id', {
                 ...configTomSelect,
@@ -89,11 +93,13 @@
             });
 
             tsJenisPengembalian.disable();
+            tsMerekPengembalian.disable();
             tsBarangPengembalian.disable();
 
             tsKaryawanPengembalian.on('change', karyawanId => {
                 if (!karyawanId) {
                     tsJenisPengembalian.disable();
+                    tsMerekPengembalian.disable();
                     tsBarangPengembalian.disable();
                     return;
                 }
@@ -103,6 +109,8 @@
                     .then(data => {
                         tsJenisPengembalian.clear(true);
                         tsJenisPengembalian.clearOptions();
+                        tsJenisPengembalian.clear(true);
+                        tsJenisPengembalian.clearOptions();
                         tsBarangPengembalian.clear(true);
                         tsBarangPengembalian.clearOptions();
 
@@ -110,11 +118,11 @@
                         const barangOptions = [];
 
                         data.forEach(b => {
-                            const jenisKey = b.jenis_id;
+                            const jenisKey = b.jenis.toLowerCase();
                             if (!jenisMap.has(jenisKey)) {
                                 jenisMap.set(jenisKey, {
                                     value: b.jenis_id,
-                                    text: `${b.jenis} - ${b.merek}`
+                                    text: `${b.jenis}`
                                 });
                             }
 
@@ -136,41 +144,73 @@
             });
 
             tsJenisPengembalian.on('change', jenisId => {
-                if (!jenisId) {
+                const selectedKaryawanId = tsKaryawanPengembalian.getValue();
+
+                if (!jenisId || !selectedKaryawanId) {
+                    tsMerekPengembalian.disable();
+                    tsMerekPengembalian.clear(true);
+                    tsMerek.clearOptions();
+                    tsBarangPengembalian.disable();
+                    return;
+                }
+
+                fetch(`/merek-by-jenis-karyawan/${jenisId}/${selectedKaryawanId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const options = data.map(m => ({
+                            value: m.merek_id,
+                            text: m.merek
+                        }));
+
+                        tsMerekPengembalian.clear(true);
+                        tsMerekPengembalian.clearOptions();
+                        tsMerekPengembalian.addOptions(options);
+                        tsMerekPengembalian.enable();
+                    })
+                    .catch(() => {
+                        Swal.fire('Error', 'Gagal memuat data merek', 'error');
+                    });
+            });
+
+            tsMerekPengembalian.on('change', merekId => {
+                const jenisId = tsJenisPengembalian.getValue();
+                const karyawanId = tsKaryawanPengembalian.getValue();
+
+                if (!merekId || !jenisId || !karyawanId) {
                     tsBarangPengembalian.disable();
                     tsBarangPengembalian.clear();
                     return;
                 }
 
-                const selectedKaryawanId = tsKaryawanPengembalian.getValue();
-
-                fetch(`/barang-by-jenis-karyawan/${jenisId}/${selectedKaryawanId}`)
+                fetch(`/barang-by-karyawan-jenis-merek/${karyawanId}/${jenisId}/${merekId}`)
                     .then(res => res.json())
                     .then(data => {
-                        const options = data.map(b => {
-                            const status = b.kelengkapan == 1 ? '(Lengkap)' : '(Tidak Lengkap)';
-                            return {
-                                value: b.id,
-                                text: `${b.id} - ${b.nama_barang} ${status}`
-                            };
-                        });
+                        const options = data.map(b => ({
+                            value: b.id,
+                            text: `${b.id} - ${b.nama_barang} ${b.kelengkapan == 1 ? '(Lengkap)' : '(Tidak Lengkap)'}`
+                        }));
 
                         tsBarangPengembalian.clear(true);
                         tsBarangPengembalian.clearOptions();
                         tsBarangPengembalian.addOptions(options);
                         tsBarangPengembalian.enable();
-                        tsBarangPengembalian.refreshOptions(false);
                     })
                     .catch(() => {
-                        tsBarangPengembalian.disable();
                         Swal.fire('Error', 'Gagal memuat data barang', 'error');
+                        tsBarangPengembalian.disable();
                     });
             });
 
             const tsJenis = new TomSelect('#jenis_id', {
                 ...configTomSelect,
-                placeholder: '-- Pilih Jenis & Merek --'
+                placeholder: '-- Pilih Jenis --'
             });
+
+            const tsMerek = new TomSelect('#merek_id', {
+                ...configTomSelect,
+                placeholder: '-- Pilih Merek --'
+            });
+            tsMerek.disable();
 
             const tsBarang = new TomSelect('#barang_id', {
                 ...configTomSelect,
@@ -181,35 +221,62 @@
                 ...configTomSelect,
                 placeholder: '-- Pilih Karyawan --'
             });
-
             tsBarang.disable();
 
-            tsJenis.on('change', value => {
-                if (!value) {
+            tsJenis.on('change', jenisId => {
+                if (!jenisId) {
+                    tsMerek.disable();
+                    tsMerek.clear(true);
+                    tsMerek.clearOptions();
                     tsBarang.disable();
                     tsBarang.clear(true);
                     tsBarang.clearOptions();
                     return;
                 }
 
-                fetch("{{ url('api/barang-by-jenis') }}/" + value)
+                fetch(`/api/merek-by-jenis/${jenisId}`)
                     .then(res => res.json())
                     .then(data => {
+                        tsMerek.clear(true);
+                        tsMerek.clearOptions();
+
+                        const options = data.map(m => ({
+                            value: m.merek_id,
+                            text: m.merek
+                        }));
+
+                        tsMerek.addOptions(options);
+                        tsMerek.enable();
+                    })
+                    .catch(() => {
+                        Swal.fire('Error', 'Gagal memuat data merek', 'error');
+                    });
+            });
+            tsMerek.on('change', merekId => {
+                const jenisId = tsJenis.getValue();
+
+                if (!merekId || !jenisId) {
+                    tsBarang.disable();
+                    tsBarang.clear(true);
+                    tsBarang.clearOptions();
+                    return;
+                }
+
+                fetch(`/api/barang-by-jenis-merek/${jenisId}/${merekId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const options = data.map(b => {
+                            const status = b.kelengkapan == 1 ? '(Lengkap)' : '(Tidak Lengkap)';
+                            return {
+                                value: b.id,
+                                text: `${b.id} - ${b.nama_barang} ${status}`
+                            };
+                        });
+
                         tsBarang.clear(true);
                         tsBarang.clearOptions();
-                        tsBarang.addOptions(
-                            data.map(b => {
-                                const statusKelengkapan = b.kelengkapan == 1 ? '(Lengkap)' :
-                                    '(Tidak Lengkap)';
-                                return {
-                                    value: b.id,
-                                    text: `${b.id} - ${b.nama_barang}${statusKelengkapan}`
-                                };
-                            })
-                        );
-
+                        tsBarang.addOptions(options);
                         tsBarang.enable();
-                        tsBarang.refreshOptions(false);
 
                         tsBarang.on('change', value => {
                             const selectedItem = tsBarang.options[value];

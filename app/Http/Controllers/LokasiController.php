@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\LokasiImport;
 use App\Models\Lokasi;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class LokasiController extends Controller
@@ -84,5 +86,24 @@ class LokasiController extends Controller
         $lokasi->delete();
 
         return redirect()->route('lokasi.index')->with('success', 'Lokasi berhasil dihapus.');
+    }
+
+    public function importPage()
+    {
+        return view('ruangan.importLokasi');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv',
+        ], [
+            'file_excel.required' => 'File harus diunggah.',
+            'file_excel.mimes' => 'File harus berupa file Excel (xlsx, xls, csv).',
+        ]);
+
+        Excel::import(new LokasiImport, $request->file('file_excel'));
+
+        return redirect()->route('lokasi.index')->with('success_excel', 'Data lokasi berhasil diimport.');
     }
 }
