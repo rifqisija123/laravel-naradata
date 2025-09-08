@@ -102,6 +102,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
     Route::post('/api/chat/update-last-seen', [ChatController::class, 'updateLastSeen'])->name('chat.update-last-seen');
     Route::post('/api/chat/mark-read', [ChatController::class, 'markAsRead'])->name('chat.mark-read');
+    Route::get('/api/chat/unread-count', [ChatController::class, 'getUnreadCount'])->name('chat.unread-count');
 });
 
 //route untuk API barang berdasarkan jenis
