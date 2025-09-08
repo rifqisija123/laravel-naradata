@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\RedirectIfNotAuthenticated;
+use App\Http\Middleware\RestrictAccessByEmail;
 use App\Http\Middleware\UpdateLastSeen;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'auth' => RedirectIfNotAuthenticated::class,
+            'restrict.email' => RestrictAccessByEmail::class,
             'update.last.seen' => UpdateLastSeen::class,
         ]);
         
