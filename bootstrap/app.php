@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\RedirectIfNotAuthenticated;
+use App\Http\Middleware\UpdateLastSeen;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'auth' => RedirectIfNotAuthenticated::class,
+            'update.last.seen' => UpdateLastSeen::class,
+        ]);
+        
+        $middleware->web(append: [
+            UpdateLastSeen::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

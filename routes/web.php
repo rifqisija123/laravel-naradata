@@ -9,8 +9,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
-
 
 //route untuk halaman utama
 Route::middleware('auth')->group(function () {
@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
 
     //route untuk halaman jenis
     Route::get('/jenis', [JenisController::class, 'index'])->name('jenis.index');
+    Route::get('/jenis/autocomplete', [JenisController::class, 'autocomplete'])->name('jenis.autocomplete');
     Route::post('/jenis/store', [JenisController::class, 'store'])->name('jenis.store');
     Route::get('/jenis/show/{id}', [JenisController::class, 'show'])->name('jenis.show');
     Route::put('/jenis/update/{id}', [JenisController::class, 'update'])->name('jenis.update');
@@ -91,6 +92,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('edit.profile');
     Route::put('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profile/update/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
+
+    //route untuk halaman chat
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    
+    // API routes untuk chat
+    Route::get('/api/chat/users', [ChatController::class, 'getUsers'])->name('chat.users');
+    Route::get('/api/chat/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/api/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::post('/api/chat/update-last-seen', [ChatController::class, 'updateLastSeen'])->name('chat.update-last-seen');
+    Route::post('/api/chat/mark-read', [ChatController::class, 'markAsRead'])->name('chat.mark-read');
 });
 
 //route untuk API barang berdasarkan jenis
@@ -136,7 +147,7 @@ Route::get('/api/fun-facts', [BarangController::class, 'getFunFacts'])->name('ap
 //route untuk filter riwayat
 Route::get('/riwayat/filter/result', [FilterController::class, 'filterResult'])->name('filter.result');
 
-// route auth  
+// route auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.action');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');

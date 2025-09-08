@@ -14,6 +14,14 @@ class FilterController extends Controller
 
         if (empty($request->all())) {
             $barangs = $query->get()->map(function ($barang) {
+                $lastRiwayat = $barang->riwayats->last();
+                $lastStatus = optional($lastRiwayat)->status;
+
+                // Logika status dan karyawan
+                $karyawanNama = '-';
+                if ($barang->status == 1 && $lastStatus === 0) {
+                    $karyawanNama = optional($lastRiwayat?->karyawan)->nama ?? '-';
+                }
                 return [
                     'nama_barang' => $barang->nama_barang,
                     'kategori' => $barang->kategori->kategori ?? '-',
@@ -22,9 +30,9 @@ class FilterController extends Controller
                     'lokasi' => $barang->lokasi->posisi ?? '-',
                     'kelengkapan' => $barang->kelengkapan == 1 ? 'Lengkap' : 'Tidak Lengkap',
                     'status' => $barang->status == 1 ? 'Dipakai' : 'Tidak Dipakai',
-                    'karyawan' => optional($barang->riwayats->last()?->karyawan)->nama ?? '-',
-                    'tanggal' => optional($barang->riwayats->last())->tanggal
-                        ? \Carbon\Carbon::parse($barang->riwayats->last()->tanggal)->translatedFormat('d F Y')
+                    'karyawan' => $karyawanNama,
+                    'tanggal' => optional($lastRiwayat)->tanggal
+                        ? \Carbon\Carbon::parse($lastRiwayat->tanggal)->translatedFormat('d F Y')
                         : '-',
                 ];
             });
@@ -91,6 +99,14 @@ class FilterController extends Controller
 
         // Ambil data hasil dan map ke struktur respons
         $barangs = $query->get()->map(function ($barang) {
+            $lastRiwayat = $barang->riwayats->last();
+            $lastStatus = optional($lastRiwayat)->status;
+
+            // Logika status dan karyawan
+            $karyawanNama = '-';
+            if ($barang->status == 1 && $lastStatus === 0) {
+                $karyawanNama = optional($lastRiwayat?->karyawan)->nama ?? '-';
+            }
             return [
                 'nama_barang' => $barang->nama_barang,
                 'kategori' => $barang->kategori->kategori ?? '-',
@@ -99,9 +115,9 @@ class FilterController extends Controller
                 'lokasi' => $barang->lokasi->posisi ?? '-',
                 'kelengkapan' => $barang->kelengkapan == 1 ? 'Lengkap' : 'Tidak Lengkap',
                 'status' => $barang->status == 1 ? 'Dipakai' : 'Tidak Dipakai',
-                'karyawan' => optional($barang->riwayats->last()?->karyawan)->nama ?? '-',
-                'tanggal' => optional($barang->riwayats->last())->tanggal
-                    ? \Carbon\Carbon::parse($barang->riwayats->last()->tanggal)->translatedFormat('d F Y')
+                'karyawan' => $karyawanNama,
+                'tanggal' => optional($lastRiwayat)->tanggal
+                    ? \Carbon\Carbon::parse($lastRiwayat->tanggal)->translatedFormat('d F Y')
                     : '-',
             ];
         });

@@ -3,6 +3,7 @@
 @section('title', 'Edit Profile')
 
 @section('content-card')
+    @include('icons.iconCardProfile')
     <h4 class="fw-bold mb-4">Profile</h4>
     <div class="text-white d-flex align-items-center">
         <hr class="me-2" style="width: 3%; height: 3px; background-color: white; margin: 0; margin-right: 10px;" />
@@ -77,7 +78,8 @@
                 <label for="passwordSaatIni" class="form-label">Password Saat Ini</label>
                 <div class="input-group">
                     <input type="password" id="passwordSaatIni" name="passwordSaatIni"
-                        class="form-control @error('passwordSaatIni') is-invalid @enderror" required>
+                        class="form-control @error('passwordSaatIni') is-invalid @enderror"
+                        value="{{ old('passwordSaatIni') }}"equired>
                     <span class="input-group-text" onclick="togglePasswordLama()">
                         <i class="bi bi-eye-slash" id="toggleIconLama"></i>
                     </span>
@@ -93,7 +95,8 @@
                 <label for="password" class="form-label">Password Baru</label>
                 <div class="input-group">
                     <input type="password" id="password" name="password"
-                        class="form-control @error('password') is-invalid @enderror" required>
+                        class="form-control @error('password') is-invalid @enderror" value="{{ old('password') }}"
+                        required>
                     <span class="input-group-text" onclick="togglePassword()">
                         <i class="bi bi-eye-slash" id="toggleIcon"></i>
                     </span>
@@ -109,7 +112,8 @@
                 <label for="confirmPassword" class="form-label">Konfirmasi Password</label>
                 <div class="input-group">
                     <input type="password" id="confirmPassword" name="confirmPassword"
-                        class="form-control @error('confirmPassword') is-invalid @enderror" required>
+                        class="form-control @error('confirmPassword') is-invalid @enderror"
+                        value="{{ old('confirmPassword') }}" required>
                     <span class="input-group-text" onclick="toggleConfirmPassword()">
                         <i class="bi bi-eye-slash" id="toggleIconConfirm"></i>
                     </span>

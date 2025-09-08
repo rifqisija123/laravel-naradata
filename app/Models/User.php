@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'tanggal',
+        'last_seen',
     ];
 
     /**
@@ -44,6 +45,22 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_seen' => 'datetime',
         ];
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Chat::class, 'sender_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Chat::class, 'receiver_id');
+    }
+
+    public function isOnline()
+    {
+        return $this->last_seen && $this->last_seen->diffInMinutes(now()) < 5;
     }
 }

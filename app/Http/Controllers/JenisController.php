@@ -19,42 +19,38 @@ class JenisController extends Controller
             'manual' => 'nullable|boolean'
         ]);
 
-        $jenisInput = strtolower($request->jenis);
-        $merekInput = strtolower($request->merek);
+        $jenisInput = strtolower(trim($request->jenis));
+        $merekInput = strtolower(trim($request->merek));
         $isManual = $request->manual;
 
-        if ($isManual) {
-            $existingJenis = Jenis::all();
-            foreach ($existingJenis as $existing) {
-                similar_text($jenisInput, strtolower($existing->jenis), $percent);
-                if ($percent > 85) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Jenis sudah ada!'
-                    ], 409);
-                }
+        $existingJenisList = Jenis::select('jenis')->distinct()->get();
+        $matchedJenis = null;
+        $highestPercent = 0;
+
+        foreach ($existingJenisList as $existing) {
+            similar_text($jenisInput, strtolower($existing->jenis), $percent);
+            if ($percent > $highestPercent && $percent >= 85) {
+                $highestPercent = $percent;
+                $matchedJenis = $existing->jenis;
             }
         }
 
-        $existingCombinations = Jenis::all();
+        $finalJenis = $matchedJenis ?? ucfirst($jenisInput);
 
-        foreach ($existingCombinations as $item) {
-            $jenisDB = strtolower($item->jenis);
-            $merekDB = strtolower($item->merek);
+        // Cek kombinasi jenis + merek apakah sudah ada
+        $exists = Jenis::whereRaw('LOWER(jenis) = ?', [strtolower($finalJenis)])
+            ->whereRaw('LOWER(merek) = ?', [$merekInput])
+            ->exists();
 
-            if ($jenisDB === $jenisInput) {
-                similar_text($merekInput, $merekDB, $percent);
-                if ($percent > 85) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Kombinasi jenis dan merek sudah ada!'
-                    ], 409);
-                }
-            }
+        if ($exists) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Kombinasi jenis dan merek sudah ada!'
+            ], 409);
         }
 
         $jenis = Jenis::create([
-            'jenis' => ucfirst($jenisInput),
+            'jenis' => ucfirst($finalJenis),
             'merek' => ucfirst($merekInput),
             'keterangan' => $request->keterangan,
         ]);
@@ -63,6 +59,16 @@ class JenisController extends Controller
             'status' => 'success',
             'data' => $jenis
         ]);
+    }
+    public function autocomplete(Request $request)
+    {
+        $keyword = strtolower($request->get('keyword'));
+        $jenis = Jenis::select('jenis')
+            ->distinct()
+            ->whereRaw('LOWER(jenis) LIKE ?', ["%{$keyword}%"])
+            ->get();
+
+        return response()->json($jenis);
     }
     public function index()
     {

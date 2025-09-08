@@ -73,7 +73,7 @@
             <h5 class="mb-1 fw-bold">Register Akun</h5>
             <p class="text-muted mb-4" style="font-size: 14px;">Silakan buat akun baru Anda</p>
 
-            @if ($errors->has('confirm_password'))
+            {{--  @if ($errors->has('confirm_password'))
                 <div class="alert alert-danger alert-dismissible fade show text-start" role="alert">
                     {{ $errors->first('confirm_password') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -83,38 +83,52 @@
                     {{ $errors->first('email') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            @endif
+            @endif  --}}
 
             <form method="POST" action="{{ route('register.action') }}">
                 @csrf
                 <div class="mb-3 text-start">
                     <label class="form-label">Name</label>
-                    <input type="text" name="name" class="form-control" required>
+                    <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+                    @error('name')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3 text-start">
                     <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required>
+                    <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+                    @error('email')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3 text-start">
                     <label class="form-label">Password</label>
                     <div class="input-group">
-                        <input type="password" name="password" class="form-control" id="password" required>
+                        <input type="password" name="password" class="form-control" id="password"
+                            value="{{ old('password') }}" required>
                         <span class="input-group-text" onclick="togglePassword()">
                             <i class="bi bi-eye-slash" id="toggleIcon"></i>
                         </span>
                     </div>
+                    @error('password')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-4 text-start">
                     <label class="form-label">Confirm Password</label>
                     <div class="input-group">
-                        <input type="password" name="confirm_password" class="form-control" id="confirm-password" required>
+                        <input type="password" name="confirm_password" class="form-control" id="confirm-password"
+                            value="{{ old('confirm_password') }}" required>
                         <span class="input-group-text" onclick="toggleConfirmPassword()">
                             <i class="bi bi-eye-slash" id="toggleIconConfirm"></i>
                         </span>
                     </div>
+                    @error('confirm_password')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <button class="btn btn-primary" type="submit">Register</button>
@@ -138,6 +152,7 @@
             icon.classList.toggle('bi-eye');
             icon.classList.toggle('bi-eye-slash');
         }
+
         function toggleConfirmPassword() {
             const confirmPasswordInput = document.getElementById('confirm-password');
             const iconConfirm = document.getElementById('toggleIconConfirm');

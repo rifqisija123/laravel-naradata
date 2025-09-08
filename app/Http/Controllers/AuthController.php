@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -31,8 +32,8 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'login' => 'Email atau Password yang dimasukkan tidak sesuai.',
-        ]);
+            'login' => 'Email atau Password yang dimasukkan tidak sesuai.'
+        ])->withInput($request->only('email', 'password'));
     }
 
     public function showRegister()
@@ -42,13 +43,14 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:100',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password',
         ], [
             'name.required' => 'Nama wajib diisi.',
+            'name.max' => 'Nama maksimal 255 karakter.',
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Akun sudah terdaftar, silahkan login.',
@@ -56,6 +58,10 @@ class AuthController extends Controller
             'password.min' => 'Password minimal 6 karakter.',
             'confirm_password.same' => 'Confirm Password tidak sesuai.',
         ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput($request->all());
+        }
 
         User::create([
             'name' => $request->name,
@@ -84,7 +90,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return back()->withErrors(['email' => 'Email tidak terdaftar.']);
+            return back()->withErrors(['email' => 'Email tidak terdaftar.'])->withInput($request->only('email'));
         }
 
         $token = base64_encode($request->email . now());
@@ -100,7 +106,7 @@ class AuthController extends Controller
 
     public function handleResetPassword(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password',
             'email' => 'required|email'
@@ -111,10 +117,23 @@ class AuthController extends Controller
             'confirm_password.same' => 'Konfirmasi password tidak sesuai.',
         ]);
 
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput($request->except(['password', 'confirm_password']) + [
+                    'password' => $request->password,
+                    'confirm_password' => $request->confirm_password,
+                ]);
+        }
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
+            return back()->withErrors(['email' => 'Email tidak ditemukan.'])
+                ->withInput($request->except(['password', 'confirm_password']) + [
+                    'password' => $request->password,
+                    'confirm_password' => $request->confirm_password,
+                ]);
         }
 
         $user->password = Hash::make($request->password);

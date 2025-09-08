@@ -3,6 +3,7 @@
 @section('title', 'Data Barang')
 
 @section('content-card')
+    @include('icons.iconCardBarang')
     <h4 class="fw-bold mb-4">Data Barang</h4>
     <div class="row justify-content-center g-5">
         <div class="col-lg-3-5 col-md-3 col-sm-6 col-12 custom-card">

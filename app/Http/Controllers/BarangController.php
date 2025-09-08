@@ -241,7 +241,6 @@ class BarangController extends Controller
 
     public function getMerekByJenisAndKaryawan($jenis_id, $karyawan_id)
     {
-        // Ambil semua Jenis dengan merek_id = jenis_id dan barang yang terkait dengan karyawan
         $jenisList = Jenis::where('merek_id', $jenis_id)
             ->with(['barangs' => function ($query) use ($karyawan_id) {
                 $query->whereHas('riwayats', function ($q) use ($karyawan_id) {
@@ -250,7 +249,6 @@ class BarangController extends Controller
             }])
             ->get();
 
-        // Ambil semua merek unik dari hasil barangs yang diambil
         $merekList = collect();
         foreach ($jenisList as $jenis) {
             foreach ($jenis->barangs as $barang) {
@@ -270,6 +268,7 @@ class BarangController extends Controller
     {
         $barangDipinjam = Riwayat::where('karyawan_id', $karyawan_id)
             ->where('jenis_id', $jenis_id)
+            ->where('status', 0)
             ->whereHas('jenis', function ($q) use ($merek_id) {
                 $q->where('merek_id', $merek_id);
             })

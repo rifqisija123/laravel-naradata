@@ -595,6 +595,7 @@ body {
     }
     .content-card-home {
         margin-top: 80px;
+        margin-bottom: 40px;
         margin-left: 230px;
         max-width: calc(200% - 120px);
     }
@@ -743,6 +744,12 @@ body {
     color: white;
     opacity: 0.08;
     filter: saturate(0%) brightness(140%);
+    transition: transform 0.3s ease;
+}
+
+.icon-navbar:hover {
+    transform: scale(1.2);
+    color: white;
 }
 
 .icon-decoration {
@@ -760,3 +767,13 @@ body {
     font-size: 1.5rem; /* lo bisa sesuaikan ukurannya */
     color: rgba(255, 255, 255, 0.08); /* warna putih transparan */
 }
+
+.bot-button {
+  transition: all 0.2s ease;
+}
+
+.bot-button:hover {
+  transform: translateY(-2px);
+  background-color: #e2e6ea !important;
+}
+

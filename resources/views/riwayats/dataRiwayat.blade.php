@@ -3,6 +3,7 @@
 @section('title', 'Data Riwayat')
 
 @section('content-card')
+    @include('icons.iconCardRiwayat')
     <h4 class="fw-bold mb-4">Data Riwayat Peminjaman</h4>
     <div class="row justify-content-center g-5">
         <div class="col-lg-3-5 col-md-4 col-sm-6 col-12 custom-card">

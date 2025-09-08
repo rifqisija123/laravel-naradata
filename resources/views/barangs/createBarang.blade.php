@@ -149,15 +149,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <label for="namaJenisBaru" class="form-label">Jenis:</label>
-                    <select id="selectJenisExisting" class="w-100" placeholder="Ketik untuk mencari jenis...">
-                        <option value="" selected disabled>-- Pilih atau cari Jenis --</option>
-                        @foreach ($jenisBarang as $j)
-                            <option value="{{ $j->jenis }}">{{ $j->jenis }}</option>
-                        @endforeach
-                    </select>
-
-                    <input type="text" class="form-control mt-2 d-none" name="jenis" id="inputJenisManual" />
+                    <label for="inputJenisManual" class="form-label">Jenis:</label>
+                    <input type="text" class="form-control" name="jenis" id="inputJenisManual" required autocomplete="off" />
                 </div>
                 <div class="modal-body">
                     <label for="namaMerekBaru" class="form-label">Merek:</label>

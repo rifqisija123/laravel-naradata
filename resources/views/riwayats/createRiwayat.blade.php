@@ -109,8 +109,8 @@
                     .then(data => {
                         tsJenisPengembalian.clear(true);
                         tsJenisPengembalian.clearOptions();
-                        tsJenisPengembalian.clear(true);
-                        tsJenisPengembalian.clearOptions();
+                        tsMerekPengembalian.clear(true);
+                        tsMerekPengembalian.clearOptions();
                         tsBarangPengembalian.clear(true);
                         tsBarangPengembalian.clearOptions();
 
@@ -134,6 +134,9 @@
 
                         tsJenisPengembalian.addOptions(Array.from(jenisMap.values()));
                         tsJenisPengembalian.enable();
+                        tsMerekPengembalian.disable();
+                        tsMerekPengembalian.clear();
+                        tsMerekPengembalian.clearOptions();
                         tsBarangPengembalian.disable();
                         tsBarangPengembalian.clear();
                         tsBarangPengembalian.clearOptions();
@@ -149,7 +152,7 @@
                 if (!jenisId || !selectedKaryawanId) {
                     tsMerekPengembalian.disable();
                     tsMerekPengembalian.clear(true);
-                    tsMerek.clearOptions();
+                    tsMerekPengembalian.clearOptions();
                     tsBarangPengembalian.disable();
                     return;
                 }
@@ -166,6 +169,9 @@
                         tsMerekPengembalian.clearOptions();
                         tsMerekPengembalian.addOptions(options);
                         tsMerekPengembalian.enable();
+                        tsBarangPengembalian.disable();
+                        tsBarangPengembalian.clear();
+                        tsBarangPengembalian.clearOptions();
                     })
                     .catch(() => {
                         Swal.fire('Error', 'Gagal memuat data merek', 'error');

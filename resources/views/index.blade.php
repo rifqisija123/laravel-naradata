@@ -63,9 +63,15 @@
                 <div class="card-header bg-white">
                     <h6 class="mb-0 fw-bold">Distribusi Barang per Kategori</h6>
                 </div>
-                <div class="card-body">
-                    <div id="chartKategori" style="height: 300px;"></div>
-                </div>
+                @if($kategoriData->isEmpty())
+                    <div class="card-body text-center">
+                        <p class="text-muted">Tidak ada data distribusi kategori barang.</p>
+                    </div>
+                @elseif($kategoriData->count() > 0)
+                    <div class="card-body">
+                        <div id="chartKategori" style="height: 300px;"></div>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -75,9 +81,15 @@
                 <div class="card-header bg-white">
                     <h6 class="mb-0 fw-bold">Status Kelengkapan Barang</h6>
                 </div>
-                <div class="card-body">
-                    <div id="chartKelengkapan" style="height: 300px;"></div>
-                </div>
+                @if($barangLengkap === 0 && $barangTidakLengkap === 0)
+                    <div class="card-body text-center">
+                        <p class="text-muted">Tidak ada data kelengkapan barang.</p>
+                    </div>
+                @elseif($barangLengkap > 0 || $barangTidakLengkap > 0)
+                    <div class="card-body">
+                        <div id="chartKelengkapan" style="height: 300px;"></div>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -87,9 +99,15 @@
                 <div class="card-header bg-white">
                     <h6 class="mb-0 fw-bold">Distribusi Barang per Lokasi</h6>
                 </div>
-                <div class="card-body">
-                    <div id="chartLokasi" style="height: 300px;"></div>
-                </div>
+                @if($lokasiRelasi->isEmpty())
+                    <div class="card-body text-center">
+                        <p class="text-muted">Tidak ada data distribusi barang per lokasi.</p>
+                    </div>
+                @elseif($lokasiRelasi->count() > 0)
+                    <div class="card-body">
+                        <div id="chartLokasi" style="height: 300px;"></div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

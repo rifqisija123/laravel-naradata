@@ -110,7 +110,7 @@
                 <div class="mb-3 text-start">
                     <label for="password" class="form-label">Password Baru</label>
                     <div class="input-group">
-                        <input type="password" name="password" class="form-control" id="password" required>
+                        <input type="password" name="password" class="form-control" id="password" value="{{ old('password') }}" required>
                         <span class="input-group-text" onclick="togglePassword()">
                             <i class="bi bi-eye-slash" id="toggleIcon"></i>
                         </span>
@@ -120,7 +120,7 @@
                 <div class="mb-4 text-start">
                     <label for="confirm_password" class="form-label">Confirm Password</label>
                     <div class="input-group">
-                        <input type="password" name="confirm_password" class="form-control" id="confirm-password" required>
+                        <input type="password" name="confirm_password" class="form-control" id="confirm-password" value="{{ old('confirm_password') }}" required>
                         <span class="input-group-text" onclick="toggleConfirmPassword()">
                             <i class="bi bi-eye-slash" id="toggleIconConfirm"></i>
                         </span>

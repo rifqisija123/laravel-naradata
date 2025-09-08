@@ -108,13 +108,13 @@
                 @csrf
                 <div class="mb-3 text-start">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" required autofocus>
+                    <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}" required autofocus>
                 </div>
 
                 <div class="mb-3 text-start">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group mb-2">
-                        <input type="password" name="password" class="form-control" id="password" required>
+                        <input type="password" name="password" class="form-control" id="password" value="{{ old('password') }}" required>
                         <span class="input-group-text" onclick="togglePassword()">
                             <i class="bi bi-eye-slash" id="toggleIcon"></i>
                         </span>

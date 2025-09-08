@@ -98,7 +98,7 @@
                 @csrf
                 <div class="mb-4 text-start">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" required autofocus>
+                    <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}" required autofocus>
                 </div>
 
                 <button class="btn btn-primary" type="submit">Reset Password</button>

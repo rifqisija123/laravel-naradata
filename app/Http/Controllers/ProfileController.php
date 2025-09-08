@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -36,7 +37,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'passwordSaatIni' => 'required',
             'password' => 'required|min:6',
             'confirmPassword' => 'required|same:password'
@@ -47,10 +48,23 @@ class ProfileController extends Controller
             'confirmPassword.same' => 'Konfirmasi password tidak sesuai.',
         ]);
 
-        $user = Auth::user();
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput($request->except(['passwordSaatIni', 'password', 'confirm_password']) + [
+                    'passwordSaatIni' => $request->passwordSaatIni,
+                    'password' => $request->password,
+                    'confirm_password' => $request->confirm_password,
+                ]);
+        }
 
         if (!Hash::check($request->passwordSaatIni, $user->password)) {
-            return back()->withErrors(['passwordSaatIni' => 'Password saat ini tidak sesuai.']);
+            return back()->withErrors(['passwordSaatIni' => 'Password saat ini tidak sesuai.'])
+                ->withInput($request->except(['passwordSaatIni', 'password', 'confirm_password']) + [
+                    'passwordSaatIni' => $request->passwordSaatIni,
+                    'password' => $request->password,
+                    'confirm_password' => $request->confirm_password,
+                ]);
         }
 
         $user->update([

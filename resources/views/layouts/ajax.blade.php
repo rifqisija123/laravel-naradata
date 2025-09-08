@@ -43,12 +43,63 @@
     });
 </script>
 <script>
+    $(document).ready(function() {
+        let debounceTimeout;
+
+        $('#inputJenisManual').on('input', function() {
+            clearTimeout(debounceTimeout);
+            const keyword = $(this).val().trim();
+
+            if (keyword.length < 2) {
+                closeDropdown();
+                return;
+            }
+
+            debounceTimeout = setTimeout(() => {
+                $.ajax({
+                    url: "{{ route('jenis.autocomplete') }}",
+                    type: "GET",
+                    data: { keyword },
+                    success: function(response) {
+                        showDropdown(response);
+                    }
+                });
+            }, 300);
+        });
+
+        function showDropdown(data) {
+            closeDropdown();
+            if (data.length === 0) return;
+
+            const dropdown = $('<div class="autocomplete-dropdown border bg-white shadow-sm rounded" style="position: absolute; z-index: 9999; width: 100%;"></div>');
+            data.forEach(item => {
+                dropdown.append(`<div class="dropdown-item py-1 px-2 cursor-pointer">${item.jenis}</div>`);
+            });
+
+            dropdown.insertAfter('#inputJenisManual');
+
+            $('.autocomplete-dropdown .dropdown-item').on('click', function() {
+                $('#inputJenisManual').val($(this).text());
+                closeDropdown();
+            });
+        }
+
+        function closeDropdown() {
+            $('.autocomplete-dropdown').remove();
+        }
+
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('#inputJenisManual').length) {
+                closeDropdown();
+            }
+        });
+    });
+
+    // Submit logic tetap
     $('#formJenisModal').on('submit', function(e) {
         e.preventDefault();
 
-        let jenis = $('#inputJenisManual').is(':visible') ? $('#inputJenisManual').val() : $(
-            '#selectJenisExisting').val();
-        let isManual = $('#inputJenisManual').is(':visible') ? 1 : 0;
+        let jenis = $('#inputJenisManual').val();
         let merek = $('#namaMerekBaru').val();
         let keterangan = $('#keteranganJenis').val();
 
@@ -57,10 +108,10 @@
             type: "POST",
             data: {
                 _token: '{{ csrf_token() }}',
-                jenis: jenis,
-                merek: merek,
-                keterangan: keterangan,
-                manual: isManual
+                jenis,
+                merek,
+                keterangan,
+                manual: 1
             },
             success: function(response) {
                 if (response.status === 'success') {
@@ -72,37 +123,14 @@
                     });
 
                     selectJenis.addItem(response.data.merek_id);
-
-                    $('#inputJenisManual').val('').addClass('d-none').attr('disabled', true);
-                    $('#selectJenisManual').attr('required', false);
-
-                    $('#selectJenisExisting')[0].tomselect.clear();
-                    $('#namaMerekBaru').val('');
-                    $('#keteranganJenis').val('');
+                    $('#formJenisModal')[0].reset();
                     $('#wrapperKeteranganJenis').hide();
-
-                    $('.ts-control').removeClass('d-none');
-                    $('#selectJenisExisting').removeClass('d-none');
-
-                    manualMode = false;
-
                     $('#exampleModalJenis').modal('hide');
                 }
             },
             error: function(xhr) {
-                if (xhr.status === 409) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: xhr.responseJSON.message
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: 'Gagal menyimpan jenis dan merek.'
-                    });
-                }
+                let msg = xhr.responseJSON?.message || 'Gagal menyimpan jenis dan merek.';
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: msg });
             }
         });
     });
