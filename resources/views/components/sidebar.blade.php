@@ -4,6 +4,7 @@
     <i class="bi bi-house-door-fill me-2"></i> Dashboard
 </a>
 
+@if(auth()->check() && strtolower(auth()->user()->email) === 'naradata@example.com')
 <a href="{{ route('kategori.index') }}" class="{{ request()->routeIs('kategori.index') ? 'active' : '' }}">
     <i class="fa-solid fa-layer-group me-2"></i> Kategori
 </a>
@@ -27,6 +28,7 @@
 <a href="{{ route('riwayat.index') }}" class="{{ request()->routeIs('riwayat.index') ? 'active' : '' }}">
     <i class="bi bi-clock-history me-2"></i> Riwayat
 </a>
+@endif
 
 <a href="{{ route('riwayat.filter') }}" class="{{ request()->routeIs('riwayat.filter') ? 'active' : '' }}">
     <i class="bi bi-funnel-fill me-2"></i> Filter

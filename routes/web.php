@@ -13,7 +13,7 @@ use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 //route untuk halaman utama
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'restrict.email'])->group(function () {
     Route::get('/', function () {
         return view('home');
     })->name('home');
