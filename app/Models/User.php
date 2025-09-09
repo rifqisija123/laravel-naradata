@@ -63,4 +63,11 @@ class User extends Authenticatable
     {
         return $this->last_seen && $this->last_seen->diffInMinutes(now()) < 5;
     }
+
+    public function getUnreadMessagesCount()
+    {
+        return $this->receivedMessages()
+            ->where('status', '!=', 'read')
+            ->count();
+    }
 }

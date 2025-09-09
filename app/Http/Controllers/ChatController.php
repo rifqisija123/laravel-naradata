@@ -120,4 +120,10 @@ class ChatController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function getUnreadCount()
+    {
+        $unreadCount = Auth::user()->getUnreadMessagesCount();
+        return response()->json(['unread_count' => $unreadCount]);
+    }
 }
